@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description"
+        content="CTI Cooling Tower Analysis Dashboard — Psychrometric & Merkel KaV/L Calculator. Reverse-engineered from CTI Toolkit with bit-perfect accuracy.">
+    <meta name="theme-color" content="#0a0a1a">
+
+    <!-- PWA / Home Screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CTI Dashboard">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CTI Dashboard">
+
+    <!-- Prevent iOS from auto-linking phone numbers / addresses -->
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CTI Analysis Dashboard">
+    <meta property="og:description" content="Psychrometric & Merkel KaV/L Calculator for Cooling Tower Analysis">
+    <meta property="og:type" content="website">
+
+    <title>CTI Analysis Dashboard — Psychrometrics & Merkel KaV/L</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="shortcut icon" href="favicon.svg">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- ================================================================
+         HEADER
+         ================================================================ -->
+        <header class="app-header">
+            <div class="app-logo">
+                <div class="app-logo-icon">CT</div>
+                <div>
+                    <div class="app-title">CTI Analysis Dashboard</div>
+                    <div class="app-subtitle">Psychrometric & Merkel KaV/L Engine</div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Engines Active
+                </div>
+            </div>
+        </header>
+
+        <!-- ================================================================
+         TAB BAR
+         ================================================================ -->
+        <nav class="tab-bar" role="tablist" aria-label="Calculator selection">
+            <button class="tab-btn active" data-tab="psychro" role="tab" aria-selected="true" id="tab-psychro">
+                <span class="tab-icon">🌡️</span>
+                Psychrometrics
+            </button>
+            <button class="tab-btn" data-tab="merkel" role="tab" aria-selected="false" id="tab-merkel">
+                <span class="tab-icon">🏗️</span>
+                Merkel KaV/L
+            </button>
+        </nav>
+
+        <!-- ================================================================
+         PSYCHROMETRICS PANEL
+         ================================================================ -->
+        <section class="tab-panel active" id="panel-psychro" role="tabpanel" aria-labelledby="tab-psychro">
+            <div class="panel-grid">
+
+                <!-- --- Input Card --- -->
+                <div class="card stagger-1">
+                    <div class="card-header">
+                        <span class="card-title">Input Parameters</span>
+                        <div class="card-icon"
+                            style="background: rgba(108, 99, 255, 0.15); color: var(--accent-purple);">📥</div>
+                    </div>
+
+                    <!-- Dry Bulb Temperature -->
+                    <div class="input-group">
+                        <label class="input-label" for="p-dbt">
+                            <span class="input-label-text">Dry Bulb Temperature (DBT)</span>
+                            <span class="input-label-unit">°C</span>
+                        </label>
+                        <input type="number" id="p-dbt" class="input-field" value="35" min="-5" max="60" step="0.1" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="p-dbt" min="-5" max="60" step="0.5"
+                            value="35">
+                    </div>
+
+                    <!-- Wet Bulb Temperature -->
+                    <div class="input-group">
+                        <label class="input-label" for="p-wbt">
+                            <span class="input-label-text">Wet Bulb Temperature (WBT)</span>
+                            <span class="input-label-unit">°C</span>
+                        </label>
+                        <input type="number" id="p-wbt" class="input-field" value="25" min="-5" max="50" step="0.1" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="p-wbt" min="-5" max="50" step="0.5"
+                            value="25">
+                    </div>
+
+                    <!-- Altitude -->
+                    <div class="input-group">
+                        <label class="input-label" for="p-alt">
+                            <span class="input-label-text">Altitude</span>
+                            <span class="input-label-unit">meters</span>
+                        </label>
+                        <input type="number" id="p-alt" class="input-field" value="0" min="0" max="3000" step="10" inputmode="numeric" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="p-alt" min="0" max="3000" step="50"
+                            value="0">
+                    </div>
+
+                    <div class="error-message" id="p-error"></div>
+                    <div class="status-message" id="psychro-status" data-state="loading"></div>
+
+                    <!-- Formula Reference -->
+                    <div class="formula-ref" id="formula-psychro">
+                        <div class="formula-header">
+                            <span class="formula-icon">ƒ</span>
+                            <div>
+                                <div class="formula-title">Psychrometric Pipeline</div>
+                                <div class="formula-subtitle">Hyland-Wexler SVP + ASHRAE 2017</div>
+                            </div>
+                            <button class="formula-toggle" aria-label="Toggle formula" aria-expanded="true" data-target="formula-psychro">
+                                <span class="formula-toggle-icon">▾</span>
+                            </button>
+                        </div>
+                        <div class="formula-body">
+                        <div class="formula-steps">
+                            <div class="formula-step">
+                                <span class="step-num">1</span>
+                                <span class="step-text"><span class="var">P</span> = <span class="num">101.325</span> ×
+                                    (1 − <span class="num">6.8753e-6</span> × Alt<sub>ft</sub>)<sup><span
+                                            class="num">5.2561</span></sup></span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">2</span>
+                                <span class="step-text"><span class="var">P<sub>ws</sub></span> = HylandWexler(<span
+                                        class="var">WBT</span>) <span class="step-comment">[kPa]</span></span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">3</span>
+                                <span class="step-text"><span class="var">W<sub>s</sub></span> = <span
+                                        class="num">0.62198</span> × f × P<sub>ws</sub> / (P − f·P<sub>ws</sub>)</span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">4</span>
+                                <span class="step-text"><span class="var">W</span> = (<span class="num">2501</span> −
+                                    <span class="num">2.381</span>·WBT)·W<sub>s</sub> − (DBT−WBT)) / (<span
+                                        class="num">2501</span> + <span class="num">1.805</span>·DBT − <span
+                                        class="num">4.186</span>·WBT)</span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">5</span>
+                                <span class="step-text"><span class="var">H</span> = <span class="num">1.006</span>·DBT
+                                    + W·(<span class="num">2501</span> + <span class="num">1.805</span>·DBT)</span>
+                            </div>
+                        </div>
+                        </div><!-- /.formula-body -->
+                    </div>
+                </div>
+
+                <!-- --- Results Area --- -->
+                <div>
+                    <!-- Results Cards -->
+                    <div class="section-header stagger-2">
+                        <span class="section-title">Calculated Properties</span>
+                        <div class="section-line"></div>
+                    </div>
+
+                    <div class="results-grid">
+                        <div class="result-card stagger-2" style="--card-accent: var(--accent-cyan);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-cyan);"></span>
+                                Humidity Ratio
+                            </div>
+                            <div id="out-hr" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">kg/kg</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-3" style="--card-accent: var(--accent-purple);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-purple);"></span>
+                                Dew Point
+                            </div>
+                            <div id="out-dp" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">°C</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-4" style="--card-accent: var(--accent-rose);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-rose);"></span>
+                                Relative Humidity
+                            </div>
+                            <div id="out-rh" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">%</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-5" style="--card-accent: var(--accent-gold);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-gold);"></span>
+                                Enthalpy
+                            </div>
+                            <div id="out-h" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">kJ/kg</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-6" style="--card-accent: var(--accent-green);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-green);"></span>
+                                Specific Volume
+                            </div>
+                            <div id="out-sv" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">m³/kg</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-7" style="--card-accent: var(--accent-orange);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-orange);"></span>
+                                Density
+                            </div>
+                            <div id="out-dens" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">kg/m³</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-7" style="--card-accent: var(--accent-cyan);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-cyan);"></span>
+                                Atm. Pressure
+                            </div>
+                            <div id="out-p" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">kPa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="section-header">
+                        <span class="section-title">Sensitivity Analysis</span>
+                        <div class="section-line"></div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-purple);"></span>
+                                Enthalpy vs Dry Bulb Temperature
+                            </div>
+                            <canvas id="chart-enthalpy-dbt" class="chart-canvas"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-rose);"></span>
+                                Relative Humidity vs Dry Bulb Temperature
+                            </div>
+                            <canvas id="chart-hr-dbt" class="chart-canvas"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-cyan);"></span>
+                                Altitude Effect on Properties
+                            </div>
+                            <canvas id="chart-altitude-effect" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+         MERKEL KaV/L PANEL
+         ================================================================ -->
+        <section class="tab-panel" id="panel-merkel" role="tabpanel" aria-labelledby="tab-merkel">
+            <div class="panel-grid">
+
+                <!-- --- Input Card --- -->
+                <div class="card stagger-1">
+                    <div class="card-header">
+                        <span class="card-title">Tower Parameters</span>
+                        <div class="card-icon" style="background: rgba(0, 217, 255, 0.15); color: var(--accent-cyan);">
+                            🔧</div>
+                    </div>
+
+                    <!-- HWT -->
+                    <div class="input-group">
+                        <label class="input-label" for="m-hwt">
+                            <span class="input-label-text">Hot Water Temp (HWT)</span>
+                            <span class="input-label-unit">°C</span>
+                        </label>
+                        <input type="number" id="m-hwt" class="input-field" value="40" min="30" max="70" step="0.1" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="m-hwt" min="30" max="70" step="0.5"
+                            value="40">
+                    </div>
+
+                    <!-- CWT -->
+                    <div class="input-group">
+                        <label class="input-label" for="m-cwt">
+                            <span class="input-label-text">Cold Water Temp (CWT)</span>
+                            <span class="input-label-unit">°C</span>
+                        </label>
+                        <input type="number" id="m-cwt" class="input-field" value="28" min="20" max="50" step="0.1" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="m-cwt" min="20" max="50" step="0.5"
+                            value="28">
+                    </div>
+
+                    <!-- WBT -->
+                    <div class="input-group">
+                        <label class="input-label" for="m-wbt">
+                            <span class="input-label-text">Wet Bulb Temp (WBT)</span>
+                            <span class="input-label-unit">°C</span>
+                        </label>
+                        <input type="number" id="m-wbt" class="input-field" value="20" min="10" max="40" step="0.1" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="m-wbt" min="10" max="40" step="0.5"
+                            value="20">
+                    </div>
+
+                    <!-- L/G -->
+                    <div class="input-group">
+                        <label class="input-label" for="m-lg">
+                            <span class="input-label-text">L/G Ratio</span>
+                            <span class="input-label-unit">dimensionless</span>
+                        </label>
+                        <input type="number" id="m-lg" class="input-field" value="1.0" min="0.5" max="3.0" step="0.01" inputmode="decimal" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="m-lg" min="0.5" max="3.0" step="0.05"
+                            value="1.0">
+                    </div>
+
+                    <!-- Altitude -->
+                    <div class="input-group">
+                        <label class="input-label" for="m-alt">
+                            <span class="input-label-text">Altitude</span>
+                            <span class="input-label-unit">meters</span>
+                        </label>
+                        <input type="number" id="m-alt" class="input-field" value="0" min="0" max="2500" step="10" inputmode="numeric" autocomplete="off">
+                        <input type="range" class="slider-input" data-target="m-alt" min="0" max="2500" step="50"
+                            value="0">
+                    </div>
+
+                    <div class="error-message" id="m-error"></div>
+                    <div class="status-message" id="merkel-status" data-state="loading"></div>
+
+                    <!-- Formula Reference -->
+                    <div class="formula-ref" id="formula-merkel">
+                        <div class="formula-header">
+                            <span class="formula-icon">∫</span>
+                            <div>
+                                <div class="formula-title">Merkel Integration</div>
+                                <div class="formula-subtitle">4-Point Chebyshev Numerical Method</div>
+                            </div>
+                            <button class="formula-toggle" aria-label="Toggle formula" aria-expanded="true" data-target="formula-merkel">
+                                <span class="formula-toggle-icon">▾</span>
+                            </button>
+                        </div>
+                        <div class="formula-body">
+                        <div class="formula-steps">
+                            <div class="formula-step">
+                                <span class="step-num">1</span>
+                                <span class="step-text"><span class="var">Cheb</span> = [<span class="num">0.9</span>,
+                                    <span class="num">0.6</span>, <span class="num">0.4</span>, <span
+                                        class="num">0.1</span>]</span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">2</span>
+                                <span class="step-text"><span class="var">h<sub>in</sub></span> = h<sub>sat</sub>(P,
+                                    WBT) <span class="step-comment">saturated enthalpy</span></span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">3</span>
+                                <span class="step-text"><span class="kw">for</span> i = 0…3 : <span
+                                        class="var">T<sub>i</sub></span> = Range · Cheb[i] + CWT</span>
+                            </div>
+                            <div class="formula-step">
+                                <span class="step-num">4</span>
+                                <span class="step-text">sum += <span class="num">0.25</span> /
+                                    (h<sub>sat</sub>(T<sub>i</sub>) − h<sub>air</sub>(T<sub>i</sub>))</span>
+                            </div>
+                            <div class="formula-step highlight">
+                                <span class="step-num">⟹</span>
+                                <span class="step-text"><span class="var">KaV/L</span> = sum × Range</span>
+                            </div>
+                        </div>
+                        </div><!-- /.formula-body -->
+                    </div>
+                </div>
+
+                <!-- --- Results Area --- -->
+                <div>
+                    <!-- KaV/L Hero Card -->
+                    <div class="results-grid">
+                        <div class="result-card hero stagger-2">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-purple);"></span>
+                                Merkel Characteristic — KaV/L
+                            </div>
+                            <div id="out-kavl" class="result-value-wrapper" style="justify-content: center;">
+                                <span class="result-value">—</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-3" style="--card-accent: var(--accent-cyan);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-cyan);"></span>
+                                Cooling Range
+                            </div>
+                            <div id="out-range" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">°C</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-4" style="--card-accent: var(--accent-green);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-green);"></span>
+                                Approach
+                            </div>
+                            <div id="out-approach" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">°C</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card stagger-5" style="--card-accent: var(--accent-gold);">
+                            <div class="result-label">
+                                <span class="label-dot" style="background: var(--accent-gold);"></span>
+                                Atm. Pressure
+                            </div>
+                            <div id="out-m-pressure" class="result-value-wrapper">
+                                <span class="result-value">—</span>
+                                <span class="result-unit">kPa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="section-header">
+                        <span class="section-title">Performance Curves</span>
+                        <div class="section-line"></div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-gold);"></span>
+                                KaV/L vs L/G Ratio
+                            </div>
+                            <canvas id="chart-kavl-lg" class="chart-canvas"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-green);"></span>
+                                KaV/L vs Altitude
+                            </div>
+                            <canvas id="chart-kavl-alt" class="chart-canvas"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <span class="chart-dot" style="background: var(--accent-cyan);"></span>
+                                KaV/L at Different WBTs
+                            </div>
+                            <canvas id="chart-kavl-wbt" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================
+         FOOTER
+         ================================================================ -->
+        <footer class="app-footer">
+            <p>
+                CTI Analysis Dashboard — Bit-perfect engines reverse-engineered from CTI Toolkit
+                <br>
+                Psychrometric: Hyland-Wexler + ASHRAE 2017 &nbsp;·&nbsp; Merkel: 4-pt Chebyshev &nbsp;·&nbsp; Zero
+                dependencies
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- Application Script (ES Modules) -->
+    <script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>

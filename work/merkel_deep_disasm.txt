@@ -1,0 +1,1074 @@
+
+====================================================================================================
+  MERKEL_INTEGRATOR @ 0x00409BFE  (369 bytes)
+====================================================================================================
+  0x00409BFE: 55                                  push     ebp
+  0x00409BFF: 8B EC                               mov      ebp, esp
+  0x00409C01: 83 EC 6C                            sub      esp, 0x6c  ; 108 bytes of locals = 13 doubles
+  0x00409C04: C7 45 B0 CD CC CC CC                mov      dword ptr [ebp - 0x50], 0xcccccccd  ; [ebp-80] = 0xCCCCCCCD
+  0x00409C0B: C7 45 B4 CC CC EC 3F                mov      dword ptr [ebp - 0x4c], 0x3feccccc  ; [ebp-76] = 0x3FECCCCC
+  0x00409C12: C7 45 B8 33 33 33 33                mov      dword ptr [ebp - 0x48], 0x33333333  ; [ebp-72] = 0x33333333
+  0x00409C19: C7 45 BC 33 33 E3 3F                mov      dword ptr [ebp - 0x44], 0x3fe33333  ; [ebp-68] = 0x3FE33333
+  0x00409C20: C7 45 C0 9A 99 99 99                mov      dword ptr [ebp - 0x40], 0x9999999a  ; [ebp-64] = 0x9999999A
+  0x00409C27: C7 45 C4 99 99 D9 3F                mov      dword ptr [ebp - 0x3c], 0x3fd99999  ; [ebp-60] = 0x3FD99999
+  0x00409C2E: C7 45 C8 9A 99 99 99                mov      dword ptr [ebp - 0x38], 0x9999999a  ; [ebp-56] = 0x9999999A
+  0x00409C35: C7 45 CC 99 99 B9 3F                mov      dword ptr [ebp - 0x34], 0x3fb99999  ; [ebp-52] = 0x3FB99999
+  0x00409C3C: C7 45 D0 31 08 AC 1C                mov      dword ptr [ebp - 0x30], 0x1cac0831  ; [ebp-48] = 0x1CAC0831
+  0x00409C43: C7 45 D4 5A 64 2D 40                mov      dword ptr [ebp - 0x2c], 0x402d645a  ; [ebp-44] = 0x402D645A
+  0x00409C4A: DD 45 28                            fld      qword ptr [ebp + 0x28]  ; [ebp+40] (arg)
+  0x00409C4D: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00409C53: DF E0                               fnstsw   ax
+  0x00409C55: F6 C4 40                            test     ah, 0x40
+  0x00409C58: 75 13                               jne      0x409c6d
+  0x00409C5A: 8B 45 2C                            mov      eax, dword ptr [ebp + 0x2c]  ; [ebp+44] (arg)
+  0x00409C5D: 50                                  push     eax
+  0x00409C5E: 8B 4D 28                            mov      ecx, dword ptr [ebp + 0x28]  ; [ebp+40] (arg)
+  0x00409C61: 51                                  push     ecx
+  0x00409C62: E8 57 FF FF FF                      call     0x409bbe  ; ← merkel_0x9BBE
+  0x00409C67: 83 C4 08                            add      esp, 8  ; cleanup 8 bytes = 1 doubles
+  0x00409C6A: DD 5D D0                            fstp     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00409C6D: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00409C70: 52                                  push     edx
+  0x00409C71: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409C74: 50                                  push     eax
+  0x00409C75: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00409C78: 51                                  push     ecx
+  0x00409C79: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409C7C: 52                                  push     edx
+  0x00409C7D: 8B 45 D4                            mov      eax, dword ptr [ebp - 0x2c]  ; [ebp-44] (local)
+  0x00409C80: 50                                  push     eax
+  0x00409C81: 8B 4D D0                            mov      ecx, dword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00409C84: 51                                  push     ecx
+  0x00409C85: E8 99 DA FF FF                      call     0x407723  ; ← MerkelPsychro_imperial
+  0x00409C8A: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409C8D: DD 5D 9C                            fstp     qword ptr [ebp - 0x64]  ; [ebp-100] (local)
+  0x00409C90: DD 45 10                            fld      qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409C93: DC 4D 20                            fmul     qword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00409C96: DC 45 9C                            fadd     qword ptr [ebp - 0x64]  ; [ebp-100] (local)
+  0x00409C99: DD 5D E0                            fstp     qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00409C9C: DD 45 08                            fld      qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409C9F: DC 45 18                            fadd     qword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00409CA2: DD 55 E8                            fst      qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00409CA5: DC 45 10                            fadd     qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409CA8: DD 5D F8                            fstp     qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00409CAB: DD 45 F8                            fld      qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00409CAE: DC 1D 78 7C 48 00                   fcomp    qword ptr [0x487c78]  ; [0x00487c78] = 212.0
+  0x00409CB4: DF E0                               fnstsw   ax
+  0x00409CB6: F6 C4 01                            test     ah, 1
+  0x00409CB9: 75 0B                               jne      0x409cc6
+  0x00409CBB: DD 05 70 7C 48 00                   fld      qword ptr [0x487c70]  ; [0x00487c70] = 999.0
+  0x00409CC1: E9 A5 00 00 00                      jmp      0x409d6b
+  0x00409CC6: C7 45 F0 00 00 00 00                mov      dword ptr [ebp - 0x10], 0  ; [ebp-16] = 0x00000000
+  0x00409CCD: C7 45 F4 00 00 00 00                mov      dword ptr [ebp - 0xc], 0  ; [ebp-12] = 0x00000000
+  0x00409CD4: 66 C7 45 AC 00 00                   mov      word ptr [ebp - 0x54], 0  ; [ebp-84] = 0x00000000
+  0x00409CDA: EB 0C                               jmp      0x409ce8
+  0x00409CDC: 66 8B 55 AC                         mov      dx, word ptr [ebp - 0x54]  ; [ebp-84] (local)
+  0x00409CE0: 66 83 C2 01                         add      dx, 1
+  0x00409CE4: 66 89 55 AC                         mov      word ptr [ebp - 0x54], dx  ; [ebp-84] (local)
+  0x00409CE8: 0F BF 45 AC                         movsx    eax, word ptr [ebp - 0x54]  ; [ebp-84] (local)
+  0x00409CEC: 83 F8 04                            cmp      eax, 4
+  0x00409CEF: 7D 74                               jge      0x409d65
+  0x00409CF1: 0F BF 4D AC                         movsx    ecx, word ptr [ebp - 0x54]  ; [ebp-84] (local)
+  0x00409CF5: DD 45 10                            fld      qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409CF8: DC 4C CD B0                         fmul     qword ptr [ebp + ecx*8 - 0x50]  ; [ebp-80] (local)
+  0x00409CFC: DC 45 E8                            fadd     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00409CFF: DD 5D 94                            fstp     qword ptr [ebp - 0x6c]  ; [ebp-108] (local)
+  0x00409D02: 8B 55 98                            mov      edx, dword ptr [ebp - 0x68]  ; [ebp-104] (local)
+  0x00409D05: 52                                  push     edx
+  0x00409D06: 8B 45 94                            mov      eax, dword ptr [ebp - 0x6c]  ; [ebp-108] (local)
+  0x00409D09: 50                                  push     eax
+  0x00409D0A: 8B 4D 98                            mov      ecx, dword ptr [ebp - 0x68]  ; [ebp-104] (local)
+  0x00409D0D: 51                                  push     ecx
+  0x00409D0E: 8B 55 94                            mov      edx, dword ptr [ebp - 0x6c]  ; [ebp-108] (local)
+  0x00409D11: 52                                  push     edx
+  0x00409D12: 8B 45 D4                            mov      eax, dword ptr [ebp - 0x2c]  ; [ebp-44] (local)
+  0x00409D15: 50                                  push     eax
+  0x00409D16: 8B 4D D0                            mov      ecx, dword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00409D19: 51                                  push     ecx
+  0x00409D1A: E8 04 DA FF FF                      call     0x407723  ; ← MerkelPsychro_imperial
+  0x00409D1F: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409D22: DD 5D A4                            fstp     qword ptr [ebp - 0x5c]  ; [ebp-92] (local)
+  0x00409D25: 0F BF 55 AC                         movsx    edx, word ptr [ebp - 0x54]  ; [ebp-84] (local)
+  0x00409D29: DD 45 E0                            fld      qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00409D2C: DC 65 9C                            fsub     qword ptr [ebp - 0x64]  ; [ebp-100] (local)
+  0x00409D2F: DC 4C D5 B0                         fmul     qword ptr [ebp + edx*8 - 0x50]  ; [ebp-80] (local)
+  0x00409D33: DC 45 9C                            fadd     qword ptr [ebp - 0x64]  ; [ebp-100] (local)
+  0x00409D36: DD 5D D8                            fstp     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00409D39: DD 45 A4                            fld      qword ptr [ebp - 0x5c]  ; [ebp-92] (local)
+  0x00409D3C: DC 5D D8                            fcomp    qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00409D3F: DF E0                               fnstsw   ax
+  0x00409D41: F6 C4 41                            test     ah, 0x41
+  0x00409D44: 74 08                               je       0x409d4e
+  0x00409D46: DD 05 70 7C 48 00                   fld      qword ptr [0x487c70]  ; [0x00487c70] = 999.0
+  0x00409D4C: EB 1D                               jmp      0x409d6b
+  0x00409D4E: DD 45 A4                            fld      qword ptr [ebp - 0x5c]  ; [ebp-92] (local)
+  0x00409D51: DC 65 D8                            fsub     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00409D54: DC 3D 68 7C 48 00                   fdivr    qword ptr [0x487c68]  ; [0x00487c68] = 0.25
+  0x00409D5A: DC 45 F0                            fadd     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00409D5D: DD 5D F0                            fstp     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00409D60: E9 77 FF FF FF                      jmp      0x409cdc
+  0x00409D65: DD 45 F0                            fld      qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00409D68: DC 4D 10                            fmul     qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409D6B: 8B E5                               mov      esp, ebp
+  0x00409D6D: 5D                                  pop      ebp
+  0x00409D6E: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: MERKEL_INTEGRATOR
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+24]
+    [ebp+32]
+    [ebp+40]
+    [ebp+44]
+  Locals (ebp-N):
+    [ebp-8]
+    [ebp-12]
+    [ebp-16]
+    [ebp-24]
+    [ebp-32]
+    [ebp-40]
+    [ebp-44]
+    [ebp-48]
+    [ebp-52]
+    [ebp-56]
+    [ebp-60]
+    [ebp-64]
+    [ebp-68]
+    [ebp-72]
+    [ebp-76]
+    [ebp-80]
+    [ebp-84]
+    [ebp-92]
+    [ebp-100]
+    [ebp-104]
+    [ebp-108]
+  Calls (3):
+    0x00409C62 → merkel_0x9BBE
+    0x00409C85 → MerkelPsychro_imperial
+    0x00409D1A → MerkelPsychro_imperial
+  Constants:
+    [0x00487c68] = 0.25
+    [0x00487c70] = 999.0
+    [0x00487c78] = 212.0
+
+====================================================================================================
+  merkel_sub_9BBE @ 0x00409BBE  (64 bytes)
+====================================================================================================
+  0x00409BBE: 55                                  push     ebp
+  0x00409BBF: 8B EC                               mov      ebp, esp
+  0x00409BC1: DD 45 08                            fld      qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409BC4: DC 35 60 7C 48 00                   fdiv     qword ptr [0x487c60]  ; [0x00487c60] = 10000.0
+  0x00409BCA: DD 5D 08                            fstp     qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409BCD: DD 05 58 7C 48 00                   fld      qword ptr [0x487c58]  ; [0x00487c58] = 0.547462
+  0x00409BD3: DC 4D 08                            fmul     qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409BD6: DC 25 50 7C 48 00                   fsub     qword ptr [0x487c50]  ; [0x00487c50] = 7.67923
+  0x00409BDC: DC 4D 08                            fmul     qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409BDF: DC 05 48 7C 48 00                   fadd     qword ptr [0x487c48]  ; [0x00487c48] = 29.9309
+  0x00409BE5: DC 0D 40 7C 48 00                   fmul     qword ptr [0x487c40]  ; [0x00487c40] = 0.491154
+  0x00409BEB: DD 05 38 7C 48 00                   fld      qword ptr [0x487c38]  ; [0x00487c38] = 0.10803
+  0x00409BF1: DC 4D 08                            fmul     qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409BF4: DC 05 F8 7A 48 00                   fadd     qword ptr [0x487af8]  ; [0x00487af8] = 1.0
+  0x00409BFA: DE F9                               fdivp    st(1)
+  0x00409BFC: 5D                                  pop      ebp
+  0x00409BFD: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_sub_9BBE
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+  Locals (ebp-N):
+  Calls (0):
+  Constants:
+    [0x00487af8] = 1.0
+    [0x00487c38] = 0.10803
+    [0x00487c40] = 0.491154
+    [0x00487c48] = 29.9309
+    [0x00487c50] = 7.67923
+    [0x00487c58] = 0.547462
+    [0x00487c60] = 10000.0
+
+====================================================================================================
+  merkel_wrapper_7B0E @ 0x00407B0E  (445 bytes)
+====================================================================================================
+  0x00407B0E: 55                                  push     ebp
+  0x00407B0F: 8B EC                               mov      ebp, esp
+  0x00407B11: 83 EC 70                            sub      esp, 0x70  ; 112 bytes of locals = 14 doubles
+  0x00407B14: C7 45 F8 00 00 00 00                mov      dword ptr [ebp - 8], 0  ; [ebp-8] = 0x00000000
+  0x00407B1B: C7 45 FC 00 00 00 00                mov      dword ptr [ebp - 4], 0  ; [ebp-4] = 0x00000000
+  0x00407B22: C7 45 98 00 00 00 00                mov      dword ptr [ebp - 0x68], 0  ; [ebp-104] = 0x00000000
+  0x00407B29: C7 45 9C 00 00 00 00                mov      dword ptr [ebp - 0x64], 0  ; [ebp-100] = 0x00000000
+  0x00407B30: C7 45 E8 00 00 00 00                mov      dword ptr [ebp - 0x18], 0  ; [ebp-24] = 0x00000000
+  0x00407B37: C7 45 EC 00 00 00 00                mov      dword ptr [ebp - 0x14], 0  ; [ebp-20] = 0x00000000
+  0x00407B3E: 8D 45 D8                            lea      eax, [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407B41: 50                                  push     eax
+  0x00407B42: 8D 4D A8                            lea      ecx, [ebp - 0x58]  ; [ebp-88] (local)
+  0x00407B45: 51                                  push     ecx
+  0x00407B46: 8D 55 F0                            lea      edx, [ebp - 0x10]  ; [ebp-16] (local)
+  0x00407B49: 52                                  push     edx
+  0x00407B4A: 8D 45 C0                            lea      eax, [ebp - 0x40]  ; [ebp-64] (local)
+  0x00407B4D: 50                                  push     eax
+  0x00407B4E: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407B51: 51                                  push     ecx
+  0x00407B52: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407B55: 52                                  push     edx
+  0x00407B56: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407B59: 50                                  push     eax
+  0x00407B5A: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407B5D: 51                                  push     ecx
+  0x00407B5E: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407B61: 52                                  push     edx
+  0x00407B62: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407B65: 50                                  push     eax
+  0x00407B66: E8 C6 F1 FF FF                      call     0x406d31  ; ← MerkelK1_wrapper
+  0x00407B6B: 83 C4 28                            add      esp, 0x28  ; cleanup 40 bytes = 5 doubles
+  0x00407B6E: DD 45 F0                            fld      qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00407B71: DC 4D D8                            fmul     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407B74: DC 6D 08                            fsubr    qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407B77: DD 5D D0                            fstp     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407B7A: DD 45 D0                            fld      qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407B7D: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00407B83: DF E0                               fnstsw   ax
+  0x00407B85: F6 C4 40                            test     ah, 0x40
+  0x00407B88: 75 12                               jne      0x407b9c
+  0x00407B8A: DD 05 88 7B 48 00                   fld      qword ptr [0x487b88]  ; [0x00487b88] = 0.62198
+  0x00407B90: DC 4D F0                            fmul     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00407B93: DC 4D D8                            fmul     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407B96: DC 75 D0                            fdiv     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407B99: DD 5D 98                            fstp     qword ptr [ebp - 0x68]  ; [ebp-104] (local)
+  0x00407B9C: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407B9F: 51                                  push     ecx
+  0x00407BA0: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407BA3: 52                                  push     edx
+  0x00407BA4: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407BA7: 50                                  push     eax
+  0x00407BA8: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407BAB: 51                                  push     ecx
+  0x00407BAC: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407BAF: 52                                  push     edx
+  0x00407BB0: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407BB3: 50                                  push     eax
+  0x00407BB4: E8 E1 F1 FF FF                      call     0x406d9a  ; ← merkel_0x6D9A
+  0x00407BB9: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407BBC: DD 5D C8                            fstp     qword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00407BBF: DD 45 C0                            fld      qword ptr [ebp - 0x40]  ; [ebp-64] (local)
+  0x00407BC2: DC 4D A8                            fmul     qword ptr [ebp - 0x58]  ; [ebp-88] (local)
+  0x00407BC5: DC 6D 08                            fsubr    qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407BC8: DD 5D D0                            fstp     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407BCB: DD 45 D0                            fld      qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407BCE: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00407BD4: DF E0                               fnstsw   ax
+  0x00407BD6: F6 C4 40                            test     ah, 0x40
+  0x00407BD9: 75 12                               jne      0x407bed
+  0x00407BDB: DD 05 88 7B 48 00                   fld      qword ptr [0x487b88]  ; [0x00487b88] = 0.62198
+  0x00407BE1: DC 4D C0                            fmul     qword ptr [ebp - 0x40]  ; [ebp-64] (local)
+  0x00407BE4: DC 4D A8                            fmul     qword ptr [ebp - 0x58]  ; [ebp-88] (local)
+  0x00407BE7: DC 75 D0                            fdiv     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407BEA: DD 5D F8                            fstp     qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00407BED: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407BF0: 51                                  push     ecx
+  0x00407BF1: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407BF4: 52                                  push     edx
+  0x00407BF5: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407BF8: 50                                  push     eax
+  0x00407BF9: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407BFC: 51                                  push     ecx
+  0x00407BFD: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407C00: 52                                  push     edx
+  0x00407C01: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407C04: 50                                  push     eax
+  0x00407C05: E8 D4 F5 FF FF                      call     0x4071de  ; ← merkel_0x71DE
+  0x00407C0A: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407C0D: DD 5D E0                            fstp     qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00407C10: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407C13: 51                                  push     ecx
+  0x00407C14: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407C17: 52                                  push     edx
+  0x00407C18: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407C1B: 50                                  push     eax
+  0x00407C1C: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407C1F: 51                                  push     ecx
+  0x00407C20: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407C23: 52                                  push     edx
+  0x00407C24: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407C27: 50                                  push     eax
+  0x00407C28: E8 B0 F6 FF FF                      call     0x4072dd  ; ← merkel_0x72DD
+  0x00407C2D: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407C30: DD 5D 90                            fstp     qword ptr [ebp - 0x70]  ; [ebp-112] (local)
+  0x00407C33: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407C36: 51                                  push     ecx
+  0x00407C37: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407C3A: 52                                  push     edx
+  0x00407C3B: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407C3E: 50                                  push     eax
+  0x00407C3F: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407C42: 51                                  push     ecx
+  0x00407C43: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407C46: 52                                  push     edx
+  0x00407C47: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407C4A: 50                                  push     eax
+  0x00407C4B: E8 F8 F7 FF FF                      call     0x407448  ; ← merkel_0x7448
+  0x00407C50: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407C53: DD 5D A0                            fstp     qword ptr [ebp - 0x60]  ; [ebp-96] (local)
+  0x00407C56: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407C59: 51                                  push     ecx
+  0x00407C5A: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407C5D: 52                                  push     edx
+  0x00407C5E: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407C61: 50                                  push     eax
+  0x00407C62: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407C65: 51                                  push     ecx
+  0x00407C66: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407C69: 52                                  push     edx
+  0x00407C6A: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407C6D: 50                                  push     eax
+  0x00407C6E: E8 42 F9 FF FF                      call     0x4075b5  ; ← merkel_0x75B5
+  0x00407C73: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407C76: DD 5D B0                            fstp     qword ptr [ebp - 0x50]  ; [ebp-80] (local)
+  0x00407C79: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407C7C: 51                                  push     ecx
+  0x00407C7D: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407C80: 52                                  push     edx
+  0x00407C81: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407C84: 50                                  push     eax
+  0x00407C85: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407C88: 51                                  push     ecx
+  0x00407C89: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407C8C: 52                                  push     edx
+  0x00407C8D: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407C90: 50                                  push     eax
+  0x00407C91: E8 F7 FC FF FF                      call     0x40798d  ; ← merkel_0x798D
+  0x00407C96: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407C99: DD 5D B8                            fstp     qword ptr [ebp - 0x48]  ; [ebp-72] (local)
+  0x00407C9C: 8B 4D CC                            mov      ecx, dword ptr [ebp - 0x34]  ; [ebp-52] (local)
+  0x00407C9F: 51                                  push     ecx
+  0x00407CA0: 8B 55 C8                            mov      edx, dword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00407CA3: 52                                  push     edx
+  0x00407CA4: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407CA7: 50                                  push     eax
+  0x00407CA8: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407CAB: 51                                  push     ecx
+  0x00407CAC: 8B 55 1C                            mov      edx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407CAF: 52                                  push     edx
+  0x00407CB0: 8B 45 18                            mov      eax, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407CB3: 50                                  push     eax
+  0x00407CB4: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407CB7: 51                                  push     ecx
+  0x00407CB8: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407CBB: 52                                  push     edx
+  0x00407CBC: E8 CC 05 00 00                      call     0x40828d  ; ← merkel_0x828D
+  0x00407CC1: 83 C4 20                            add      esp, 0x20  ; cleanup 32 bytes = 4 doubles
+  0x00407CC4: DD 55 E8                            fst      qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00407CC7: 8B E5                               mov      esp, ebp
+  0x00407CC9: 5D                                  pop      ebp
+  0x00407CCA: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_wrapper_7B0E
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+20]
+    [ebp+24]
+    [ebp+28]
+  Locals (ebp-N):
+    [ebp-4]
+    [ebp-8]
+    [ebp-16]
+    [ebp-20]
+    [ebp-24]
+    [ebp-32]
+    [ebp-40]
+    [ebp-48]
+    [ebp-52]
+    [ebp-56]
+    [ebp-64]
+    [ebp-72]
+    [ebp-80]
+    [ebp-88]
+    [ebp-96]
+    [ebp-100]
+    [ebp-104]
+    [ebp-112]
+  Calls (8):
+    0x00407B66 → MerkelK1_wrapper
+    0x00407BB4 → merkel_0x6D9A
+    0x00407C05 → merkel_0x71DE
+    0x00407C28 → merkel_0x72DD
+    0x00407C4B → merkel_0x7448
+    0x00407C6E → merkel_0x75B5
+    0x00407C91 → merkel_0x798D
+    0x00407CBC → merkel_0x828D
+  Constants:
+    [0x00487b88] = 0.62198
+
+====================================================================================================
+  merkel_wrapper_7CCB @ 0x00407CCB  (342 bytes)
+====================================================================================================
+  0x00407CCB: 55                                  push     ebp
+  0x00407CCC: 8B EC                               mov      ebp, esp
+  0x00407CCE: 83 EC 08                            sub      esp, 8  ; 8 bytes of locals = 1 doubles
+  0x00407CD1: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407CD4: 50                                  push     eax
+  0x00407CD5: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407CD8: 51                                  push     ecx
+  0x00407CD9: 8B 55 1C                            mov      edx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407CDC: 52                                  push     edx
+  0x00407CDD: 8B 45 18                            mov      eax, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407CE0: 50                                  push     eax
+  0x00407CE1: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407CE4: 51                                  push     ecx
+  0x00407CE5: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407CE8: 52                                  push     edx
+  0x00407CE9: E8 AC F0 FF FF                      call     0x406d9a  ; ← merkel_0x6D9A
+  0x00407CEE: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407CF1: 8B 45 20                            mov      eax, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00407CF4: DD 18                               fstp     qword ptr [eax]
+  0x00407CF6: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407CF9: 51                                  push     ecx
+  0x00407CFA: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407CFD: 52                                  push     edx
+  0x00407CFE: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407D01: 50                                  push     eax
+  0x00407D02: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407D05: 51                                  push     ecx
+  0x00407D06: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407D09: 52                                  push     edx
+  0x00407D0A: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407D0D: 50                                  push     eax
+  0x00407D0E: E8 CB F4 FF FF                      call     0x4071de  ; ← merkel_0x71DE
+  0x00407D13: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407D16: DD 5D F8                            fstp     qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00407D19: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407D1C: 51                                  push     ecx
+  0x00407D1D: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407D20: 52                                  push     edx
+  0x00407D21: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407D24: 50                                  push     eax
+  0x00407D25: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407D28: 51                                  push     ecx
+  0x00407D29: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407D2C: 52                                  push     edx
+  0x00407D2D: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407D30: 50                                  push     eax
+  0x00407D31: E8 A7 F5 FF FF                      call     0x4072dd  ; ← merkel_0x72DD
+  0x00407D36: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407D39: 8B 4D 24                            mov      ecx, dword ptr [ebp + 0x24]  ; [ebp+36] (arg)
+  0x00407D3C: DD 19                               fstp     qword ptr [ecx]
+  0x00407D3E: 8B 55 14                            mov      edx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407D41: 52                                  push     edx
+  0x00407D42: 8B 45 10                            mov      eax, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407D45: 50                                  push     eax
+  0x00407D46: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407D49: 51                                  push     ecx
+  0x00407D4A: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407D4D: 52                                  push     edx
+  0x00407D4E: 8B 45 0C                            mov      eax, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407D51: 50                                  push     eax
+  0x00407D52: 8B 4D 08                            mov      ecx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407D55: 51                                  push     ecx
+  0x00407D56: E8 ED F6 FF FF                      call     0x407448  ; ← merkel_0x7448
+  0x00407D5B: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407D5E: 8B 55 2C                            mov      edx, dword ptr [ebp + 0x2c]  ; [ebp+44] (arg)
+  0x00407D61: DD 1A                               fstp     qword ptr [edx]
+  0x00407D63: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407D66: 50                                  push     eax
+  0x00407D67: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407D6A: 51                                  push     ecx
+  0x00407D6B: 8B 55 1C                            mov      edx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407D6E: 52                                  push     edx
+  0x00407D6F: 8B 45 18                            mov      eax, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407D72: 50                                  push     eax
+  0x00407D73: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407D76: 51                                  push     ecx
+  0x00407D77: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407D7A: 52                                  push     edx
+  0x00407D7B: E8 35 F8 FF FF                      call     0x4075b5  ; ← merkel_0x75B5
+  0x00407D80: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407D83: 8B 45 30                            mov      eax, dword ptr [ebp + 0x30]  ; [ebp+48] (arg)
+  0x00407D86: DD 18                               fstp     qword ptr [eax]
+  0x00407D88: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407D8B: 51                                  push     ecx
+  0x00407D8C: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407D8F: 52                                  push     edx
+  0x00407D90: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407D93: 50                                  push     eax
+  0x00407D94: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407D97: 51                                  push     ecx
+  0x00407D98: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407D9B: 52                                  push     edx
+  0x00407D9C: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407D9F: 50                                  push     eax
+  0x00407DA0: E8 E8 FB FF FF                      call     0x40798d  ; ← merkel_0x798D
+  0x00407DA5: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407DA8: 8B 4D 28                            mov      ecx, dword ptr [ebp + 0x28]  ; [ebp+40] (arg)
+  0x00407DAB: DD 19                               fstp     qword ptr [ecx]
+  0x00407DAD: 8B 55 20                            mov      edx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00407DB0: 8B 42 04                            mov      eax, dword ptr [edx + 4]
+  0x00407DB3: 50                                  push     eax
+  0x00407DB4: 8B 0A                               mov      ecx, dword ptr [edx]
+  0x00407DB6: 51                                  push     ecx
+  0x00407DB7: 8B 55 1C                            mov      edx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407DBA: 52                                  push     edx
+  0x00407DBB: 8B 45 18                            mov      eax, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407DBE: 50                                  push     eax
+  0x00407DBF: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407DC2: 51                                  push     ecx
+  0x00407DC3: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407DC6: 52                                  push     edx
+  0x00407DC7: 8B 45 0C                            mov      eax, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407DCA: 50                                  push     eax
+  0x00407DCB: 8B 4D 08                            mov      ecx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407DCE: 51                                  push     ecx
+  0x00407DCF: E8 B9 04 00 00                      call     0x40828d  ; ← merkel_0x828D
+  0x00407DD4: 83 C4 20                            add      esp, 0x20  ; cleanup 32 bytes = 4 doubles
+  0x00407DD7: 8B 55 34                            mov      edx, dword ptr [ebp + 0x34]  ; [ebp+52] (arg)
+  0x00407DDA: DD 1A                               fstp     qword ptr [edx]
+  0x00407DDC: 8B 45 20                            mov      eax, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00407DDF: DD 00                               fld      qword ptr [eax]
+  0x00407DE1: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00407DE7: DF E0                               fnstsw   ax
+  0x00407DE9: F6 C4 01                            test     ah, 1
+  0x00407DEC: 74 2F                               je       0x407e1d
+  0x00407DEE: 8B 4D 20                            mov      ecx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00407DF1: 8B 51 04                            mov      edx, dword ptr [ecx + 4]
+  0x00407DF4: 52                                  push     edx
+  0x00407DF5: 8B 01                               mov      eax, dword ptr [ecx]
+  0x00407DF7: 50                                  push     eax
+  0x00407DF8: E8 60 22 00 00                      call     0x40a05d  ; ← abs_value
+  0x00407DFD: 83 C4 08                            add      esp, 8  ; cleanup 8 bytes = 1 doubles
+  0x00407E00: DC 1D B8 7B 48 00                   fcomp    qword ptr [0x487bb8]  ; [0x00487bb8] = 1e-06
+  0x00407E06: DF E0                               fnstsw   ax
+  0x00407E08: F6 C4 01                            test     ah, 1
+  0x00407E0B: 74 10                               je       0x407e1d
+  0x00407E0D: 8B 4D 20                            mov      ecx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00407E10: C7 01 00 00 00 00                   mov      dword ptr [ecx], 0
+  0x00407E16: C7 41 04 00 00 00 00                mov      dword ptr [ecx + 4], 0
+  0x00407E1D: 8B E5                               mov      esp, ebp
+  0x00407E1F: 5D                                  pop      ebp
+  0x00407E20: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_wrapper_7CCB
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+20]
+    [ebp+24]
+    [ebp+28]
+    [ebp+32]
+    [ebp+36]
+    [ebp+40]
+    [ebp+44]
+    [ebp+48]
+    [ebp+52]
+  Locals (ebp-N):
+    [ebp-8]
+  Calls (8):
+    0x00407CE9 → merkel_0x6D9A
+    0x00407D0E → merkel_0x71DE
+    0x00407D31 → merkel_0x72DD
+    0x00407D56 → merkel_0x7448
+    0x00407D7B → merkel_0x75B5
+    0x00407DA0 → merkel_0x798D
+    0x00407DCF → merkel_0x828D
+    0x00407DF8 → abs_value
+  Constants:
+    [0x00487bb8] = 1e-06
+
+====================================================================================================
+  merkel_helper_6D9A @ 0x00406D9A  (210 bytes)
+====================================================================================================
+  0x00406D9A: 55                                  push     ebp
+  0x00406D9B: 8B EC                               mov      ebp, esp
+  0x00406D9D: 83 EC 38                            sub      esp, 0x38  ; 56 bytes of locals = 7 doubles
+  0x00406DA0: C7 45 C8 00 00 00 00                mov      dword ptr [ebp - 0x38], 0  ; [ebp-56] = 0x00000000
+  0x00406DA7: C7 45 CC 00 00 00 00                mov      dword ptr [ebp - 0x34], 0  ; [ebp-52] = 0x00000000
+  0x00406DAE: C7 45 E0 00 00 00 00                mov      dword ptr [ebp - 0x20], 0  ; [ebp-32] = 0x00000000
+  0x00406DB5: C7 45 E4 00 00 00 00                mov      dword ptr [ebp - 0x1c], 0  ; [ebp-28] = 0x00000000
+  0x00406DBC: 8D 45 F0                            lea      eax, [ebp - 0x10]  ; [ebp-16] (local)
+  0x00406DBF: 50                                  push     eax
+  0x00406DC0: 8D 4D D0                            lea      ecx, [ebp - 0x30]  ; [ebp-48] (local)
+  0x00406DC3: 51                                  push     ecx
+  0x00406DC4: 8D 55 F8                            lea      edx, [ebp - 8]  ; [ebp-8] (local)
+  0x00406DC7: 52                                  push     edx
+  0x00406DC8: 8D 45 D8                            lea      eax, [ebp - 0x28]  ; [ebp-40] (local)
+  0x00406DCB: 50                                  push     eax
+  0x00406DCC: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00406DCF: 51                                  push     ecx
+  0x00406DD0: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00406DD3: 52                                  push     edx
+  0x00406DD4: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00406DD7: 50                                  push     eax
+  0x00406DD8: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00406DDB: 51                                  push     ecx
+  0x00406DDC: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00406DDF: 52                                  push     edx
+  0x00406DE0: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00406DE3: 50                                  push     eax
+  0x00406DE4: E8 48 FF FF FF                      call     0x406d31  ; ← MerkelK1_wrapper
+  0x00406DE9: 83 C4 28                            add      esp, 0x28  ; cleanup 40 bytes = 5 doubles
+  0x00406DEC: DD 45 F8                            fld      qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00406DEF: DC 4D F0                            fmul     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00406DF2: DC 6D 08                            fsubr    qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00406DF5: DD 5D E8                            fstp     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406DF8: DD 45 E8                            fld      qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406DFB: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00406E01: DF E0                               fnstsw   ax
+  0x00406E03: F6 C4 40                            test     ah, 0x40
+  0x00406E06: 75 12                               jne      0x406e1a
+  0x00406E08: DD 05 88 7B 48 00                   fld      qword ptr [0x487b88]  ; [0x00487b88] = 0.62198
+  0x00406E0E: DC 4D F8                            fmul     qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00406E11: DC 4D F0                            fmul     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00406E14: DC 75 E8                            fdiv     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406E17: DD 5D C8                            fstp     qword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00406E1A: DD 05 80 7B 48 00                   fld      qword ptr [0x487b80]  ; [0x00487b80] = 0.444
+  0x00406E20: DC 4D 10                            fmul     qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00406E23: DC 05 78 7B 48 00                   fadd     qword ptr [0x487b78]  ; [0x00487b78] = 1093.0
+  0x00406E29: DC 65 18                            fsub     qword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00406E2C: DD 5D E8                            fstp     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406E2F: DD 45 E8                            fld      qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406E32: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00406E38: DF E0                               fnstsw   ax
+  0x00406E3A: F6 C4 40                            test     ah, 0x40
+  0x00406E3D: 75 26                               jne      0x406e65
+  0x00406E3F: DD 05 70 7B 48 00                   fld      qword ptr [0x487b70]  ; [0x00487b70] = 0.556
+  0x00406E45: DC 4D 18                            fmul     qword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00406E48: DC 2D 78 7B 48 00                   fsubr    qword ptr [0x487b78]  ; [0x00487b78] = 1093.0
+  0x00406E4E: DC 4D C8                            fmul     qword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00406E51: DD 45 10                            fld      qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00406E54: DC 65 18                            fsub     qword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00406E57: DC 0D 68 7B 48 00                   fmul     qword ptr [0x487b68]  ; [0x00487b68] = 0.24
+  0x00406E5D: DE E9                               fsubp    st(1)
+  0x00406E5F: DC 75 E8                            fdiv     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00406E62: DD 5D E0                            fstp     qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00406E65: DD 45 E0                            fld      qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00406E68: 8B E5                               mov      esp, ebp
+  0x00406E6A: 5D                                  pop      ebp
+  0x00406E6B: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_helper_6D9A
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+20]
+    [ebp+24]
+    [ebp+28]
+  Locals (ebp-N):
+    [ebp-8]
+    [ebp-16]
+    [ebp-24]
+    [ebp-28]
+    [ebp-32]
+    [ebp-40]
+    [ebp-48]
+    [ebp-52]
+    [ebp-56]
+  Calls (1):
+    0x00406DE4 → MerkelK1_wrapper
+  Constants:
+    [0x00487b68] = 0.24
+    [0x00487b70] = 0.556
+    [0x00487b78] = 1093.0
+    [0x00487b80] = 0.444
+    [0x00487b88] = 0.62198
+
+====================================================================================================
+  merkel_798D @ 0x0040798D  (385 bytes)
+====================================================================================================
+  0x0040798D: 55                                  push     ebp
+  0x0040798E: 8B EC                               mov      ebp, esp
+  0x00407990: 83 EC 68                            sub      esp, 0x68  ; 104 bytes of locals = 13 doubles
+  0x00407993: C7 45 F8 00 00 00 00                mov      dword ptr [ebp - 8], 0  ; [ebp-8] = 0x00000000
+  0x0040799A: C7 45 FC 00 00 00 00                mov      dword ptr [ebp - 4], 0  ; [ebp-4] = 0x00000000
+  0x004079A1: C7 45 A0 00 00 00 00                mov      dword ptr [ebp - 0x60], 0  ; [ebp-96] = 0x00000000
+  0x004079A8: C7 45 A4 00 00 00 00                mov      dword ptr [ebp - 0x5c], 0  ; [ebp-92] = 0x00000000
+  0x004079AF: 8D 45 E0                            lea      eax, [ebp - 0x20]  ; [ebp-32] (local)
+  0x004079B2: 50                                  push     eax
+  0x004079B3: 8D 4D B0                            lea      ecx, [ebp - 0x50]  ; [ebp-80] (local)
+  0x004079B6: 51                                  push     ecx
+  0x004079B7: 8D 55 F0                            lea      edx, [ebp - 0x10]  ; [ebp-16] (local)
+  0x004079BA: 52                                  push     edx
+  0x004079BB: 8D 45 C8                            lea      eax, [ebp - 0x38]  ; [ebp-56] (local)
+  0x004079BE: 50                                  push     eax
+  0x004079BF: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x004079C2: 51                                  push     ecx
+  0x004079C3: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x004079C6: 52                                  push     edx
+  0x004079C7: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x004079CA: 50                                  push     eax
+  0x004079CB: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x004079CE: 51                                  push     ecx
+  0x004079CF: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x004079D2: 52                                  push     edx
+  0x004079D3: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004079D6: 50                                  push     eax
+  0x004079D7: E8 55 F3 FF FF                      call     0x406d31  ; ← MerkelK1_wrapper
+  0x004079DC: 83 C4 28                            add      esp, 0x28  ; cleanup 40 bytes = 5 doubles
+  0x004079DF: DD 45 F0                            fld      qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x004079E2: DC 4D E0                            fmul     qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x004079E5: DC 6D 08                            fsubr    qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004079E8: DD 5D D8                            fstp     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x004079EB: DD 45 D8                            fld      qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x004079EE: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x004079F4: DF E0                               fnstsw   ax
+  0x004079F6: F6 C4 40                            test     ah, 0x40
+  0x004079F9: 75 12                               jne      0x407a0d
+  0x004079FB: DD 05 88 7B 48 00                   fld      qword ptr [0x487b88]  ; [0x00487b88] = 0.62198
+  0x00407A01: DC 4D F0                            fmul     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x00407A04: DC 4D E0                            fmul     qword ptr [ebp - 0x20]  ; [ebp-32] (local)
+  0x00407A07: DC 75 D8                            fdiv     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407A0A: DD 5D A0                            fstp     qword ptr [ebp - 0x60]  ; [ebp-96] (local)
+  0x00407A0D: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407A10: 51                                  push     ecx
+  0x00407A11: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407A14: 52                                  push     edx
+  0x00407A15: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407A18: 50                                  push     eax
+  0x00407A19: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407A1C: 51                                  push     ecx
+  0x00407A1D: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407A20: 52                                  push     edx
+  0x00407A21: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407A24: 50                                  push     eax
+  0x00407A25: E8 70 F3 FF FF                      call     0x406d9a  ; ← merkel_0x6D9A
+  0x00407A2A: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407A2D: DD 5D D0                            fstp     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407A30: DD 45 C8                            fld      qword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00407A33: DC 4D B0                            fmul     qword ptr [ebp - 0x50]  ; [ebp-80] (local)
+  0x00407A36: DC 6D 08                            fsubr    qword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407A39: DD 5D D8                            fstp     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407A3C: DD 45 D8                            fld      qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407A3F: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x00407A45: DF E0                               fnstsw   ax
+  0x00407A47: F6 C4 40                            test     ah, 0x40
+  0x00407A4A: 75 12                               jne      0x407a5e
+  0x00407A4C: DD 05 88 7B 48 00                   fld      qword ptr [0x487b88]  ; [0x00487b88] = 0.62198
+  0x00407A52: DC 4D C8                            fmul     qword ptr [ebp - 0x38]  ; [ebp-56] (local)
+  0x00407A55: DC 4D B0                            fmul     qword ptr [ebp - 0x50]  ; [ebp-80] (local)
+  0x00407A58: DC 75 D8                            fdiv     qword ptr [ebp - 0x28]  ; [ebp-40] (local)
+  0x00407A5B: DD 5D F8                            fstp     qword ptr [ebp - 8]  ; [ebp-8] (local)
+  0x00407A5E: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407A61: 51                                  push     ecx
+  0x00407A62: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407A65: 52                                  push     edx
+  0x00407A66: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407A69: 50                                  push     eax
+  0x00407A6A: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407A6D: 51                                  push     ecx
+  0x00407A6E: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407A71: 52                                  push     edx
+  0x00407A72: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407A75: 50                                  push     eax
+  0x00407A76: E8 63 F7 FF FF                      call     0x4071de  ; ← merkel_0x71DE
+  0x00407A7B: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407A7E: DD 5D E8                            fstp     qword ptr [ebp - 0x18]  ; [ebp-24] (local)
+  0x00407A81: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407A84: 51                                  push     ecx
+  0x00407A85: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407A88: 52                                  push     edx
+  0x00407A89: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407A8C: 50                                  push     eax
+  0x00407A8D: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407A90: 51                                  push     ecx
+  0x00407A91: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407A94: 52                                  push     edx
+  0x00407A95: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407A98: 50                                  push     eax
+  0x00407A99: E8 3F F8 FF FF                      call     0x4072dd  ; ← merkel_0x72DD
+  0x00407A9E: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407AA1: DD 5D 98                            fstp     qword ptr [ebp - 0x68]  ; [ebp-104] (local)
+  0x00407AA4: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407AA7: 51                                  push     ecx
+  0x00407AA8: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407AAB: 52                                  push     edx
+  0x00407AAC: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407AAF: 50                                  push     eax
+  0x00407AB0: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407AB3: 51                                  push     ecx
+  0x00407AB4: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407AB7: 52                                  push     edx
+  0x00407AB8: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407ABB: 50                                  push     eax
+  0x00407ABC: E8 87 F9 FF FF                      call     0x407448  ; ← merkel_0x7448
+  0x00407AC1: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407AC4: DD 5D A8                            fstp     qword ptr [ebp - 0x58]  ; [ebp-88] (local)
+  0x00407AC7: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00407ACA: 51                                  push     ecx
+  0x00407ACB: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00407ACE: 52                                  push     edx
+  0x00407ACF: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00407AD2: 50                                  push     eax
+  0x00407AD3: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407AD6: 51                                  push     ecx
+  0x00407AD7: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00407ADA: 52                                  push     edx
+  0x00407ADB: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00407ADE: 50                                  push     eax
+  0x00407ADF: E8 D1 FA FF FF                      call     0x4075b5  ; ← merkel_0x75B5
+  0x00407AE4: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00407AE7: DD 5D B8                            fstp     qword ptr [ebp - 0x48]  ; [ebp-72] (local)
+  0x00407AEA: DD 05 68 7B 48 00                   fld      qword ptr [0x487b68]  ; [0x00487b68] = 0.24
+  0x00407AF0: DC 4D 10                            fmul     qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407AF3: DD 05 80 7B 48 00                   fld      qword ptr [0x487b80]  ; [0x00487b80] = 0.444
+  0x00407AF9: DC 4D 10                            fmul     qword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00407AFC: DC 05 B0 7B 48 00                   fadd     qword ptr [0x487bb0]  ; [0x00487bb0] = 1061.0
+  0x00407B02: DC 4D D0                            fmul     qword ptr [ebp - 0x30]  ; [ebp-48] (local)
+  0x00407B05: DE C1                               faddp    st(1)
+  0x00407B07: DD 55 C0                            fst      qword ptr [ebp - 0x40]  ; [ebp-64] (local)
+  0x00407B0A: 8B E5                               mov      esp, ebp
+  0x00407B0C: 5D                                  pop      ebp
+  0x00407B0D: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_798D
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+20]
+    [ebp+24]
+    [ebp+28]
+  Locals (ebp-N):
+    [ebp-4]
+    [ebp-8]
+    [ebp-16]
+    [ebp-24]
+    [ebp-32]
+    [ebp-40]
+    [ebp-48]
+    [ebp-56]
+    [ebp-64]
+    [ebp-72]
+    [ebp-80]
+    [ebp-88]
+    [ebp-92]
+    [ebp-96]
+    [ebp-104]
+  Calls (6):
+    0x004079D7 → MerkelK1_wrapper
+    0x00407A25 → merkel_0x6D9A
+    0x00407A76 → merkel_0x71DE
+    0x00407A99 → merkel_0x72DD
+    0x00407ABC → merkel_0x7448
+    0x00407ADF → merkel_0x75B5
+  Constants:
+    [0x00487b68] = 0.24
+    [0x00487b80] = 0.444
+    [0x00487b88] = 0.62198
+    [0x00487bb0] = 1061.0
+
+====================================================================================================
+  merkel_90AE @ 0x004090AE  (390 bytes)
+====================================================================================================
+  0x004090AE: 55                                  push     ebp
+  0x004090AF: 8B EC                               mov      ebp, esp
+  0x004090B1: 83 EC 28                            sub      esp, 0x28  ; 40 bytes of locals = 5 doubles
+  0x004090B4: 8D 45 E8                            lea      eax, [ebp - 0x18]  ; [ebp-24] (local)
+  0x004090B7: 50                                  push     eax
+  0x004090B8: 8D 4D D8                            lea      ecx, [ebp - 0x28]  ; [ebp-40] (local)
+  0x004090BB: 51                                  push     ecx
+  0x004090BC: 8D 55 F8                            lea      edx, [ebp - 8]  ; [ebp-8] (local)
+  0x004090BF: 52                                  push     edx
+  0x004090C0: 8D 45 E0                            lea      eax, [ebp - 0x20]  ; [ebp-32] (local)
+  0x004090C3: 50                                  push     eax
+  0x004090C4: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x004090C7: 51                                  push     ecx
+  0x004090C8: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x004090CB: 52                                  push     edx
+  0x004090CC: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x004090CF: 50                                  push     eax
+  0x004090D0: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x004090D3: 51                                  push     ecx
+  0x004090D4: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x004090D7: 52                                  push     edx
+  0x004090D8: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004090DB: 50                                  push     eax
+  0x004090DC: E8 5B F8 FF FF                      call     0x40893c  ; ← K1_psych
+  0x004090E1: 83 C4 28                            add      esp, 0x28  ; cleanup 40 bytes = 5 doubles
+  0x004090E4: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x004090E7: 51                                  push     ecx
+  0x004090E8: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x004090EB: 52                                  push     edx
+  0x004090EC: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x004090EF: 50                                  push     eax
+  0x004090F0: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x004090F3: 51                                  push     ecx
+  0x004090F4: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x004090F7: 52                                  push     edx
+  0x004090F8: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004090FB: 50                                  push     eax
+  0x004090FC: E8 DF F8 FF FF                      call     0x4089e0  ; ← K2_psych(W)
+  0x00409101: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409104: 8B 4D 20                            mov      ecx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00409107: DD 19                               fstp     qword ptr [ecx]
+  0x00409109: 8B 55 14                            mov      edx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x0040910C: 52                                  push     edx
+  0x0040910D: 8B 45 10                            mov      eax, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409110: 50                                  push     eax
+  0x00409111: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00409114: 51                                  push     ecx
+  0x00409115: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00409118: 52                                  push     edx
+  0x00409119: 8B 45 0C                            mov      eax, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x0040911C: 50                                  push     eax
+  0x0040911D: 8B 4D 08                            mov      ecx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409120: 51                                  push     ecx
+  0x00409121: E8 8E F9 FF FF                      call     0x408ab4  ; ← K3b_psych
+  0x00409126: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409129: DD 5D F0                            fstp     qword ptr [ebp - 0x10]  ; [ebp-16] (local)
+  0x0040912C: 8B 55 14                            mov      edx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x0040912F: 52                                  push     edx
+  0x00409130: 8B 45 10                            mov      eax, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409133: 50                                  push     eax
+  0x00409134: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00409137: 51                                  push     ecx
+  0x00409138: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x0040913B: 52                                  push     edx
+  0x0040913C: 8B 45 0C                            mov      eax, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x0040913F: 50                                  push     eax
+  0x00409140: 8B 4D 08                            mov      ecx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409143: 51                                  push     ecx
+  0x00409144: E8 2E FA FF FF                      call     0x408b77  ; ← K4b_psych
+  0x00409149: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x0040914C: 8B 55 24                            mov      edx, dword ptr [ebp + 0x24]  ; [ebp+36] (arg)
+  0x0040914F: DD 1A                               fstp     qword ptr [edx]
+  0x00409151: 8B 45 14                            mov      eax, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00409154: 50                                  push     eax
+  0x00409155: 8B 4D 10                            mov      ecx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x00409158: 51                                  push     ecx
+  0x00409159: 8B 55 1C                            mov      edx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x0040915C: 52                                  push     edx
+  0x0040915D: 8B 45 18                            mov      eax, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00409160: 50                                  push     eax
+  0x00409161: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00409164: 51                                  push     ecx
+  0x00409165: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x00409168: 52                                  push     edx
+  0x00409169: E8 FC FA FF FF                      call     0x408c6a  ; ← K5b_psych(RH)
+  0x0040916E: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409171: 8B 45 2C                            mov      eax, dword ptr [ebp + 0x2c]  ; [ebp+44] (arg)
+  0x00409174: DD 18                               fstp     qword ptr [eax]
+  0x00409176: 8B 4D 14                            mov      ecx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x00409179: 51                                  push     ecx
+  0x0040917A: 8B 55 10                            mov      edx, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x0040917D: 52                                  push     edx
+  0x0040917E: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x00409181: 50                                  push     eax
+  0x00409182: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x00409185: 51                                  push     ecx
+  0x00409186: 8B 55 0C                            mov      edx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x00409189: 52                                  push     edx
+  0x0040918A: 8B 45 08                            mov      eax, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x0040918D: 50                                  push     eax
+  0x0040918E: E8 CC FB FF FF                      call     0x408d5f  ; ← K6b_psych
+  0x00409193: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x00409196: 8B 4D 30                            mov      ecx, dword ptr [ebp + 0x30]  ; [ebp+48] (arg)
+  0x00409199: DD 19                               fstp     qword ptr [ecx]
+  0x0040919B: 8B 55 14                            mov      edx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x0040919E: 52                                  push     edx
+  0x0040919F: 8B 45 10                            mov      eax, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x004091A2: 50                                  push     eax
+  0x004091A3: 8B 4D 1C                            mov      ecx, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x004091A6: 51                                  push     ecx
+  0x004091A7: 8B 55 18                            mov      edx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x004091AA: 52                                  push     edx
+  0x004091AB: 8B 45 0C                            mov      eax, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x004091AE: 50                                  push     eax
+  0x004091AF: 8B 4D 08                            mov      ecx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004091B2: 51                                  push     ecx
+  0x004091B3: E8 A8 FC FF FF                      call     0x408e60  ; ← K7_psych(H)
+  0x004091B8: 83 C4 18                            add      esp, 0x18  ; cleanup 24 bytes = 3 doubles
+  0x004091BB: 8B 55 28                            mov      edx, dword ptr [ebp + 0x28]  ; [ebp+40] (arg)
+  0x004091BE: DD 1A                               fstp     qword ptr [edx]
+  0x004091C0: 8B 45 20                            mov      eax, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x004091C3: 8B 48 04                            mov      ecx, dword ptr [eax + 4]
+  0x004091C6: 51                                  push     ecx
+  0x004091C7: 8B 10                               mov      edx, dword ptr [eax]
+  0x004091C9: 52                                  push     edx
+  0x004091CA: 8B 45 1C                            mov      eax, dword ptr [ebp + 0x1c]  ; [ebp+28] (arg)
+  0x004091CD: 50                                  push     eax
+  0x004091CE: 8B 4D 18                            mov      ecx, dword ptr [ebp + 0x18]  ; [ebp+24] (arg)
+  0x004091D1: 51                                  push     ecx
+  0x004091D2: 8B 55 14                            mov      edx, dword ptr [ebp + 0x14]  ; [ebp+20] (arg)
+  0x004091D5: 52                                  push     edx
+  0x004091D6: 8B 45 10                            mov      eax, dword ptr [ebp + 0x10]  ; [ebp+16] (arg)
+  0x004091D9: 50                                  push     eax
+  0x004091DA: 8B 4D 0C                            mov      ecx, dword ptr [ebp + 0xc]  ; [ebp+12] (arg)
+  0x004091DD: 51                                  push     ecx
+  0x004091DE: 8B 55 08                            mov      edx, dword ptr [ebp + 8]  ; [ebp+8] (arg)
+  0x004091E1: 52                                  push     edx
+  0x004091E2: E8 31 02 00 00                      call     0x409418  ; ← final_conversion
+  0x004091E7: 83 C4 20                            add      esp, 0x20  ; cleanup 32 bytes = 4 doubles
+  0x004091EA: 8B 45 34                            mov      eax, dword ptr [ebp + 0x34]  ; [ebp+52] (arg)
+  0x004091ED: DD 18                               fstp     qword ptr [eax]
+  0x004091EF: 8B 4D 20                            mov      ecx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x004091F2: DD 01                               fld      qword ptr [ecx]
+  0x004091F4: DC 1D 90 7B 48 00                   fcomp    qword ptr [0x487b90]  ; [0x00487b90] = 0.0
+  0x004091FA: DF E0                               fnstsw   ax
+  0x004091FC: F6 C4 01                            test     ah, 1
+  0x004091FF: 74 2F                               je       0x409230
+  0x00409201: 8B 55 20                            mov      edx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00409204: 8B 42 04                            mov      eax, dword ptr [edx + 4]
+  0x00409207: 50                                  push     eax
+  0x00409208: 8B 0A                               mov      ecx, dword ptr [edx]
+  0x0040920A: 51                                  push     ecx
+  0x0040920B: E8 4D 0E 00 00                      call     0x40a05d  ; ← abs_value
+  0x00409210: 83 C4 08                            add      esp, 8  ; cleanup 8 bytes = 1 doubles
+  0x00409213: DC 1D B8 7B 48 00                   fcomp    qword ptr [0x487bb8]  ; [0x00487bb8] = 1e-06
+  0x00409219: DF E0                               fnstsw   ax
+  0x0040921B: F6 C4 01                            test     ah, 1
+  0x0040921E: 74 10                               je       0x409230
+  0x00409220: 8B 55 20                            mov      edx, dword ptr [ebp + 0x20]  ; [ebp+32] (arg)
+  0x00409223: C7 02 00 00 00 00                   mov      dword ptr [edx], 0
+  0x00409229: C7 42 04 00 00 00 00                mov      dword ptr [edx + 4], 0
+  0x00409230: 8B E5                               mov      esp, ebp
+  0x00409232: 5D                                  pop      ebp
+  0x00409233: C3                                  ret      
+
+  ────────────────────────────────────────────────────────────────────────────────
+  SUMMARY: merkel_90AE
+  ────────────────────────────────────────────────────────────────────────────────
+  Arguments (ebp+8..):
+    [ebp+8]
+    [ebp+12]
+    [ebp+16]
+    [ebp+20]
+    [ebp+24]
+    [ebp+28]
+    [ebp+32]
+    [ebp+36]
+    [ebp+40]
+    [ebp+44]
+    [ebp+48]
+    [ebp+52]
+  Locals (ebp-N):
+    [ebp-8]
+    [ebp-16]
+    [ebp-24]
+    [ebp-32]
+    [ebp-40]
+  Calls (9):
+    0x004090DC → K1_psych
+    0x004090FC → K2_psych(W)
+    0x00409121 → K3b_psych
+    0x00409144 → K4b_psych
+    0x00409169 → K5b_psych(RH)
+    0x0040918E → K6b_psych
+    0x004091B3 → K7_psych(H)
+    0x004091E2 → final_conversion
+    0x0040920B → abs_value
+  Constants:
+    [0x00487bb8] = 1e-06

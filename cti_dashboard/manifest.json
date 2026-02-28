@@ -1,0 +1,24 @@
+{
+    "name": "CTI Analysis Dashboard",
+    "short_name": "CTI Dashboard",
+    "description": "Psychrometric & Merkel KaV/L Calculator for Cooling Tower Analysis",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui"],
+    "background_color": "#0a0a1a",
+    "theme_color": "#0a0a1a",
+    "orientation": "any",
+    "lang": "en-US",
+    "categories": ["utilities", "productivity"],
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [],
+    "prefer_related_applications": false
+}

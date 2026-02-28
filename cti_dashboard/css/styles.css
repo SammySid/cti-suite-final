@@ -1,0 +1,1524 @@
+/**
+ * ============================================================
+ * CTI DASHBOARD — Design System & Styles
+ * ============================================================
+ * 
+ * A premium dark-mode dashboard theme inspired by modern
+ * data analytics platforms (Linear, Vercel, Raycast).
+ * 
+ * Design tokens:
+ *   --bg-primary:    Deep navy background
+ *   --bg-card:       Glass-morphic card backgrounds
+ *   --accent-*:      Vibrant accent colors for data viz
+ *   --font-primary:  Inter (via Google Fonts)
+ * 
+ * Architecture:
+ *   1. Reset & custom properties
+ *   2. Typography
+ *   3. Layout (header, tabs, grid)
+ *   4. Components (cards, inputs, results)
+ *   5. Charts
+ *   6. Animations
+ *   7. Responsive breakpoints
+ */
+
+/* ============================================================
+   1. RESET & CUSTOM PROPERTIES
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Backgrounds */
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #0f0f24;
+    --bg-card: rgba(18, 18, 42, 0.7);
+    --bg-card-hover: rgba(26, 26, 58, 0.8);
+    --bg-input: rgba(12, 12, 32, 0.8);
+    --bg-input-focus: rgba(18, 18, 50, 0.95);
+
+    /* Borders */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-input: rgba(255, 255, 255, 0.1);
+    --border-focus: rgba(108, 99, 255, 0.5);
+
+    /* Text */
+    --text-primary: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.55);
+    --text-tertiary: rgba(255, 255, 255, 0.35);
+    --text-label: rgba(255, 255, 255, 0.65);
+
+    /* Accent Colors */
+    --accent-purple: #6C63FF;
+    --accent-cyan: #00D9FF;
+    --accent-rose: #FF6B8A;
+    --accent-gold: #FFD93D;
+    --accent-green: #4ADE80;
+    --accent-orange: #F97316;
+
+    /* Shadows */
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 30px rgba(108, 99, 255, 0.15);
+    --shadow-input: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    /* Sizing */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-med: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent iOS Safari from auto-scaling text after orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* Remove blue highlight flash on tap (iOS / Android) */
+    -webkit-tap-highlight-color: transparent;
+    /* Block over-scroll bounce except when content needs it */
+    overscroll-behavior-y: none;
+}
+
+/* Subtle gradient background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(108, 99, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(0, 217, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================================
+   2. TYPOGRAPHY
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 1.75rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1rem;
+}
+
+/* ============================================================
+   3. LAYOUT
+   ============================================================ */
+
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Header --- */
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 24px;
+}
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.app-logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+}
+
+.app-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 30%, rgba(255, 255, 255, 0.6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: 20px;
+    color: var(--accent-green);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    animation: pulse 2s infinite;
+}
+
+/* --- Tabs --- */
+
+.tab-bar {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 24px;
+    width: fit-content;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Snappy tap on mobile — no 300ms delay */
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    /* Suppress callout on long-press (iOS) */
+    -webkit-touch-callout: none;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.tab-btn.active {
+    background: var(--accent-purple);
+    color: white;
+    box-shadow: 0 2px 12px rgba(108, 99, 255, 0.35);
+}
+
+.tab-btn .tab-icon {
+    font-size: 1.05rem;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* Directional slide animations (applied via JS on tab switch) */
+.tab-panel.active.slide-from-right {
+    animation: slideInFromRight 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.tab-panel.active.slide-from-left {
+    animation: slideInFromLeft 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* --- Main Grid --- */
+
+.panel-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ============================================================
+   4. COMPONENTS
+   ============================================================ */
+
+/* --- Cards --- */
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-med);
+}
+
+.card:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* --- Input Groups --- */
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group:last-child {
+    margin-bottom: 0;
+}
+
+.input-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.input-label-text {
+    font-size: 0.8rem;
+    color: var(--text-label);
+    font-weight: 500;
+}
+
+.input-label-unit {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.95rem;
+    font-weight: 500;
+    outline: none;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-input);
+}
+
+.input-field:focus {
+    border-color: var(--border-focus);
+    background: var(--bg-input-focus);
+    box-shadow: var(--shadow-input), 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.input-field::-webkit-inner-spin-button,
+.input-field::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Range sliders */
+input[type="range"].slider-input {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    outline: none;
+    margin-top: 8px;
+    /* Allow vertical scroll on page while letting horizontal drags work on the slider */
+    touch-action: pan-y;
+    cursor: pointer;
+}
+
+input[type="range"].slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.4);
+    transition: transform var(--transition-fast);
+}
+
+input[type="range"].slider-input::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* --- Error Message --- */
+
+.error-message {
+    display: none;
+    padding: 10px 14px;
+    background: rgba(255, 107, 138, 0.1);
+    border: 1px solid rgba(255, 107, 138, 0.25);
+    border-radius: var(--radius-sm);
+    color: var(--accent-rose);
+    font-size: 0.8rem;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.status-message {
+    font-size: 0.78rem;
+    margin-top: 10px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+.status-message:empty { display: none; }
+.status-message[data-state="loading"] {
+    background: rgba(0, 217, 255, 0.08);
+    color: var(--accent-cyan);
+}
+.status-message[data-state="error"] {
+    background: rgba(255, 107, 138, 0.1);
+    color: var(--accent-rose);
+    display: block;
+}
+
+/* --- Results Grid --- */
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    transition: all var(--transition-med);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--card-accent, var(--accent-purple)), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-med);
+}
+
+.result-card:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.result-card:hover::before {
+    opacity: 1;
+}
+
+.result-card.flash {
+    border-color: rgba(108, 99, 255, 0.4);
+}
+
+.result-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.result-label .label-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.result-value-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.result-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.result-unit {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 400;
+}
+
+/* KaV/L hero card */
+.result-card.hero {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.12), rgba(0, 217, 255, 0.06));
+    border-color: rgba(108, 99, 255, 0.2);
+    padding: 24px;
+    text-align: center;
+}
+
+.result-card.hero .result-value {
+    font-size: 2.8rem;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.result-card.hero .result-label {
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* ============================================================
+   5. CHARTS
+   ============================================================ */
+
+.charts-grid {
+    display: grid;
+    /* min(380px, 100%) prevents overflow on narrow screens */
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 18px;
+}
+
+.chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    backdrop-filter: blur(12px);
+}
+
+.chart-title {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-title .chart-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.chart-canvas {
+    width: 100%;
+    height: 220px;
+    display: block;
+}
+
+/* ============================================================
+   6. ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(36px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-36px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.stagger-1 {
+    animation: slideUp 0.4s ease 0.1s both;
+}
+
+.stagger-2 {
+    animation: slideUp 0.4s ease 0.15s both;
+}
+
+.stagger-3 {
+    animation: slideUp 0.4s ease 0.2s both;
+}
+
+.stagger-4 {
+    animation: slideUp 0.4s ease 0.25s both;
+}
+
+.stagger-5 {
+    animation: slideUp 0.4s ease 0.3s both;
+}
+
+.stagger-6 {
+    animation: slideUp 0.4s ease 0.35s both;
+}
+
+.stagger-7 {
+    animation: slideUp 0.4s ease 0.4s both;
+}
+
+/* ============================================================
+   7. RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* ---- Tablet: 1100px and below ---- */
+@media (max-width: 1100px) {
+    .panel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    /* Collapse formula by default on tablet/mobile — JS will respect this */
+    .formula-ref {
+        margin-top: 20px;
+    }
+}
+
+/* ============================================================
+   MOBILE APP LAYOUT  (≤ 768px)
+   — Native app patterns: sticky top bar, bottom nav, 
+     inline input rows, safe-area support, slide transitions
+   ============================================================ */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    /* ── 1. App container ── */
+    .app-container {
+        padding: 0 14px;
+        /* reserve space for fixed bottom nav */
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ── 2. Sticky top header — iOS navigation-bar style ── */
+    .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        /* Full-bleed beyond container padding */
+        margin-left: -14px;
+        margin-right: -14px;
+        padding: 10px 14px;
+        /* Reserve top safe area (notch) */
+        padding-top: calc(10px + env(safe-area-inset-top, 0px));
+        background: rgba(10, 10, 26, 0.92);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        /* Horizontal: logo left, badge right — keep as row */
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    .app-logo {
+        gap: 10px;
+    }
+
+    .app-logo-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .app-title {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    /* Hide long subtitle on mobile — save space */
+    .app-subtitle {
+        display: none;
+    }
+
+    .status-badge {
+        font-size: 0.68rem;
+        padding: 4px 9px;
+    }
+
+    /* Small spacer between sticky header and panel content */
+    .tab-panel.active {
+        padding-top: 18px;
+    }
+
+    /* ── 3. Bottom navigation bar — Android/iOS pattern ── */
+    .tab-bar {
+        /* Detach from flow, anchor to bottom of screen */
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        width: 100% !important;
+        margin: 0;
+
+        /* Extend into home-indicator area */
+        padding: 6px 32px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+
+        /* Frosted-glass bar */
+        background: rgba(9, 9, 22, 0.97);
+        backdrop-filter: blur(28px) saturate(200%);
+        -webkit-backdrop-filter: blur(28px) saturate(200%);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0;
+
+        /* Equal-spaced tabs */
+        display: flex;
+        gap: 0;
+        justify-content: space-around;
+    }
+
+    .tab-btn {
+        flex: 1;
+        flex-direction: column;
+        gap: 3px;
+        padding: 8px 12px 6px;
+        border-radius: var(--radius-sm);
+        font-size: 0.65rem;
+        letter-spacing: 0.02em;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        transition: color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .tab-btn .tab-icon {
+        font-size: 1.45rem;
+        line-height: 1;
+    }
+
+    .tab-btn.active {
+        background: rgba(108, 99, 255, 0.12);
+        color: var(--accent-purple);
+        box-shadow: none;
+    }
+
+    .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-secondary);
+    }
+
+    /* ── 4. Cards ── */
+    .card {
+        padding: 16px 14px;
+        border-radius: var(--radius-md);
+    }
+
+    .card-header {
+        margin-bottom: 16px;
+    }
+
+    .card-title {
+        font-size: 0.78rem;
+    }
+
+    /* ── 5. Input groups — native settings-row style ──
+          Layout:  [Label text]          [value pill]
+                   [════════● ─────────────────────── ]
+    ── */
+    .input-group {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        column-gap: 12px;
+        row-gap: 10px;
+        align-items: center;
+
+        padding: 13px 14px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        margin-bottom: 8px;
+    }
+
+    .input-label {
+        grid-column: 1;
+        grid-row: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2px;
+        margin-bottom: 0;
+    }
+
+    .input-label-text {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .input-label-unit {
+        font-size: 0.68rem;
+        color: var(--text-tertiary);
+        font-family: 'SF Mono', 'Cascadia Code', monospace;
+        text-transform: lowercase;
+    }
+
+    /* Number input: compact pill on right side of label row */
+    .input-field {
+        grid-column: 2;
+        grid-row: 1;
+        width: 78px;
+        text-align: center;
+        padding: 7px 8px;
+        font-size: 16px; /* prevents iOS zoom */
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        background: rgba(108, 99, 255, 0.1);
+        border-color: rgba(108, 99, 255, 0.25);
+        border-radius: 8px;
+        color: var(--accent-purple);
+    }
+
+    .input-field:focus {
+        background: rgba(108, 99, 255, 0.18);
+        border-color: rgba(108, 99, 255, 0.5);
+        color: white;
+    }
+
+    /* Slider: spans both columns below the row */
+    input[type="range"].slider-input {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin-top: 0;
+        height: 5px;
+        padding: 9px 0; /* invisible vertical tap zone */
+        background-clip: content-box;
+        cursor: pointer;
+
+        /* Filled track via CSS custom property (set by JS) */
+        background-image: linear-gradient(
+            to right,
+            var(--accent-purple) 0%,
+            var(--accent-purple) var(--slider-fill, 50%),
+            rgba(255, 255, 255, 0.1) var(--slider-fill, 50%),
+            rgba(255, 255, 255, 0.1) 100%
+        );
+    }
+
+    input[type="range"].slider-input::-webkit-slider-thumb {
+        width: 22px;
+        height: 22px;
+        box-shadow: 0 0 8px rgba(108, 99, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    input[type="range"].slider-input::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent-purple);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 8px rgba(108, 99, 255, 0.6);
+    }
+
+    /* ── 6. Result cards — color-coded left border ── */
+    .results-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-bottom: 20px;
+    }
+
+    .result-card {
+        padding: 13px 13px;
+        border-left: 3px solid var(--card-accent, var(--accent-purple));
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    /* Remove the top-line pseudo since we use left border instead */
+    .result-card::before {
+        display: none;
+    }
+
+    .result-label {
+        font-size: 0.62rem;
+        margin-bottom: 6px;
+    }
+
+    .result-value {
+        font-size: 1.5rem;
+    }
+
+    .result-unit {
+        font-size: 0.7rem;
+    }
+
+    /* Hero KaV/L card */
+    .result-card.hero {
+        border-left: none;
+        border-radius: var(--radius-md);
+        padding: 20px 16px;
+    }
+
+    .result-card.hero::before {
+        display: block;
+    }
+
+    .result-card.hero .result-value {
+        font-size: 2.6rem;
+    }
+
+    .result-card.hero .result-label {
+        font-size: 0.75rem;
+    }
+
+    /* ── 7. Section headers ── */
+    .section-header {
+        margin-top: 22px;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-tertiary);
+        white-space: nowrap;
+    }
+
+    /* ── 8. Charts ── */
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .chart-card {
+        padding: 14px;
+    }
+
+    .chart-canvas {
+        height: 185px;
+    }
+
+    /* ── 9. Formula ref ── */
+    .formula-ref {
+        margin-top: 16px;
+        padding: 13px 13px 13px 17px;
+    }
+
+    .formula-title {
+        font-size: 0.78rem;
+    }
+
+    .step-text {
+        font-size: 0.67rem;
+    }
+
+    /* ── 10. Footer ── */
+    .app-footer {
+        padding: 16px 0;
+        margin-top: 20px;
+    }
+}
+
+/* ── Small mobile: 480px ── */
+@media (max-width: 480px) {
+    .app-container {
+        padding: 0 12px;
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .app-header {
+        margin-left: -12px;
+        margin-right: -12px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .result-value {
+        font-size: 1.35rem;
+    }
+
+    .chart-canvas {
+        height: 170px;
+    }
+
+    .input-field {
+        width: 70px;
+        font-size: 15px;
+        padding: 6px 6px;
+    }
+
+    .tab-btn {
+        font-size: 0.6rem;
+        padding: 7px 8px 5px;
+    }
+}
+
+/* ============================================================
+   8. SCROLLBAR STYLING
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================================
+   9. SECTION DIVIDERS
+   ============================================================ */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    margin-top: 8px;
+}
+
+.section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+}
+
+/* ============================================================
+   10. FORMULA REFERENCE PANEL  
+   ============================================================ */
+
+.formula-ref {
+    margin-top: 24px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle left accent bar */
+.formula-ref::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent-purple), var(--accent-cyan));
+    border-radius: 0 2px 2px 0;
+}
+
+/* --- Formula Header --- */
+
+.formula-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: margin-bottom 0.3s ease, padding-bottom 0.3s ease,
+                border-bottom-color 0.3s ease;
+}
+
+.formula-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(0, 217, 255, 0.1));
+    border: 1px solid rgba(108, 99, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-purple);
+    flex-shrink: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.formula-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+}
+
+.formula-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* --- Formula Steps --- */
+
+.formula-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formula-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: background var(--transition-fast);
+}
+
+.formula-step:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.formula-step.highlight {
+    background: linear-gradient(90deg, rgba(108, 99, 255, 0.1), rgba(0, 217, 255, 0.05));
+    border: 1px solid rgba(108, 99, 255, 0.15);
+    margin-top: 4px;
+}
+
+.step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(108, 99, 255, 0.12);
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+}
+
+.formula-step.highlight .step-num {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    color: white;
+    font-size: 0.7rem;
+}
+
+.step-text {
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
+.step-text .var {
+    color: var(--accent-purple);
+    font-weight: 600;
+}
+
+.step-text .num {
+    color: var(--accent-gold);
+}
+
+.step-text .kw {
+    color: var(--accent-rose);
+    font-weight: 600;
+}
+
+.step-text .step-comment {
+    color: var(--text-tertiary);
+    font-size: 0.65rem;
+    font-style: italic;
+}
+
+/* --- Verification Badge --- */
+
+.formula-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 0.65rem;
+    color: var(--accent-green);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.formula-badge .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    animation: pulse 2s infinite;
+}
+
+/* --- Formula Collapse Toggle --- */
+
+.formula-toggle {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 5px 9px;
+    font-size: 0.75rem;
+    line-height: 1;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.formula-toggle:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-input);
+}
+
+.formula-toggle-icon {
+    display: inline-block;
+    transition: transform 0.25s ease;
+    font-style: normal;
+    line-height: 1;
+}
+
+.formula-ref.collapsed .formula-toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.formula-body {
+    overflow: hidden;
+    max-height: 700px;
+    opacity: 1;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease;
+}
+
+.formula-ref.collapsed .formula-body {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Tighten header spacing when panel is collapsed */
+.formula-ref.collapsed .formula-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom-color: transparent;
+}
+
+/* On mobile/tablet, show the toggle hint more prominently */
+@media (max-width: 1100px) {
+    .formula-toggle {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        border-color: var(--border-input);
+    }
+}
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+
+.app-footer {
+    padding: 24px 0;
+    margin-top: 32px;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+}
+
+.app-footer p {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    line-height: 1.7;
+}
+
+/* ============================================================
+   12. FOCUS-VISIBLE (keyboard navigation accessibility)
+   ============================================================ */
+
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.tab-btn:focus-visible {
+    outline-offset: 2px;
+}
+
+.input-field:focus-visible {
+    outline: none; /* uses custom box-shadow focus style */
+}
+
+/* ============================================================
+   13. ACTIVE / PRESS STATES (touch feedback)
+   ============================================================ */
+
+.tab-btn:active:not(.active) {
+    opacity: 0.75;
+    transform: scale(0.97);
+}
+
+.formula-toggle:active {
+    opacity: 0.7;
+    transform: scale(0.94);
+}
+
+.result-card:active {
+    transform: translateY(-1px) scale(0.995);
+}
+
+/* ============================================================
+   14. HOVER-NONE — disable hover effects on touch devices
+       so they don't get "stuck" after a tap
+   ============================================================ */
+
+@media (hover: none) {
+    .result-card:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: var(--border-subtle);
+    }
+
+    .card:hover {
+        border-color: var(--border-subtle);
+    }
+
+    .tab-btn:hover:not(.active) {
+        background: transparent;
+        color: var(--text-secondary);
+    }
+
+    .formula-step:hover {
+        background: transparent;
+    }
+}
+
+/* ============================================================
+   15. LANDSCAPE PHONE
+       Handles notch/dynamic-island safe-areas and optimises
+       the two-column layout for short/wide viewports.
+   ============================================================ */
+
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+
+    /* Handle notch safe-areas on the sides (iPhone X+ landscape) */
+    .app-container {
+        padding-left:  max(14px, calc(env(safe-area-inset-left,  0px) + 10px));
+        padding-right: max(14px, calc(env(safe-area-inset-right, 0px) + 10px));
+        padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .tab-bar {
+        padding-left:  max(32px, calc(env(safe-area-inset-left,  0px) + 20px));
+        padding-right: max(32px, calc(env(safe-area-inset-right, 0px) + 20px));
+    }
+
+    /* Two-column results on landscape phone */
+    .results-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    /* Side-by-side charts in landscape */
+    .charts-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .chart-canvas {
+        height: 150px;
+    }
+
+    .app-header {
+        padding: 6px 14px;
+        padding-top: calc(6px + env(safe-area-inset-top, 0px));
+    }
+}
