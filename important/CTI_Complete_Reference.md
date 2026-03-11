@@ -57,7 +57,7 @@ class MyCustomSiphon(PsychrometricsSiphon):
 
 ### Rule 3: File Locations
 ```
-cti_crack/
+cti-suite-final/
 ├── important/          ← READ-ONLY. Never create or edit files here.
 │   ├── CTI_Complete_Reference.md
 │   ├── Psychrometrics_Siphon.py
@@ -464,7 +464,7 @@ if ret == 0:
 ## 12. File Structure & Scripts
 
 ```
-cti_crack/
+cti-suite-final/
 ├── HANDOFF.md                              ← Project overview & formula documentation
 ├── cti_dashboard/                          ← ★ Standalone web dashboard (no binary at runtime)
 │   ├── index.html

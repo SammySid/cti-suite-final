@@ -196,7 +196,7 @@ cti_dashboard/
 ## Repository Layout
 
 ```
-cti_crack/
+cti-suite-final/
 ├── HANDOFF.md                              ← This file
 ├── cti_dashboard/                          ← ★ PORTABLE WEB DASHBOARD
 │   ├── index.html

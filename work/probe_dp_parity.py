@@ -8,7 +8,7 @@ Fix v2: poll_sync now checks DBT + WBT + Alt to avoid stale reads.
 """
 import sys, os, csv, math, random, time
 import ctypes
-sys.path.insert(0, r"f:\2026 latest\cti Toolkit\cti_crack\important")
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "important"))
 
 # ─── Python re-implementation of psychro-engine.js (post-C9 fix) ─────────────
 C9_WATER = 1.3914993 - math.log(1000)
@@ -150,7 +150,7 @@ try:
 except ImportError:
     print("[!] Could not import PsychrometricsSiphon"); sys.exit(1)
 
-EXE = r"f:\2026 latest\cti Toolkit\cti_crack\official\cti toolkit\CTIToolkit_Ghost_Engine.exe"
+EXE = os.path.join(os.path.dirname(__file__), "..", "official", "cti toolkit", "CTIToolkit_Ghost_Engine.exe")
 OUT_CSV = os.path.join(os.path.dirname(__file__), "dp_parity_probe.csv")
 
 class SiphonEx(PsychrometricsSiphon):

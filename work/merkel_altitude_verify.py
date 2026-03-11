@@ -14,7 +14,7 @@ Reports which hypothesis matches the CTI GUI, and shows full discrepancy
 table across all temperature ranges and altitudes.
 
 Usage:
-    cd "f:\\2026 latest\\cti Toolkit\\cti_crack"
+    cd "cti-suite-final"
     python work/merkel_altitude_verify.py
 """
 import sys, os, math

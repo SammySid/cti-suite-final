@@ -19,7 +19,7 @@ Method:
                   linear P-interpolation between 10m altitude levels
 
 Usage:
-    cd "f:\\2026 latest\\cti Toolkit\\cti_crack"
+    cd "cti-suite-final"
     python work/merkel_parity_comprehensive.py
 """
 import os, sys, ctypes, struct, time, math, array as arr_mod
@@ -33,7 +33,7 @@ except ImportError:
     P("pip install pywin32"); sys.exit(1)
 
 KERNEL32  = ctypes.windll.kernel32
-EXE_PATH  = r"f:\2026 latest\cti Toolkit\cti_crack\official\cti toolkit\CTIToolkit.exe"
+EXE_PATH  = os.path.join(os.path.dirname(__file__), "..", "official", "cti toolkit", "CTIToolkit.exe")
 ADDR_EP   = 0x004569CE
 FUNC_HSAT = 0x407723
 
