@@ -32,6 +32,10 @@ export function bindEvents(ui) {
         ui.exportData();
     });
     document.getElementById('tabThermal')?.addEventListener('click', () => ui.switchTab('thermal'));
+    document.getElementById('tabPrediction')?.addEventListener('click', () => {
+        ui.switchTab('prediction');
+        ui.calculatePrediction(); // initial calc
+    });
     document.getElementById('tabPsychro')?.addEventListener('click', () => ui.switchTab('psychro'));
     document.getElementById('tabFilter')?.addEventListener('click', () => ui.switchTab('filter'));
     document.getElementById('runFilterAction')?.addEventListener('click', () => {
@@ -51,6 +55,10 @@ export function bindEvents(ui) {
     });
     ['p-dbt', 'p-wbt', 'p-alt'].forEach((id) => {
         document.getElementById(id)?.addEventListener('input', ui.debounce(ui.calculatePsychrometrics, 150));
+    });
+
+    ['pred-wbt', 'pred-range', 'pred-lg', 'pred-c', 'pred-m'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('input', ui.debounce(ui.calculatePrediction, 100)); // extremely fast real-time feedback
     });
     document.getElementById('exportPDF')?.addEventListener('click', () => window.print());
     document.getElementById('resetDefaults')?.addEventListener('click', () => {

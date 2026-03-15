@@ -2,10 +2,14 @@ export function switchTab(ui, tabId) {
     ui.activeTab = tabId;
     const thermalTab = document.getElementById('tabThermal');
     const psychroTab = document.getElementById('tabPsychro');
+    const predictionTab = document.getElementById('tabPrediction');
     const filterTab = document.getElementById('tabFilter');
     const thermalPanel = document.getElementById('thermalTabPanel');
     const psychroPanel = document.getElementById('psychroTabPanel');
     const filterPanel = document.getElementById('filterTabPanel');
+    const predictionPanel = document.getElementById('predictionTabPanel');
+    const thermalSidebarInputs = document.getElementById('thermalSidebarInputs');
+    const thermalSidebarExport = document.getElementById('thermalSidebarExport');
 
     const setTabActive = (tabEl, active) => {
         if (!tabEl) return;
@@ -18,11 +22,17 @@ export function switchTab(ui, tabId) {
     };
 
     setTabActive(thermalTab, tabId === 'thermal');
+    setTabActive(predictionTab, tabId === 'prediction');
     setTabActive(psychroTab, tabId === 'psychro');
     setTabActive(filterTab, tabId === 'filter');
     thermalPanel?.classList.toggle('hidden', tabId !== 'thermal');
     psychroPanel?.classList.toggle('hidden', tabId !== 'psychro');
     filterPanel?.classList.toggle('hidden', tabId !== 'filter');
+    predictionPanel?.classList.toggle('hidden', tabId !== 'prediction');
+
+    // Sidebar specifically
+    thermalSidebarInputs?.classList.toggle('hidden', tabId !== 'thermal');
+    thermalSidebarExport?.classList.toggle('hidden', tabId !== 'thermal');
 
     if (tabId === 'psychro') {
         ui.calculatePsychrometrics();

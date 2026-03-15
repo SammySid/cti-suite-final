@@ -6,6 +6,7 @@ import { setSidebarOpen, initMobileNavigation } from './ui/mobile-nav.js';
 import { formatPsychroValue, calculatePsychrometrics } from './ui/psychro.js';
 import { updateFilterUiState, syncFilterSettingsToUi, runFilterTool } from './ui/filter.js';
 import { updateExportUiState, getDownloadFileName, downloadBlob, exportData } from './ui/export.js';
+import { calculatePrediction } from './ui/prediction.js';
 
 export const ui = {
     inputs: {
@@ -298,6 +299,7 @@ export const ui = {
     syncFilterSettingsToUi: () => syncFilterSettingsToUi(ui),
     formatPsychroValue,
     calculatePsychrometrics: () => calculatePsychrometrics(ui),
+    calculatePrediction: () => calculatePrediction(ui),
     runFilterTool: () => runFilterTool(ui),
     exportData: () => exportData(ui),
     setSidebarOpen: (open) => setSidebarOpen(ui, open),

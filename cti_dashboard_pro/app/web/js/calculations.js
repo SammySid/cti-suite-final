@@ -79,5 +79,62 @@ export const calculations = {
         }
 
         return bestCWT;
+    },
+
+    /**
+     * Solves for the predicted CWT (Performance Prediction Off-Design capability)
+     * Given WBT, Range, L/G, C, and m, find the CWT that balances Demand/Supply
+     */
+    solveOffDesignCWT: (wbt, range, lg, constC, constM) => {
+        // First get the physical tower's supply capability
+        const supplyKavl = calculations.calculateSupplyKaVL(lg, constC, constM);
+        if (isNaN(supplyKavl) || supplyKavl <= 0) {
+            return null;
+        }
+
+        // We will guess the Approach (CWT - WBT). Common range is 0.5 to 30 as a fallback.
+        // The relationship is invariant: HWT = CWT + Range 
+        // We want Demand KaV/L to exactly equal the Supply KaV/L
+        
+        let bestCwt = NaN;
+        let bestDiff = Infinity;
+        let matchedDemand = NaN;
+        
+        // Scan with a simple linear loop initially (we can use a bisect method if it's too slow but this is usually fast enough in JS)
+        // From 0.5 deg approach up to a max 30 deg approach
+        for (let approach = 0.5; approach <= 30.0; approach += 0.01) {
+            const guessCwt = wbt + approach;
+            const guessHwt = guessCwt + range;
+
+            try {
+                // To avoid breaking the engine, ensure valid temps
+                if (guessHwt > 80 || guessCwt < wbt) continue;
+
+                const demandKavl = calculations.calculateDemandKaVL(wbt, guessHwt, guessCwt, lg);
+                if (isNaN(demandKavl) || demandKavl <= 0) continue;
+
+                const diff = Math.abs(demandKavl - supplyKavl);
+                if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestCwt = guessCwt;
+                    matchedDemand = demandKavl;
+                }
+                
+                // Since demand kaV/L decreases as approach increases, once we cross it we can optionally stop, 
+                // but diff scanning over the entire window guarantees we find the absolute minimum safely without getting stuck on local anomalies
+            } catch (e) {
+                continue;
+            }
+        }
+
+        if (isNaN(bestCwt) || bestDiff > 0.5) return null; // Unsolvable
+
+        return {
+            cwt: bestCwt,
+            approach: bestCwt - wbt,
+            hwt: bestCwt + range,
+            demandKavl: matchedDemand,
+            supplyKavl: supplyKavl
+        };
     }
 };
