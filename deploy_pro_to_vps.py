@@ -136,9 +136,18 @@ def deploy():
 
         sftp.close()
 
+        print("\n🔄  Restarting the backend application service on the VPS...")
+        stdin, stdout, stderr = client.exec_command(f"echo '{password}' | sudo -S systemctl restart cti-dashboard")
+        exit_status = stdout.channel.recv_exit_status()
+        if exit_status == 0:
+            print("    ✅ Service restarted successfully!")
+        else:
+            err_msg = stderr.read().decode().strip()
+            print(f"    ⚠️ Could not automatically restart service: {err_msg}")
+
         print(f"\n{'='*60}")
         if errors == 0:
-            print(f"✅  Deployment complete!")
+            print("✅  Deployment complete!")
         else:
             print(f"⚠️   Deployment finished with {errors} error(s).")
         print(f"    Uploaded : {uploaded} file(s)")
