@@ -34,14 +34,14 @@ sudo apt update
 sudo apt install python3 python3-pip -y
 
 # Install exactly what the backend needs
-pip3 install pandas xlsxwriter openpyxl python-dateutil
+pip3 install pandas xlsxwriter openpyxl python-dateutil fastapi uvicorn pydantic python-multipart
 ```
 
 ---
 
 ## 3. Run the Backend as a Background Service (Systemd)
 
-You want your Python backend (`app/backend/dashboard_server.py`) to run continuously, restart on crashes, and launch automatically if the VPS reboots.
+You want your Python FastAPI backend (`app/backend/main.py`) to run continuously, restart on crashes, and launch automatically if the VPS reboots.
 
 **Create a new service file:**
 ```bash
@@ -58,7 +58,7 @@ After=network.target
 User=root
 WorkingDirectory=/path/to/your/cti_dashboard_pro/app/backend
 # Point to your python3 executable
-ExecStart=/usr/bin/python3 dashboard_server.py
+ExecStart=/usr/bin/python3 main.py
 Restart=always
 
 [Install]

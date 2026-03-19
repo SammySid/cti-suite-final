@@ -6,7 +6,7 @@ While the standard `cti_dashboard` operates entirely in the browser using static
 
 ### Key Differences & Additions
 
-- **Python Backend Engine**: Employs an active `dashboard_server.py` daemon running on port 8000. It dynamically intercepts `/api/export-excel` and `/api/filter-excel` routes.
+- **Secure Python Backend Engine**: Employs an active high-performance `main.py` (FastAPI) daemon running on port 8000. It dynamically intercepts `/api/calculate`, `/api/export-excel` and `/api/filter-excel` routes, completely hiding your Trade Secrets and proprietary math from the frontend web browser.
 - **Excel Filter System**: Capable of processing massive multiphase `.xlsx` datasets. The Python backend extracts sensor columns, interpolates rows by matching timestamps, styles the output using XlsxWriter, and serves the file securely via JSON payloads and Multipart.
 - **Performance Report Generator**: Intercepts calculations processed asynchronously via your web workers (the 320 probe Tchebeycheff algorithms) and builds automated professional thermal reports directly to `.xlsx`.
 
@@ -14,7 +14,7 @@ While the standard `cti_dashboard` operates entirely in the browser using static
 
 Unlike the static version, this requires Python (>= 3.9) and several Data Science libraries natively installed:
 ```bash
-pip install pandas openpyxl xlsxwriter python-dateutil
+pip install pandas openpyxl xlsxwriter python-dateutil fastapi uvicorn pydantic python-multipart
 ```
 
 ### Starting the Environment

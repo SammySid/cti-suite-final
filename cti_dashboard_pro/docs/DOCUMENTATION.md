@@ -6,7 +6,7 @@ This project is a local-first engineering dashboard for cooling tower thermal an
 
 The dashboard is built as:
 - A static frontend (`app/web/index.html` + modular JS/CSS)
-- A lightweight Python HTTP server (`app/backend/dashboard_server.py`)
+- A high-performance Python FastAPI server (`app/backend/main.py`)
 - Backend services for Excel report generation and Excel time-window filtering
 
 Primary outcomes supported:
@@ -78,14 +78,15 @@ Primary outcomes supported:
 - `app/web/js/ui/export.js` - export state + download flow
 
 ### Calculation layer
-- `app/web/js/calculations.js` - high-level calc API used by UI/worker
-- `app/web/js/merkel-engine.js` - Merkel KaV/L engine
-- `app/web/js/psychro-engine.js` - psychrometric engine
-- `app/web/js/worker.js` - off-main-thread curve generation
+- `app/web/js/worker.js` - async fetch wrapper offloading curve generation arrays to the API
 - `app/web/js/charts.js` - Chart.js rendering wrapper
 
-## Backend
-- `app/backend/dashboard_server.py` provides static file serving + API routes:
+## Backend (IP Secured)
+- `app/backend/main.py` provides static file serving + FastAPI routes:
+  - `POST /api/calculate/kavl`
+  - `POST /api/calculate/psychro`
+  - `POST /api/calculate/predict`
+  - `POST /api/calculate/curves`
   - `POST /api/export-excel`
   - `POST /api/filter-excel`
   - `POST /api/filter-excel-local`
@@ -173,14 +174,16 @@ Key runtime files:
 - `app/web/js/ui.js` - central orchestrator
 - `app/web/js/ui/` - modular UI code
 - `app/web/js/worker.js` - background curve calculations
-- `app/backend/dashboard_server.py` - local web server + APIs
+- `app/backend/main.py` - FastAPI server + backend endpoints
+- `app/backend/core/merkel_engine.py` - IP Secured Merkel integration
+- `app/backend/core/psychro_engine.py` - IP Secured Psychrometrics
 - `app/backend/excel_gen.py` - report generation
 - `app/backend/excel_filter_service.py` - filter service
 - `start_dashboard.bat` - one-click launch
 - `app/scripts/test_backend.mjs` - backend/engine smoke test
 
 Supporting folders:
-- `app/web/data/` - optional binary tables used by psychrometric/merkel engines
+- `app/backend/core/data/` - binary tables serving python engines
 - `app/reports/` - generated outputs and stored exports
 - `docs/` - documentation and references
 
@@ -197,13 +200,17 @@ Supporting folders:
 3. Keep terminal open while using dashboard. Press `Ctrl+C` for a graceful shutdown.
 
 ## Manual run
-From `Caclulator/`:
-- `python app/backend/dashboard_server.py`
+From `cti_dashboard_pro/`:
+- `python app/backend/main.py`
 
 Then open:
 - `http://localhost:8000`
 
 Python dependencies (auto-installed by launcher):
+- `fastapi`
+- `uvicorn`
+- `pydantic`
+- `python-multipart`
 - `xlsxwriter`
 - `pandas`
 - `openpyxl`

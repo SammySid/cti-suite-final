@@ -206,6 +206,10 @@ cti-suite-final/
 │   ├── js/merkel-engine.js
 │   ├── js/chart-utils.js
 │   └── README.md
+├── cti_dashboard_pro/                      ← 🔒 SECURE ENTERPRISE DASHBOARD
+│   ├── app/backend/main.py                 ← FastAPI Python backend
+│   ├── app/backend/core/                   ← Secret Python Ports of Math Engines
+│   └── app/backend/core/data/              ← Hidden probed binary tables
 ├── important/                              ← 🔒 READ-ONLY production files
 │   ├── CTI_Complete_Reference.md           ← Win32 siphon API reference
 │   ├── Psychrometrics_Siphon.py            ← GUI automation siphon (~250 pts/sec)
