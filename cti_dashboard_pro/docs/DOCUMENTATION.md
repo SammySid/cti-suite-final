@@ -1,5 +1,7 @@
 # SS Cooling Tower Dashboard - Complete Documentation
 
+> **Last updated:** 2026-03-20
+
 ## 1) Project Overview
 
 This project is a local-first engineering dashboard for cooling tower thermal analysis, psychrometric calculations, and Excel data processing/export.
@@ -53,10 +55,11 @@ Primary outcomes supported:
   - dynamic date-based report layout sheets (e.g., `12-11-2023`, `13-11-2023`) or a `Consolidated` sheet if only one date is present.
 
 ### Responsive UX
-- Mobile drawer for controls
-- Tablet/desktop adaptive layout
-- Sticky mobile header and touch-friendly actions
-- Print-focused formatting for engineering reports
+- **Thermal Analysis tab:** operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) displayed **inline** in main content on mobile/tablet (`lg:hidden`); sidebar on desktop (`hidden lg:block` managed by tabs.js). Mobile export buttons also rendered inline in the same panel.
+- **Other tabs** (Psychrometric, Performance Prediction, Excel Filter): inputs always inline — no sidebar involvement.
+- Hamburger menu (mobile): shows only project metadata (client, engineer, date) and export actions — no keyboard inputs, eliminating the focus/close race condition.
+- Tablet/desktop adaptive layout with sticky mobile header and touch-friendly actions.
+- Print-focused formatting for engineering reports.
 
 ---
 
@@ -70,12 +73,13 @@ Primary outcomes supported:
 
 ### Frontend module map
 - `app/web/js/ui/constants.js` - shared field lists and curve-affecting input map
-- `app/web/js/ui/bind-events.js` - event wiring and startup UI flow
-- `app/web/js/ui/mobile-nav.js` - drawer open/close logic
-- `app/web/js/ui/tabs.js` - tab activation and panel switching
+- `app/web/js/ui/bind-events.js` - event wiring for sidebar inputs, mobile mirror inputs (via `data-mobile-mirror`), export buttons (desktop + mobile), tabs, filter, psychro, prediction, print mode
+- `app/web/js/ui/mobile-nav.js` - drawer open/close logic; `stopPropagation` on sidebar to prevent backdrop swallowing input taps
+- `app/web/js/ui/tabs.js` - tab activation, panel switching, sidebar/inline panel visibility toggling
 - `app/web/js/ui/psychro.js` - psychrometric rendering/validation
 - `app/web/js/ui/filter.js` - filter tool state + request flow
-- `app/web/js/ui/export.js` - export state + download flow
+- `app/web/js/ui/export.js` - export state + download flow; syncs status text to both desktop (`#exportStatus`) and mobile (`#exportStatusMobile`) elements
+- `app/web/js/ui/prediction.js` - CWT prediction engine wrapper
 
 ### Calculation layer
 - `app/web/js/worker.js` - async fetch wrapper offloading curve generation arrays to the API
@@ -244,9 +248,14 @@ This verifies:
 - top-level calculations pipeline consistency
 
 ## Manual QA checklist
-- Thermal/Psychro/Filter tab switching
-- Mobile drawer open/close and control accessibility
-- Export button disable/enable state transition
+- Thermal/Psychro/Filter/Prediction tab switching
+- **Mobile:** operational inputs visible inline under result cards (no hamburger required)
+- **Mobile:** hamburger opens → shows only project scope + export → tapping inputs/buttons does NOT close menu
+- **Desktop:** sidebar shows full inputs + export sidebar on thermal tab; hides on other tabs
+- Mobile Export Excel and Report PDF buttons function identically to sidebar buttons
+- Export status text updates in both sidebar and mobile inline panel
+- Export button disable/enable state transition (both desktop and mobile buttons)
+- Changing an input on mobile updates sidebar canonical value and vice-versa (bidirectional sync)
 - Psychrometric validation (`WBT > DBT`)
 - Filter validation errors and successful download flow
 - Print preview/report layout readability

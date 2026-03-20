@@ -24,10 +24,14 @@ If you are running this locally:
 If you are running this on a VPS:
 - The app is containerised with Docker. See [`VPS_HOSTING_GUIDE.md`](../VPS_HOSTING_GUIDE.md) for the full architecture and deployment guide.
 - **Live URL:** `https://ct.ftp.sh` (Oracle UK VPS — protected by Authelia SSO)
-- **Auto-deploy:** Push to `main` on GitHub → VPS auto-syncs within 5 minutes via `auto_sync.sh`
+- **Live URL:** `https://ct.ftp.sh` (Oracle UK VPS — protected by Authelia SSO)
+- **Auto-deploy:** Push to `master` on GitHub → VPS auto-syncs within 5 minutes via `auto_sync.sh`
 
 ---
 
 ### Engineering & Logic Guide
 For a deep dive into the "First Principles" of cooling towers, Merkel's Method, and the physics behind the dashboard, see:
 - [COOLING_TOWER_FUNDAMENTALS.md](docs/COOLING_TOWER_FUNDAMENTALS.md)
+
+### Mobile UX Architecture
+The **Thermal Analysis** tab moves all operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) **inline** in the main panel on mobile/tablet devices (`lg:hidden`). On desktop the inputs remain in the left sidebar. The hamburger menu on mobile shows only project metadata (client name, engineer, date) and export buttons — no keyboard inputs — eliminating the historical bug where tapping a sidebar input closed the menu. This design is consistent with the other tabs (Psychrometric, Performance Prediction, Excel Filter) which have always used inline inputs.

@@ -2,6 +2,8 @@
 
 The `cti_dashboard_pro` is fully containerised and deployed on the **UK Oracle VPS** (`ct.ftp.sh`) via Docker. This guide covers the live architecture, how to deploy updates, and the automated sync system.
 
+> **Last updated:** 2026-03-20
+
 ---
 
 ## 🌐 Live Production URL
@@ -42,17 +44,21 @@ All four containers (`trading-nginx`, `authelia`, `cpr-options-dashboard`, `cti-
 
 ### Method 1: Push to GitHub (Recommended — Fully Automatic ✅)
 
-Just **push your changes** to the `main` branch of `github.com/SammySid/cti-suite-final`.
+Just **push your changes** to the `master` branch of `github.com/SammySid/cti-suite-final`.
 
 A **systemd timer** on the VPS runs `/home/ubuntu/cooling-tower_pro/auto_sync.sh` every **5 minutes**. It:
 
-1. Sparse-clones only `cti_dashboard_pro/` from GitHub
+1. Sparse-clones only `cti_dashboard_pro/` from GitHub (`master` branch)
 2. Compares the remote SHA to the last deployed SHA (`.last_deployed_sha`)
-3. If changed — rsyncs new code into `/home/ubuntu/cooling-tower_pro/`
+3. If changed — rsyncs new code into `/home/ubuntu/cooling-tower_pro/` (excluding `__pycache__`, `.pyc`, `Dockerfile`, `docker-compose.yml`, `requirements.txt`, `auto_sync.sh`, `.last_deployed_sha`)
 4. Rebuilds the Docker image and restarts the container
 5. Logs everything to `/var/log/cti_autosync.log`
 
-> **The old `deploy_pro_to_vps.py` script is no longer needed.**
+To deploy immediately without waiting for the 5-minute timer, run `deploy_pro_to_vps.py`:
+```bash
+python deploy_pro_to_vps.py
+```
+This commits + pushes to GitHub, then SSH's into the VPS and triggers `auto_sync.sh` on-demand.
 
 **Check auto-sync status on VPS:**
 ```bash
@@ -134,13 +140,37 @@ docker exec trading-nginx nginx -t
 
 ---
 
-## ⚠️ Known Issue — Fixed 2026-03-19
+## ⚠️ Known Issues — Fixed
 
+### Fixed 2026-03-19
 **Symptom:** `ct.ftp.sh` returning "Unable to connect" / `trading-nginx` stuck in crash loop.
 
-**Root Cause:** A stray `}` brace in `/home/ubuntu/nginx-trading.conf` (left from the Docker migration session) caused nginx to fail its config syntax check on startup, putting the container into a crash-restart loop.
+**Root Cause:** A stray `}` brace in `/home/ubuntu/nginx-trading.conf` caused nginx to fail its config syntax check on startup, putting the container into a crash-restart loop.
 
-**Fix Applied:** Rewrote `nginx-trading.conf` with corrected syntax and modernised `http2 on` directive (replacing deprecated `listen 443 ssl http2`).
+**Fix Applied:** Rewrote `nginx-trading.conf` with corrected syntax and modernised `http2 on` directive.
+
+---
+
+### Fixed 2026-03-20 — Mobile Hamburger Menu / Input Focus Bug
+**Symptom:** On mobile (`ct.ftp.sh`), opening the hamburger menu in the Thermal Analysis tab and tapping any input field caused the menu to immediately close before the input could receive focus.
+
+**Root Cause:** The backdrop `<div>` covered the full viewport. Touch events on sidebar inputs bubbled up through the DOM to the backdrop's `click` listener, firing `closeIfOpen()` before focus landed on the input.
+
+**Fix Applied — 3-layer approach:**
+1. **Inputs moved inline (primary fix):** All operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) are now rendered inline within the `thermalTabPanel` on mobile (`lg:hidden`). On desktop they remain in the sidebar. This matches the UX pattern of all other tabs and eliminates the bug entirely for operational use.
+2. **`data-mobile-mirror` sync:** Mobile inputs use `data-mobile-mirror="<id>"` attributes (no duplicate IDs). `bind-events.js` wires bidirectional sync — changes to either set propagate to `ui.inputs` and keep both in sync.
+3. **`stopPropagation` safety net:** `mobile-nav.js` adds `sidebar.addEventListener('click', e => e.stopPropagation())` so any remaining sidebar taps cannot bubble to the backdrop.
+
+**Files changed:** `index.html`, `js/ui/bind-events.js`, `js/ui/mobile-nav.js`, `js/ui/tabs.js`, `js/ui/export.js`
+
+---
+
+### Fixed 2026-03-20 — auto_sync.sh branch mismatch
+**Symptom:** VPS auto-sync failing every 5 minutes with `fatal: couldn't find remote ref main`.
+
+**Root Cause:** `auto_sync.sh` had `BRANCH="main"` but the GitHub repo uses `master` as the default branch.
+
+**Fix Applied:** Updated `BRANCH="master"` in `auto_sync.sh` on the VPS and in `deploy_pro_to_vps.py` locally. Also hardened rsync excludes to prevent `__pycache__`, `auto_sync.sh`, and `.last_deployed_sha` from being deleted during sync.
 
 ---
 

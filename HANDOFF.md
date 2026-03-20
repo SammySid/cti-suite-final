@@ -1,5 +1,5 @@
 # CTI Toolkit — Reverse Engineering Handbook
-**Last Updated:** 2026-03-19  
+**Last Updated:** 2026-03-20  
 **Status:** Psychrometrics ✅ DP 100% · HR 100% · H **COMPLETE** (JS is mathematically correct) | Merkel KaV/L ✅ 100% CROSS-PLATFORM | Pro Dashboard ✅ Live at ct.ftp.sh
 
 ---
@@ -242,7 +242,7 @@ cti-suite-final/
 Oracle UK VPS (130.162.191.58)
 /home/ubuntu/
 ├── cooling-tower_pro/          ← CTI Dashboard Pro (synced from cti_dashboard_pro/)
-│   ├── auto_sync.sh            ← GitHub auto-sync (runs every 5 min via systemd timer)
+│   ├── auto_sync.sh            ← GitHub auto-sync (master branch, runs every 5 min via systemd timer)
 │   ├── .last_deployed_sha      ← Tracks last deployed GitHub commit
 │   ├── Dockerfile
 │   ├── docker-compose.yml
@@ -250,6 +250,12 @@ Oracle UK VPS (130.162.191.58)
 ├── nginx-trading.conf          ← Nginx proxy config (all 4 domains)
 └── nginx-compose.yml           ← Docker Compose for nginx + authelia + cpr-options
 ```
+
+**Deploy workflow:**
+- Push to `master` on GitHub
+- VPS timer fires `auto_sync.sh` within 5 min (or trigger immediately via `python deploy_pro_to_vps.py`)
+- rsync syncs app code only (excludes `__pycache__`, `Dockerfile`, `auto_sync.sh`, `.last_deployed_sha`)
+- Docker image rebuilt and container restarted
 
 ---
 
@@ -283,4 +289,4 @@ Oracle UK VPS (130.162.191.58)
 
 ---
 
-*Psychrometrics: 2026-02-18 · Merkel (sea-level): 2026-02-19 · Merkel (altitude, 100%): 2026-02-27 · Psychrometrics DP 100% all altitudes: 2026-02-27 · HR 100%: 2026-02-28 · H 81.56% (1°C 2D probed f table): 2026-02-28*
+*Psychrometrics: 2026-02-18 · Merkel (sea-level): 2026-02-19 · Merkel (altitude, 100%): 2026-02-27 · Psychrometrics DP 100% all altitudes: 2026-02-27 · HR 100%: 2026-02-28 · H 81.56% (1°C 2D probed f table): 2026-02-28 · Mobile input inline panel + hamburger fix: 2026-03-20 · auto_sync.sh branch fix (main→master): 2026-03-20*
