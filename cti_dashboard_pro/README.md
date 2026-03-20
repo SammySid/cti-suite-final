@@ -22,7 +22,9 @@ If you are running this locally:
 - Simply run `start_dashboard.bat`. It will verify dependencies and immediately launch the unified UI in your browser.
 
 If you are running this on a VPS:
-- Refer to the `VPS_HOSTING_GUIDE.md` located in the root directory for instructions on deploying Python Systemd proxies.
+- The app is containerised with Docker. See [`VPS_HOSTING_GUIDE.md`](../VPS_HOSTING_GUIDE.md) for the full architecture and deployment guide.
+- **Live URL:** `https://ct.ftp.sh` (Oracle UK VPS — protected by Authelia SSO)
+- **Auto-deploy:** Push to `main` on GitHub → VPS auto-syncs within 5 minutes via `auto_sync.sh`
 
 ---
 

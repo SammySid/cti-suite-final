@@ -1,7 +1,9 @@
 export function updateExportUiState(ui, statusMessage = '') {
-    const exportBtn = document.getElementById('exportExcel');
-    const label = document.getElementById('exportExcelLabel');
-    const statusEl = document.getElementById('exportStatus');
+    const exportBtn       = document.getElementById('exportExcel');
+    const exportBtnMobile = document.getElementById('exportExcelMobile');
+    const label           = document.getElementById('exportExcelLabel');
+    const statusEl        = document.getElementById('exportStatus');
+    const statusMobile    = document.getElementById('exportStatusMobile');
     if (!exportBtn) return;
 
     const isDisabled = !ui.workerReady || ui.isCalculating || ui.isExporting;
@@ -9,23 +11,26 @@ export function updateExportUiState(ui, statusMessage = '') {
     exportBtn.classList.toggle('opacity-50', isDisabled);
     exportBtn.classList.toggle('cursor-not-allowed', isDisabled);
 
+    if (exportBtnMobile) {
+        exportBtnMobile.disabled = isDisabled;
+        exportBtnMobile.classList.toggle('opacity-50', isDisabled);
+        exportBtnMobile.classList.toggle('cursor-not-allowed', isDisabled);
+    }
+
     if (label) {
         label.innerText = ui.isExporting ? 'Generating Excel...' : 'Export Data & Curves';
     }
 
-    if (statusEl) {
-        if (statusMessage) {
-            statusEl.innerText = statusMessage;
-        } else if (ui.isExporting) {
-            statusEl.innerText = 'Generating report...';
-        } else if (ui.areCurvesReady()) {
-            statusEl.innerText = 'Curves ready. Export is enabled.';
-        } else if (!ui.workerReady) {
-            statusEl.innerText = 'Initializing calculation engine...';
-        } else {
-            statusEl.innerText = 'Calculating curves...';
-        }
+    let resolvedMessage = statusMessage;
+    if (!resolvedMessage) {
+        if (ui.isExporting)           resolvedMessage = 'Generating report...';
+        else if (ui.areCurvesReady()) resolvedMessage = 'Curves ready. Export is enabled.';
+        else if (!ui.workerReady)     resolvedMessage = 'Initializing calculation engine...';
+        else                          resolvedMessage = 'Calculating curves...';
     }
+
+    if (statusEl)     statusEl.innerText     = resolvedMessage;
+    if (statusMobile) statusMobile.innerText = resolvedMessage;
 }
 
 export function getDownloadFileName(contentDispositionHeader) {

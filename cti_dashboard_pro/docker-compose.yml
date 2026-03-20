@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  cti-dashboard-pro:
+    build: .
+    container_name: cti-dashboard-pro
+    restart: unless-stopped
+    # We do NOT expose to the host machine. This protects it from Oracle Cloud Firewall.
+    # Nginx will securely talk directly to the container over the backend network.
+    expose:
+      - "8000"
+    environment:
+      - ENABLE_LOCAL_WRITE=0
+    networks:
+      - options-network
+
+networks:
+  # Mount to the existing Nginx docker network
+  options-network:
+    external: true

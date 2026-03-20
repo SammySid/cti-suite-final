@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div id="thermalSidebarInputs" class="space-y-8">
+            <!-- Thermal sidebar inputs: hidden on mobile (inputs moved inline), visible on desktop when on thermal tab -->\n            <div id="thermalSidebarInputs" class="hidden space-y-8">
             <!-- Operational Parameters -->
             <div>
                 <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 mb-4">Heat Load Specs
@@ -198,6 +198,8 @@
                 class="w-full bg-slate-800/10 hover:bg-slate-800/20 text-slate-500 py-2 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all border border-white/5">
                 Reset All Parameters
             </button>
+            <!-- Mobile hint: inputs are in the main panel -->
+            <p class="lg:hidden text-[9px] text-slate-600 text-center font-semibold uppercase tracking-widest pt-1">Operational inputs are in the main panel ↓</p>
         </div>
     </aside>
 
@@ -260,7 +262,122 @@
                 </button>
             </div>
 
-            <div id="thermalTabPanel" class="space-y-8">
+            <div id="thermalTabPanel" class="space-y-6 lg:space-y-8">
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 MOBILE-ONLY INLINE PARAMETER PANEL
+                 Visible on mobile/tablet only (lg:hidden). On desktop, these
+                 inputs live in the sidebar. Provides same IDs, same JS wiring.
+                 Eliminates the hamburger-menu-closes-on-input-tap bug entirely.
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <div id="thermalMobileInputPanel" class="lg:hidden glass-card rounded-2xl border border-white/10 overflow-hidden">
+                <!-- Panel Header -->
+                <div class="px-5 py-4 border-b border-white/5 flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></div>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Operational Parameters</h3>
+                </div>
+
+                <div class="p-5 space-y-5">
+                    <!-- Heat Load Specs -->
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-3">Heat Load Specs</p>
+                        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                            <div class="group">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400 transition-colors">L/G Ratio</label>
+                                <input data-mobile-mirror="lgRatio" type="number" step="0.1" value="1.5"
+                                    class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                            </div>
+                            <div class="group">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400 transition-colors">Flow (m³/h)</label>
+                                <input data-mobile-mirror="designWaterFlow" type="number" step="10" value="1000"
+                                    class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                            </div>
+                            <div class="group">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400 transition-colors">WBT (°C)</label>
+                                <input data-mobile-mirror="designWBT" type="number" step="0.1" value="27"
+                                    class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                            </div>
+                            <div class="group">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400 transition-colors">CWT (°C)</label>
+                                <input data-mobile-mirror="designCWT" type="number" step="0.1" value="32"
+                                    class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                            </div>
+                            <div class="group">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400 transition-colors">HWT (°C)</label>
+                                <input data-mobile-mirror="designHWT" type="number" step="0.1" value="37"
+                                    class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-white/5"></div>
+
+                    <!-- Transfer Constants + Chart Scaling -->
+                    <div class="grid grid-cols-2 gap-5 sm:grid-cols-4">
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-3 col-span-2">Transfer Constants</p>
+                            <div class="space-y-3">
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block underline decoration-cyan-500/30">Const C</label>
+                                    <input data-mobile-mirror="constantC" type="number" step="0.1" value="1.2"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block underline decoration-amber-500/30">Const m</label>
+                                    <input data-mobile-mirror="constantM" type="number" step="0.1" value="0.6"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-3">Chart Scaling</p>
+                            <div class="space-y-3">
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400">X-Min (WBT)</label>
+                                    <input data-mobile-mirror="axXMin" type="number" step="1" value="18"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400">X-Max (WBT)</label>
+                                    <input data-mobile-mirror="axXMax" type="number" step="1" value="30"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400">Y-Min (CWT)</label>
+                                    <input data-mobile-mirror="axYMin" type="number" step="1" value="25"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase px-1 mb-1.5 block group-focus-within:text-cyan-400">Y-Max (CWT)</label>
+                                    <input data-mobile-mirror="axYMax" type="number" step="1" value="38"
+                                        class="w-full input-premium rounded-lg px-3 py-2.5 text-sm font-mono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-white/5"></div>
+
+                    <!-- Mobile Export Actions -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="exportExcelMobile"
+                            class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all border border-emerald-500/20 flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Export Excel
+                        </button>
+                        <button id="exportPDFMobile"
+                            class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all border border-rose-500/20 flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                            </svg>
+                            Report PDF
+                        </button>
+                    </div>
+                    <p id="exportStatusMobile" class="text-[10px] text-slate-500 font-semibold tracking-wide text-center">Initializing engine...</p>
+                </div>
+            </div>
             <!-- Hero Dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Result Cards -->

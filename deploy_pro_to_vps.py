@@ -1,167 +1,135 @@
 """
 deploy_pro_to_vps.py
 ====================
-Deploys ONLY the cti_dashboard_pro/ sub-folder to the VPS via SFTP.
+UPDATED 2026-03-19 — GitHub Auto-Sync Architecture
 
-Credentials are read from deploy_config.json (which is git-ignored —
-never commit that file). By default, this will append '_pro' to your 
-remote_path from the config so it doesn't overwrite your static dashboard.
+The VPS now pulls directly from GitHub (SammySid/cti-suite-final) every 5 minutes
+via a systemd timer running /home/ubuntu/cooling-tower_pro/auto_sync.sh.
+
+This script: 
+  1. Pushes any uncommitted local changes to GitHub
+  2. SSH's into the VPS and immediately triggers the auto_sync.sh
+     (so you don't have to wait up to 5 minutes for the timer to fire)
 
 Usage:
     python deploy_pro_to_vps.py
 
 Requirements:
     pip install paramiko
+    git must be installed and repo must be configured with push access
 """
 
 import os
-import json
+import subprocess
 import paramiko
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy_config.json")
+VPS_HOST     = "130.162.191.58"
+VPS_USER     = "ubuntu"
+VPS_PASSWORD = "Stallion316##"
+VPS_SYNC_CMD = "/home/ubuntu/cooling-tower_pro/auto_sync.sh"
+BRANCH       = "main"
 
-# Only this sub-folder is uploaded to the VPS
-DASHBOARD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cti_dashboard_pro")
+REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# Files / dirs inside cti_dashboard_pro that should NOT be uploaded
-EXCLUDE_DIRS  = {".git", "__pycache__", "docs", "reports"}   # docs = internal reference only
-EXCLUDE_FILES = {
-    ".DS_Store", "Thumbs.db", "desktop.ini",
-    "*.log", "*.tmp", "*.xlsx"
-}
-EXCLUDE_EXTS  = {".log", ".tmp", ".pyc", ".pyo"}
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def load_config():
-    if not os.path.exists(CONFIG_FILE):
-        raise FileNotFoundError(
-            f"deploy_config.json not found at {CONFIG_FILE}\n"
-            "Create it with: {{\"host\":\"…\",\"user\":\"…\",\"password\":\"…\",\"remote_path\":\"…\"}}"
+def run_local(cmd: list[str], cwd: str = REPO_ROOT) -> str:
+    """Run a local shell command and return stdout. Raises on failure."""
+    result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Command failed: {' '.join(cmd)}\n"
+            f"stderr: {result.stderr.strip()}"
         )
-    with open(CONFIG_FILE) as f:
-        cfg = json.load(f)
-    for key in ("host", "user", "password", "remote_path"):
-        if key not in cfg:
-            raise KeyError(f"deploy_config.json is missing key: {key!r}")
-    return cfg
+    return result.stdout.strip()
 
 
-def should_exclude(name: str, is_dir: bool) -> bool:
-    if is_dir:
-        return name in EXCLUDE_DIRS
-    if name in EXCLUDE_FILES:
-        return True
-    _, ext = os.path.splitext(name)
-    return ext.lower() in EXCLUDE_EXTS
+def git_push() -> bool:
+    """
+    Stage, commit (if anything changed), and push to GitHub.
+    Returns True if a push was made, False if already up to date.
+    """
+    print("\n📦  Checking git status...")
+    status = run_local(["git", "status", "--porcelain"])
+
+    if status:
+        print(f"    {len(status.splitlines())} changed file(s) — committing...")
+        run_local(["git", "add", "-A"])
+        run_local(["git", "commit", "-m", "chore: auto-deploy commit from deploy_pro_to_vps.py"])
+        print("    ✅ Committed.")
+    else:
+        print("    Working tree clean — nothing to commit.")
+
+    # Check if we're ahead of remote
+    ahead = run_local(["git", "rev-list", f"origin/{BRANCH}..HEAD", "--count"])
+    if ahead == "0":
+        print("    Already up to date with remote — no push needed.")
+        return False
+
+    print(f"    ⬆️  Pushing {ahead} commit(s) to GitHub ({BRANCH})...")
+    run_local(["git", "push", "origin", BRANCH])
+    sha = run_local(["git", "rev-parse", "--short", "HEAD"])
+    print(f"    ✅ Pushed. Latest SHA: {sha}")
+    return True
 
 
-def sftp_mkdir_p(sftp, remote_dir: str):
-    """Recursively create remote directory if it doesn't exist."""
-    parts = remote_dir.replace("\\", "/").split("/")
-    path = ""
-    for part in parts:
-        if not part:
-            path = "/"
-            continue
-        path = f"{path}/{part}" if path != "/" else f"/{part}"
-        try:
-            sftp.stat(path)
-        except FileNotFoundError:
-            sftp.mkdir(path)
+def trigger_vps_sync():
+    """SSH into VPS and run the auto_sync.sh immediately."""
+    print(f"\n🔌  Connecting to VPS ({VPS_HOST})...")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(VPS_HOST, username=VPS_USER, password=VPS_PASSWORD, timeout=30)
+
+    print(f"🚀  Triggering sync on VPS: {VPS_SYNC_CMD}\n")
+    print("─" * 60)
+
+    # Stream output line-by-line
+    stdin, stdout, stderr = client.exec_command(
+        VPS_SYNC_CMD, get_pty=True, timeout=300
+    )
+    for line in stdout:
+        print(f"  VPS | {line.rstrip()}")
+
+    exit_status = stdout.channel.recv_exit_status()
+    client.close()
+
+    print("─" * 60)
+    if exit_status == 0:
+        print("\n✅  VPS sync complete!")
+    else:
+        err = stderr.read().decode().strip()
+        print(f"\n⚠️  Sync exited with code {exit_status}. stderr: {err}")
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def deploy():
-    cfg = load_config()
-    host        = cfg["host"]
-    user        = cfg["user"]
-    password    = cfg["password"]
-    # Append _pro to avoid overwriting the static dashboard unless modified by the user
-    remote_root = cfg["remote_path"].rstrip("/") + "_pro"
+    print("\n" + "=" * 60)
+    print("  CTI Dashboard PRO — Deploy to VPS")
+    print("  Mode: GitHub auto-sync (push → trigger)")
+    print("=" * 60)
 
-    if not os.path.isdir(DASHBOARD_DIR):
-        raise FileNotFoundError(f"Pro Dashboard source not found: {DASHBOARD_DIR}")
-
-    print(f"\n🚀  CTI Dashboard PRO — deploying to {user}@{host}:{remote_root}")
-    print(f"    Source : {DASHBOARD_DIR}")
-    print(f"    Skipping dirs : {EXCLUDE_DIRS}")
-    print(f"    Skipping exts : {EXCLUDE_EXTS}\n")
-
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-    uploaded = 0
-    skipped  = 0
-    errors   = 0
-
+    # Step 1: Push to GitHub
     try:
-        client.connect(host, username=user, password=password, timeout=30)
-        sftp = client.open_sftp()
+        git_push()
+    except RuntimeError as e:
+        print(f"\n⚠️  Git error (continuing anyway): {e}")
 
-        # Ensure remote root exists
-        sftp_mkdir_p(sftp, remote_root)
-
-        for root, dirs, files in os.walk(DASHBOARD_DIR):
-            # Filter out excluded dirs in-place so os.walk won't descend into them
-            dirs[:] = [d for d in dirs if not should_exclude(d, is_dir=True)]
-
-            rel = os.path.relpath(root, DASHBOARD_DIR)
-            remote_dir = remote_root if rel == "." else f"{remote_root}/{rel.replace(chr(92), '/')}"
-
-            # Create remote sub-directory
-            if rel != ".":
-                sftp_mkdir_p(sftp, remote_dir)
-
-            for filename in files:
-                if should_exclude(filename, is_dir=False):
-                    skipped += 1
-                    continue
-
-                local_file  = os.path.join(root, filename)
-                remote_file = f"{remote_dir}/{filename}"
-
-                try:
-                    size_kb = os.path.getsize(local_file) / 1024
-                    display = f"{rel}/{filename}" if rel != "." else filename
-                    print(f"  📤  {display:<55}  {size_kb:>7.1f} KB")
-                    sftp.put(local_file, remote_file)
-                    uploaded += 1
-                except Exception as e:
-                    print(f"  ❌  FAILED {filename}: {e}")
-                    errors += 1
-
-        sftp.close()
-
-        print("\n🔄  Restarting the backend application service on the VPS...")
-        stdin, stdout, stderr = client.exec_command(f"echo '{password}' | sudo -S systemctl restart cti-dashboard")
-        exit_status = stdout.channel.recv_exit_status()
-        if exit_status == 0:
-            print("    ✅ Service restarted successfully!")
-        else:
-            err_msg = stderr.read().decode().strip()
-            print(f"    ⚠️ Could not automatically restart service: {err_msg}")
-
-        print(f"\n{'='*60}")
-        if errors == 0:
-            print("✅  Deployment complete!")
-        else:
-            print(f"⚠️   Deployment finished with {errors} error(s).")
-        print(f"    Uploaded : {uploaded} file(s)")
-        print(f"    Skipped  : {skipped} file(s)")
-        print(f"    Host     : http://{host}")
-        print(f"{'='*60}\n")
-        print("💡 NOTE: You must establish the Python backend environment on the VPS to serve the PRO dashboard.")
-        print("Please read VPS_HOSTING_GUIDE.md for setting up Nginx and Systemd.")
-
+    # Step 2: Trigger immediate sync on VPS
+    try:
+        trigger_vps_sync()
     except Exception as e:
-        print(f"\n❌  Deployment FAILED: {e}\n")
-        raise
-    finally:
-        client.close()
+        print(f"\n❌  VPS connection failed: {e}")
+        print("\n💡  The VPS timer will still auto-sync within 5 minutes.")
+        print(f"    Monitor: ssh {VPS_USER}@{VPS_HOST} 'tail -f /var/log/cti_autosync.log'")
+        return
+
+    print(f"\n🌐  Live at: https://ct.ftp.sh")
+    print(f"    Logs:    ssh {VPS_USER}@{VPS_HOST} 'docker logs cti-dashboard-pro --tail 30'")
+    print("=" * 60 + "\n")
 
 
 if __name__ == "__main__":

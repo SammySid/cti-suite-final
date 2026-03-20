@@ -30,9 +30,13 @@ export function switchTab(ui, tabId) {
     filterPanel?.classList.toggle('hidden', tabId !== 'filter');
     predictionPanel?.classList.toggle('hidden', tabId !== 'prediction');
 
-    // Sidebar specifically
+    // Sidebar controls (desktop): show only on thermal tab
     thermalSidebarInputs?.classList.toggle('hidden', tabId !== 'thermal');
     thermalSidebarExport?.classList.toggle('hidden', tabId !== 'thermal');
+
+    // Mobile inline input panel: show only on thermal tab (lg:hidden keeps it off desktop)
+    const thermalMobileInputPanel = document.getElementById('thermalMobileInputPanel');
+    thermalMobileInputPanel?.classList.toggle('hidden', tabId !== 'thermal');
 
     if (tabId === 'psychro') {
         ui.calculatePsychrometrics();

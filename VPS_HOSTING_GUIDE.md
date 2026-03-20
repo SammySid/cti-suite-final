@@ -1,122 +1,174 @@
-# VPS Hosting Guide: Full-Stack Dashboard (PRO)
+# VPS Hosting Guide: CTI Dashboard Pro
 
-Since the new "Pro" dashboard features a Python backend for Excel report generation and bulk data filtering, hosting it on your VPS requires slightly different steps than simply serving static files.
-
-By following this guide, you will deploy the dashboard to your VPS, set up the Python backend to run as a 24/7 background service, and configure Nginx (or your chosen web server) as a reverse proxy.
+The `cti_dashboard_pro` is fully containerised and deployed on the **UK Oracle VPS** (`ct.ftp.sh`) via Docker. This guide covers the live architecture, how to deploy updates, and the automated sync system.
 
 ---
 
-## 1. Deploy the Files
+## 🌐 Live Production URL
 
-Run your new deployment script locally to push the `cti_dashboard_pro` folder securely to your VPS:
+**`https://ct.ftp.sh`** — Protected by Authelia SSO (login required)
 
-```bash
-python deploy_pro_to_vps.py
-```
-
-*Note: The script automatically appends `_pro` to your `remote_path` in `deploy_config.json` to prevent overwriting your old, static dashboard.*
-
----
-
-## 2. Install VPS Dependencies
-
-SSH into your VPS. Once logged in, navigate to the pro dashboard directory (e.g., `/var/www/html/cti_dashboard_pro`):
-
-```bash
-cd /path/to/your/cti_dashboard_pro
-```
-
-You need to ensure Python 3 is installed, and then install the required libraries for the backend (Pandas, XlsxWriter, OpenPyxl):
-
-```bash
-# Update package list (Ubuntu/Debian)
-sudo apt update
-sudo apt install python3 python3-pip -y
-
-# Install exactly what the backend needs
-pip3 install pandas xlsxwriter openpyxl python-dateutil fastapi uvicorn pydantic python-multipart
-```
+| Detail | Value |
+|--------|-------|
+| **VPS** | Oracle Cloud UK — `130.162.191.58` |
+| **SSH** | `ssh ubuntu@130.162.191.58` (password: on file) |
+| **Container** | `cti-dashboard-pro` |
+| **Network** | `options-network` (shared Docker bridge) |
+| **Proxy** | `trading-nginx` container → ports 80 / 443 |
+| **Auth** | `authelia` container (SSO guard) |
+| **SSL** | Let's Encrypt — `/etc/letsencrypt/live/ct.ftp.sh/` |
 
 ---
 
-## 3. Run the Backend as a Background Service (Systemd)
+## 🏗️ Architecture
 
-You want your Python FastAPI backend (`app/backend/main.py`) to run continuously, restart on crashes, and launch automatically if the VPS reboots.
-
-**Create a new service file:**
-```bash
-sudo nano /etc/systemd/system/cti-dashboard.service
+```
+Internet (HTTPS 443)
+        ↓
+trading-nginx  (Docker container — nginx:alpine)
+        ├─ ct.ftp.sh  → authelia:9091 (SSO gate)
+        │                    ↓ (on auth OK)
+        │              cti-dashboard-pro:8000  (FastAPI)
+        ├─ shiva.ftp.sh  → cpr-options-dashboard:5000
+        ├─ nol.ftp.sh    → cpr-options-dashboard:5000
+        └─ options.ftp.sh→ cpr-options-dashboard:5000
 ```
 
-**Paste the following configuration (adjust the paths to match your exact VPS paths):**
-```ini
-[Unit]
-Description=CTI Dashboard Pro Backend Service
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/path/to/your/cti_dashboard_pro/app/backend
-# Point to your python3 executable
-ExecStart=/usr/bin/python3 main.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-**Enable and start the service:**
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable cti-dashboard
-sudo systemctl start cti-dashboard
-sudo systemctl status cti-dashboard
-```
-*If everything is correct, the status will say "active (running)".* 
-*To check logs later: `sudo journalctl -u cti-dashboard -f`*
+All four containers (`trading-nginx`, `authelia`, `cpr-options-dashboard`, `cti-dashboard-pro`) share the `options-network` Docker bridge.
 
 ---
 
-## 4. Configure Your Web Server (Reverse Proxy)
+## 🔄 Deploying Updates — Two Methods
 
-The Python backend is now running locally on port **8000** of your VPS. You need to tell your web server (like Nginx) to forward public internet traffic to this port.
+### Method 1: Push to GitHub (Recommended — Fully Automatic ✅)
 
-**If you are using Nginx**, edit your site configuration:
+Just **push your changes** to the `main` branch of `github.com/SammySid/cti-suite-final`.
+
+A **systemd timer** on the VPS runs `/home/ubuntu/cooling-tower_pro/auto_sync.sh` every **5 minutes**. It:
+
+1. Sparse-clones only `cti_dashboard_pro/` from GitHub
+2. Compares the remote SHA to the last deployed SHA (`.last_deployed_sha`)
+3. If changed — rsyncs new code into `/home/ubuntu/cooling-tower_pro/`
+4. Rebuilds the Docker image and restarts the container
+5. Logs everything to `/var/log/cti_autosync.log`
+
+> **The old `deploy_pro_to_vps.py` script is no longer needed.**
+
+**Check auto-sync status on VPS:**
 ```bash
-sudo nano /etc/nginx/sites-available/default
+sudo systemctl status cti-autosync.timer
+sudo tail -f /var/log/cti_autosync.log
 ```
 
-Modify the config to proxy requests to port 8000. It should look something like this:
+---
 
-```nginx
-server {
-    listen 80;
-    server_name your_domain_or_ip.com;
+### Method 2: Manual Deploy (Emergency / Immediate)
 
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        
-        # Important for large file uploads (Excel Filtering tool)
-        client_max_body_size 100M; 
-    }
-}
+SSH in and rebuild manually:
+
+```bash
+ssh ubuntu@130.162.191.58
+
+# Navigate to app directory
+cd /home/ubuntu/cooling-tower_pro
+
+# Pull latest from GitHub manually
+/home/ubuntu/cooling-tower_pro/auto_sync.sh
+
+# Or force a full rebuild without pulling
+docker compose down
+docker compose up -d --build
+
+# Check status
+docker ps
+docker logs cti-dashboard-pro --tail 50 -f
 ```
 
-**Test and restart Nginx:**
+---
+
+## 📁 VPS Directory Layout
+
+```
+/home/ubuntu/
+├── cooling-tower_pro/          ← CTI Dashboard Pro app root
+│   ├── app/
+│   │   ├── backend/            ← FastAPI Python backend (main.py)
+│   │   └── web/                ← Static frontend assets
+│   ├── Dockerfile
+│   ├── docker-compose.yml      ← Connects to options-network (external)
+│   ├── requirements.txt
+│   ├── auto_sync.sh            ← GitHub auto-sync script (runs every 5 min)
+│   └── .last_deployed_sha      ← Tracks last deployed GitHub commit SHA
+├── nginx-trading.conf          ← Nginx config (mounted into trading-nginx)
+├── nginx-compose.yml           ← Docker Compose for nginx + authelia + cpr
+├── certs/                      ← Self-signed certs (trading-nginx fallback)
+└── authelia/config/            ← Authelia SSO configuration
+```
+
+---
+
+## 🔧 Key Management Commands
+
 ```bash
-sudo nginx -t
-sudo systemctl reload nginx
+# Check all running containers
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Restart nginx (if config changed)
+cd /home/ubuntu && docker compose -f nginx-compose.yml restart nginx
+
+# View nginx logs
+docker logs trading-nginx --tail 50 -f
+
+# View CTI dashboard logs
+docker logs cti-dashboard-pro --tail 50 -f
+
+# View Authelia logs
+docker logs authelia --tail 50 -f
+
+# Reload nginx config without downtime
+docker exec trading-nginx nginx -s reload
+
+# Test nginx config syntax
+docker exec trading-nginx nginx -t
+```
+
+---
+
+## ⚠️ Known Issue — Fixed 2026-03-19
+
+**Symptom:** `ct.ftp.sh` returning "Unable to connect" / `trading-nginx` stuck in crash loop.
+
+**Root Cause:** A stray `}` brace in `/home/ubuntu/nginx-trading.conf` (left from the Docker migration session) caused nginx to fail its config syntax check on startup, putting the container into a crash-restart loop.
+
+**Fix Applied:** Rewrote `nginx-trading.conf` with corrected syntax and modernised `http2 on` directive (replacing deprecated `listen 443 ssl http2`).
+
+---
+
+## 💾 Automated Backups
+
+A daily backup to Google Drive runs automatically:
+
+| Detail | Value |
+|--------|-------|
+| **Service** | `backup-trading-vps.timer` (systemd) |
+| **Schedule** | Daily at ~07:30 IST |
+| **Destination** | `gdrive-vps:Vps Backup/backup images/uk-trading-vps/` |
+| **Retention** | 5 most recent archives kept |
+| **Log** | `/var/log/backup-trading-vps.log` |
+
+```bash
+# Check backup timer
+sudo systemctl status backup-trading-vps.timer
+
+# View backup log
+sudo tail -50 /var/log/backup-trading-vps.log
 ```
 
 ---
 
 ## 5. Verify the Installation
 
-Navigate to your VPS IP or domain in a web browser. 
-1. The dashboard UI should load successfully.
-2. Go to the "Excel Data Filter" tab and upload some files to verify the backend Python engine handles multipart uploads smoothly.
-3. Test the "Generate Report" PDF/Excel pipelines to confirm that Pandas and XlsxWriter are functioning flawlessly.
+Navigate to `https://ct.ftp.sh` in a browser:
+1. You should be redirected to the **Authelia login page**
+2. After logging in, the CTI Dashboard Pro should load fully
+3. Test the Excel Data Filter tab and Performance Prediction tab to confirm the FastAPI backend is healthy

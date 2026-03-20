@@ -1,6 +1,6 @@
 # CTI Toolkit — Reverse Engineering Handbook
-**Last Updated:** 2026-02-28  
-**Status:** Psychrometrics ✅ DP 100% · HR 100% · H **COMPLETE** (JS is mathematically correct) | Merkel KaV/L ✅ 100% CROSS-PLATFORM
+**Last Updated:** 2026-03-19  
+**Status:** Psychrometrics ✅ DP 100% · HR 100% · H **COMPLETE** (JS is mathematically correct) | Merkel KaV/L ✅ 100% CROSS-PLATFORM | Pro Dashboard ✅ Live at ct.ftp.sh
 
 ---
 
@@ -198,7 +198,8 @@ cti_dashboard/
 ```
 cti-suite-final/
 ├── HANDOFF.md                              ← This file
-├── cti_dashboard/                          ← ★ PORTABLE WEB DASHBOARD
+├── VPS_HOSTING_GUIDE.md                    ← Live deployment guide (Docker + auto-sync)
+├── cti_dashboard/                          ← ★ PORTABLE WEB DASHBOARD (static, zero-dep)
 │   ├── index.html
 │   ├── css/styles.css
 │   ├── js/app.js
@@ -206,10 +207,13 @@ cti-suite-final/
 │   ├── js/merkel-engine.js
 │   ├── js/chart-utils.js
 │   └── README.md
-├── cti_dashboard_pro/                      ← 🔒 SECURE ENTERPRISE DASHBOARD
+├── cti_dashboard_pro/                      ← 🔒 ENTERPRISE PRO DASHBOARD (FastAPI + Docker)
 │   ├── app/backend/main.py                 ← FastAPI Python backend
 │   ├── app/backend/core/                   ← Secret Python Ports of Math Engines
-│   └── app/backend/core/data/              ← Hidden probed binary tables
+│   ├── app/backend/core/data/              ← Hidden probed binary tables
+│   ├── Dockerfile                          ← Container build recipe
+│   ├── docker-compose.yml                  ← Connects to options-network (external)
+│   └── requirements.txt
 ├── important/                              ← 🔒 READ-ONLY production files
 │   ├── CTI_Complete_Reference.md           ← Win32 siphon API reference
 │   ├── Psychrometrics_Siphon.py            ← GUI automation siphon (~250 pts/sec)
@@ -230,6 +234,21 @@ cti-suite-final/
 │   └── cti toolkit/                        ← CTI Toolkit binary (source of truth)
 └── tools/
     └── w64devkit/                           ← Development toolchain
+```
+
+### VPS Deployment (Live Production)
+
+```
+Oracle UK VPS (130.162.191.58)
+/home/ubuntu/
+├── cooling-tower_pro/          ← CTI Dashboard Pro (synced from cti_dashboard_pro/)
+│   ├── auto_sync.sh            ← GitHub auto-sync (runs every 5 min via systemd timer)
+│   ├── .last_deployed_sha      ← Tracks last deployed GitHub commit
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── app/
+├── nginx-trading.conf          ← Nginx proxy config (all 4 domains)
+└── nginx-compose.yml           ← Docker Compose for nginx + authelia + cpr-options
 ```
 
 ---
