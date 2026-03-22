@@ -214,6 +214,9 @@ cti-suite-final/
 │   ├── Dockerfile                          ← Container build recipe
 │   ├── docker-compose.yml                  ← Connects to options-network (external)
 │   └── requirements.txt
+
+**⚠️ Python Backend Initialization Gotcha:**
+Inside the `cti_dashboard_pro` Python backend, the Math Engines (`psychro_engine.py` and `merkel_engine.py`) rely on binary lookup tables uploaded into module-level globals during application startup. To prevent Python's `sys.modules` from inadvertently creating two isolated instances of an engine (e.g. `psychro_engine` vs `core.psychro_engine`), **you must strictly use relative imports** inside `core/` (i.e. `from .psychro_engine import init_psychro_engine` inside `calculations.py`). Failure to do so will result in the lookup tables remaining empty during API execution, degrading accuracy to fallback mathematical approximations.
 ├── important/                              ← 🔒 READ-ONLY production files
 │   ├── CTI_Complete_Reference.md           ← Win32 siphon API reference
 │   ├── Psychrometrics_Siphon.py            ← GUI automation siphon (~250 pts/sec)
