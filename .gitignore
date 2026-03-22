@@ -45,3 +45,4 @@ cti_dashboard_pro/app/backend/reports/
 cti_dashboard_pro/app/scripts/reports/
 *_Report_*.xlsx
 Master_Filtered_*.xlsx
+.vscode/

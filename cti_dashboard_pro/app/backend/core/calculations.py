@@ -1,6 +1,6 @@
 import math
-from psychro_engine import psychrometrics, init_psychro_engine
-from merkel_engine import merkel_kavl, init_merkel_engine
+from .psychro_engine import psychrometrics, init_psychro_engine
+from .merkel_engine import merkel_kavl, init_merkel_engine
 
 def init(psychro_lib_path="data/psychro_f_alt.bin", merkel_lib_path="data/merkel_poly.bin"):
     init_psychro_engine(psychro_lib_path)
