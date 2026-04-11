@@ -92,6 +92,14 @@ export function bindEvents(ui) {
         ui.filterSettings.endTime = e.target.value;
         ui.saveFilterSettings();
     });
+    document.getElementById('filterProcessAll')?.addEventListener('change', (e) => {
+        ui.filterSettings.processAll = e.target.checked;
+        ui.saveFilterSettings();
+        ui.bindFilterProcessAllToggle && ui.bindFilterProcessAllToggle();
+    });
+    // Init toggle state on load
+    ui.bindFilterProcessAllToggle();
+
 
     // ── Psychrometric calculator ──────────────────────────────────────────────
     ['p-dbt', 'p-wbt', 'p-alt'].forEach((id) => {

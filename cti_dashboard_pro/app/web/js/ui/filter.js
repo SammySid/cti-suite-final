@@ -15,15 +15,45 @@ export function updateFilterUiState(ui, message = '') {
     if (panelStatus) panelStatus.innerText = resolvedMessage;
 }
 
+function _applyProcessAllState(isAll) {
+    const startInput = document.getElementById('filterStartTime');
+    const endInput = document.getElementById('filterEndTime');
+    const timeGrid = startInput?.closest('.grid');
+    if (startInput) {
+        startInput.disabled = isAll;
+        startInput.style.opacity = isAll ? '0.35' : '';
+    }
+    if (endInput) {
+        endInput.disabled = isAll;
+        endInput.style.opacity = isAll ? '0.35' : '';
+    }
+    if (timeGrid) {
+        timeGrid.style.pointerEvents = isAll ? 'none' : '';
+    }
+}
+
+export function bindFilterProcessAllToggle() {
+    const chk = document.getElementById('filterProcessAll');
+    if (chk) {
+        chk.addEventListener('change', () => _applyProcessAllState(chk.checked));
+    }
+}
+
 export function syncFilterSettingsToUi(ui) {
     const pathInput = document.getElementById('filterSourcePath');
     const destPathInput = document.getElementById('filterDestPath');
     const startInput = document.getElementById('filterStartTime');
     const endInput = document.getElementById('filterEndTime');
+    const processAllChk = document.getElementById('filterProcessAll');
+
     if (pathInput) pathInput.value = ui.filterSettings.sourcePath || '';
     if (destPathInput) destPathInput.value = ui.filterSettings.destPath || '';
     if (startInput) startInput.value = ui.filterSettings.startTime || '16:00';
     if (endInput) endInput.value = ui.filterSettings.endTime || '17:00';
+    if (processAllChk) {
+        processAllChk.checked = ui.filterSettings.processAll || false;
+        _applyProcessAllState(processAllChk.checked);
+    }
 }
 
 export async function runFilterTool(ui) {
@@ -35,18 +65,21 @@ export async function runFilterTool(ui) {
     const destPathInput = document.getElementById('filterDestPath');
     const folderInput = document.getElementById('filterExcelFolder');
     const filesInput = document.getElementById('filterExcelFiles');
+    const processAllChk = document.getElementById('filterProcessAll');
 
-    const startTime = startInput?.value;
-    const endTime = endInput?.value;
+    const processAll = processAllChk?.checked || false;
+    const startTime = processAll ? '' : (startInput?.value || '');
+    const endTime = processAll ? '' : (endInput?.value || '');
     const sourcePath = sourcePathInput?.value?.trim() || '';
     const destPath = destPathInput?.value?.trim() || '';
     const folderFiles = folderInput?.files ? Array.from(folderInput.files) : [];
     const manualFiles = filesInput?.files ? Array.from(filesInput.files) : [];
     const files = folderFiles.length > 0 ? folderFiles : manualFiles;
-    const excelFiles = files.filter((file) => file.name.toLowerCase().endsWith('.xlsx'));
+    const SUPPORTED_EXT = ['.xlsx', '.xls'];
+    const excelFiles = files.filter((file) => SUPPORTED_EXT.some(ext => file.name.toLowerCase().endsWith(ext)));
 
-    if (!startTime || !endTime) {
-        ui.updateFilterUiState('Please choose both start and end time.');
+    if (!processAll && (!startTime || !endTime)) {
+        ui.updateFilterUiState('Please choose both start and end time, or enable "Process All".');
         return;
     }
     if (!sourcePath && excelFiles.length === 0) {
@@ -58,7 +91,8 @@ export async function runFilterTool(ui) {
         sourcePath,
         destPath,
         startTime,
-        endTime
+        endTime,
+        processAll
     };
     ui.saveFilterSettings();
 
@@ -93,7 +127,7 @@ export async function runFilterTool(ui) {
             if (errorText) {
                 try {
                     const errorJson = JSON.parse(errorText);
-                    message = errorJson.error || message;
+                    message = errorJson.detail || errorJson.error || message;
                 } catch (parseError) {
                     message = errorText;
                 }

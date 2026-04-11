@@ -4,7 +4,7 @@ import { bindEvents } from './ui/bind-events.js';
 import { switchTab } from './ui/tabs.js';
 import { setSidebarOpen, initMobileNavigation } from './ui/mobile-nav.js';
 import { formatPsychroValue, calculatePsychrometrics } from './ui/psychro.js';
-import { updateFilterUiState, syncFilterSettingsToUi, runFilterTool } from './ui/filter.js';
+import { updateFilterUiState, syncFilterSettingsToUi, runFilterTool, bindFilterProcessAllToggle } from './ui/filter.js';
 import { updateExportUiState, getDownloadFileName, downloadBlob, exportData } from './ui/export.js';
 import { calculatePrediction } from './ui/prediction.js';
 
@@ -29,7 +29,8 @@ export const ui = {
     filterSettings: {
         sourcePath: '',
         startTime: '16:00',
-        endTime: '17:00'
+        endTime: '17:00',
+        processAll: false
     },
     workerReady: false,
     enginesReady: false,
@@ -302,6 +303,7 @@ export const ui = {
     calculatePsychrometrics: () => calculatePsychrometrics(ui),
     calculatePrediction: () => calculatePrediction(ui),
     runFilterTool: () => runFilterTool(ui),
+    bindFilterProcessAllToggle: () => bindFilterProcessAllToggle(),
     exportData: () => exportData(ui),
     setSidebarOpen: (open) => setSidebarOpen(ui, open),
     initMobileNavigation: () => initMobileNavigation(ui)

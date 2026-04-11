@@ -92,8 +92,8 @@ class ExcelExportRequest(BaseModel):
     curves: dict
 
 class LocalFilterRequest(BaseModel):
-    startTime: str
-    endTime: str
+    startTime: Optional[str] = ""
+    endTime: Optional[str] = ""
     sourcePath: str
     destPath: Optional[str] = ""
 
@@ -186,13 +186,14 @@ async def export_excel(payload: dict):
 # Filter Excel
 @app.post("/api/filter-excel")
 async def filter_excel(
-    startTime: str = Form(...),
-    endTime: str = Form(...),
+    startTime: Optional[str] = Form(default=""),
+    endTime: Optional[str] = Form(default=""),
     files: List[UploadFile] = File(...)
 ):
-    valid_files = [f for f in files if f.filename.lower().endswith('.xlsx')]
+    SUPPORTED_EXT = ('.xlsx', '.xls')
+    valid_files = [f for f in files if f.filename.lower().endswith(SUPPORTED_EXT)]
     if not valid_files:
-        raise HTTPException(status_code=400, detail="Please upload valid .xlsx files.")
+        raise HTTPException(status_code=400, detail="Please upload valid .xlsx or .xls files.")
 
     file_items = []
     for f in valid_files:
@@ -216,8 +217,8 @@ async def filter_excel_local(req: LocalFilterRequest):
     if os.environ.get("ENABLE_LOCAL_WRITE", "0") != "1":
         raise HTTPException(status_code=403, detail="Local file writing is disabled for security reasons on this server.")
 
-    if not req.startTime or not req.endTime or not req.sourcePath:
-        raise HTTPException(status_code=400, detail="startTime, endTime and sourcePath are required.")
+    if not req.sourcePath:
+        raise HTTPException(status_code=400, detail="sourcePath is required.")
 
     try:
         download_name, bg_bytes = generate_filtered_workbook_from_directory(req.sourcePath, req.startTime, req.endTime)

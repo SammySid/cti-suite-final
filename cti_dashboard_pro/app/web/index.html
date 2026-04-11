@@ -647,16 +647,25 @@
                         </div>
                     </div>
 
+                    <!-- Process All toggle -->
+                    <div class="flex items-center gap-3 py-1">
+                        <input id="filterProcessAll" type="checkbox"
+                            class="w-4 h-4 rounded accent-cyan-400 cursor-pointer" />
+                        <label for="filterProcessAll" class="text-[11px] font-bold text-slate-300 uppercase tracking-widest cursor-pointer select-none">
+                            Process All Rows <span class="text-slate-500 normal-case font-normal">(ignore time filter — include every row)</span>
+                        </label>
+                    </div>
+
                     <div>
                         <label for="filterExcelFolder" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Source Folder (bulk scan)</label>
-                        <input id="filterExcelFolder" type="file" accept=".xlsx" webkitdirectory directory multiple
+                        <input id="filterExcelFolder" type="file" accept=".xlsx,.xls" webkitdirectory directory multiple
                             class="w-full text-sm text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-cyan-500/20 file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-widest file:text-cyan-300 hover:file:bg-cyan-500/30" />
-                        <p class="text-[10px] text-slate-500 mt-2">Select one folder and all nested `.xlsx` files will be scanned.</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Select one folder and all nested <code>.xlsx</code> / <code>.xls</code> files will be scanned.</p>
                     </div>
 
                     <div>
                         <label for="filterExcelFiles" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Fallback: Select Files Manually</label>
-                        <input id="filterExcelFiles" type="file" accept=".xlsx" multiple
+                        <input id="filterExcelFiles" type="file" accept=".xlsx,.xls" multiple
                             class="w-full text-sm text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-cyan-500/20 file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-widest file:text-cyan-300 hover:file:bg-cyan-500/30" />
                     </div>
 

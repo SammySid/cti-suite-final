@@ -5,4 +5,5 @@ python-multipart
 pandas
 xlsxwriter
 openpyxl
+xlrd
 python-dateutil
