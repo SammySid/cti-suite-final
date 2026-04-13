@@ -635,50 +635,56 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- START TIME custom 12h picker -->
+                        <!-- START TIME — custom 12h picker, universal across all OS/browser locales -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Start Time</label>
-                            <div id="filterStartTimeGroup" class="w-full input-premium rounded-lg px-3 py-2 flex items-center gap-1">
-                                <select id="filterStartHour" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer">
+                            <div id="filterStartTimeGroup" class="time-picker-field w-full rounded-lg px-3 py-2 flex items-center">
+                                <select id="filterStartHour" class="tp-hour">
                                     <option value="01">01</option><option value="02">02</option><option value="03">03</option>
                                     <option value="04" selected>04</option><option value="05">05</option><option value="06">06</option>
                                     <option value="07">07</option><option value="08">08</option><option value="09">09</option>
                                     <option value="10">10</option><option value="11">11</option><option value="12">12</option>
                                 </select>
                                 <span class="text-slate-500 font-mono select-none px-0.5">:</span>
-                                <select id="filterStartMin" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer">
+                                <select id="filterStartMin" class="tp-min">
                                     <option value="00" selected>00</option><option value="05">05</option><option value="10">10</option>
                                     <option value="15">15</option><option value="20">20</option><option value="25">25</option>
                                     <option value="30">30</option><option value="35">35</option><option value="40">40</option>
                                     <option value="45">45</option><option value="50">50</option><option value="55">55</option>
                                 </select>
-                                <select id="filterStartAmPm" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer ml-1">
+                                <select id="filterStartAmPm" class="tp-ampm">
                                     <option value="AM">AM</option>
                                     <option value="PM" selected>PM</option>
                                 </select>
+                                <svg class="ml-auto w-4 h-4 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
                             </div>
                         </div>
-                        <!-- END TIME custom 12h picker -->
+                        <!-- END TIME — custom 12h picker, universal across all OS/browser locales -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">End Time</label>
-                            <div id="filterEndTimeGroup" class="w-full input-premium rounded-lg px-3 py-2 flex items-center gap-1">
-                                <select id="filterEndHour" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer">
+                            <div id="filterEndTimeGroup" class="time-picker-field w-full rounded-lg px-3 py-2 flex items-center">
+                                <select id="filterEndHour" class="tp-hour">
                                     <option value="01">01</option><option value="02">02</option><option value="03">03</option>
                                     <option value="04">04</option><option value="05" selected>05</option><option value="06">06</option>
                                     <option value="07">07</option><option value="08">08</option><option value="09">09</option>
                                     <option value="10">10</option><option value="11">11</option><option value="12">12</option>
                                 </select>
                                 <span class="text-slate-500 font-mono select-none px-0.5">:</span>
-                                <select id="filterEndMin" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer">
+                                <select id="filterEndMin" class="tp-min">
                                     <option value="00" selected>00</option><option value="05">05</option><option value="10">10</option>
                                     <option value="15">15</option><option value="20">20</option><option value="25">25</option>
                                     <option value="30">30</option><option value="35">35</option><option value="40">40</option>
                                     <option value="45">45</option><option value="50">50</option><option value="55">55</option>
                                 </select>
-                                <select id="filterEndAmPm" class="bg-transparent text-sm font-mono text-slate-100 border-none outline-none cursor-pointer ml-1">
+                                <select id="filterEndAmPm" class="tp-ampm">
                                     <option value="AM">AM</option>
                                     <option value="PM" selected>PM</option>
                                 </select>
+                                <svg class="ml-auto w-4 h-4 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
                             </div>
                         </div>
                     </div>

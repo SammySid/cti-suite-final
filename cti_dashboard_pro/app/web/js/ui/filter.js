@@ -1,10 +1,13 @@
 // ── 12-hour custom time picker helpers ───────────────────────────────────────
 // Returns a string like "4:00 PM" from the three select elements.
+// Always 12h format — never influenced by OS/browser locale.
 function _getPickerTime(hourId, minId, ampmId) {
     const h  = document.getElementById(hourId)?.value  || '04';
     const m  = document.getElementById(minId)?.value   || '00';
     const ap = document.getElementById(ampmId)?.value  || 'PM';
-    return `${parseInt(h, 10)}:${m} ${ap}`;   // e.g. "4:00 PM"
+    const hNum = parseInt(h, 10) || 4;
+    const mPad = String(parseInt(m, 10) || 0).padStart(2, '0');
+    return `${hNum}:${mPad} ${ap}`;   // e.g. "4:00 PM"
 }
 
 // Parses any time string ("4:00 PM", "16:00", "4pm") and sets the selects.
