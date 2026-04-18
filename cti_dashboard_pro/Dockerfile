@@ -2,12 +2,15 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install system level dependencies for PDF rendering (pycairo/xhtml2pdf)
+# Install system level dependencies for PDF rendering (cairo, build tools)
 RUN apt-get update && apt-get install -y \
     gcc \
     libcairo2-dev \
+    libpango1.0-dev \
     pkg-config \
     python3-dev \
+    meson \
+    ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies required by python backend
