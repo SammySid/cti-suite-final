@@ -820,78 +820,94 @@
 
                 <div class="grid grid-cols-1 gap-6">
 
-                    <!-- STEP 1: Metadata -->
-                    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                            <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 1</span> REPORT METADATA
-                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
-                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
-                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
-                                    Cover page information for the PDF. Enter the report title, client name, cooling tower ID, testing date, report date, and all personnel present during the test.
+                    <!-- STEP 1: Metadata (collapsible) -->
+                    <div class="glass-card rounded-3xl border border-white/10 overflow-hidden">
+                        <button type="button" onclick="repToggle('step1-body','step1-chevron')"
+                            class="w-full flex items-center justify-between gap-3 px-6 sm:px-8 py-5 sm:py-6 text-left hover:bg-white/[0.02] transition-colors">
+                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2 pointer-events-none">
+                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 1</span> REPORT METADATA
+                                <span class="relative group inline-flex items-center cursor-help ml-0.5 pointer-events-auto" onclick="event.stopPropagation()">
+                                    <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                    <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                        Cover page information for the PDF. Enter the report title, client name, cooling tower ID, testing date, report date, and all personnel present during the test.
+                                    </span>
                                 </span>
-                            </span>
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Report Title</label>
-                                <input id="rep-title" type="text" value="CT PERFORMANCE EVALUATION REPORT" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                            </h4>
+                            <svg id="step1-chevron" class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="step1-body" class="px-6 sm:px-8 pb-6 sm:pb-8 space-y-5 border-t border-white/5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Report Title</label>
+                                    <input id="rep-title" type="text" value="CT PERFORMANCE EVALUATION REPORT" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Company / Client</label>
+                                    <input id="rep-client" type="text" value="DHARIWAL INFRASTRUCTURE LTD CHANDRAPUR" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Asset Identity (CT Number / Cell)</label>
+                                    <input id="rep-asset" type="text" value="CT - 02 , CELL 02" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Testing Date</label>
+                                    <input id="rep-test-date" type="text" value="27 March 2026" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Report Date</label>
+                                    <input id="rep-report-date" type="text" value="15 April 2026" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
+                                </div>
                             </div>
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Company / Client</label>
-                                <input id="rep-client" type="text" value="DHARIWAL INFRASTRUCTURE LTD CHANDRAPUR" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
-                            </div>
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Asset Identity (CT Number / Cell)</label>
-                                <input id="rep-asset" type="text" value="CT - 02 , CELL 02" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
-                            </div>
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Testing Date</label>
-                                <input id="rep-test-date" type="text" value="27 March 2026" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
-                            </div>
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Report Date</label>
-                                <input id="rep-report-date" type="text" value="15 April 2026" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono">
-                            </div>
-                        </div>
-                        <!-- Members -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Client Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
-                                <textarea id="rep-members-client" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr Shrikant Shrivastava ( Remote)
+                            <!-- Members -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Client Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
+                                    <textarea id="rep-members-client" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr Shrikant Shrivastava ( Remote)
 Mr GAURAV HANTODKAR
 Mr PAWAN GAWANDE</textarea>
-                            </div>
-                            <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">SSCTC Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
-                                <textarea id="rep-members-ssctc" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr SURESH SARMA
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">SSCTC Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
+                                    <textarea id="rep-members-ssctc" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr SURESH SARMA
 Mr SANJAY GORAD
 Mr MRADUL VISHWAKARMA
 Mr PARAG VISHWAKARMA
 Mr RAHUL MANKE</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- STEP 2: Narrative -->
-                    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                            <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 2</span> NARRATIVE
-                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
-                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
-                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
-                                    Written content for the report body. The preamble sets the scene; conclusions are auto-numbered as a list on the final page. Both fields are plain text — edit freely.
+                    <!-- STEP 2: Narrative (collapsible) -->
+                    <div class="glass-card rounded-3xl border border-white/10 overflow-hidden">
+                        <button type="button" onclick="repToggle('step2-body','step2-chevron')"
+                            class="w-full flex items-center justify-between gap-3 px-6 sm:px-8 py-5 sm:py-6 text-left hover:bg-white/[0.02] transition-colors">
+                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2 pointer-events-none">
+                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 2</span> NARRATIVE
+                                <span class="relative group inline-flex items-center cursor-help ml-0.5 pointer-events-auto" onclick="event.stopPropagation()">
+                                    <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                    <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                        Written content for the report body. The preamble sets the scene; conclusions are auto-numbered as a list on the final page. Both fields are plain text — edit freely.
+                                    </span>
                                 </span>
-                            </span>
-                        </h4>
-                        <div class="group">
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Preamble &amp; Objective</label>
-                            <textarea id="rep-preamble" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Due to poor performance of the cooling tower, factors influencing the poor performance were identified to be progressively resolved. To carry out this procedure it was decided to carry out the changes on one cell and based on the result carry out the same on balance cell. This procedure had to be conducted both before change of gear box and fan and post change of gear box and fan to ascertain the effect on cold water temperature.</textarea>
-                        </div>
-                        <div class="group">
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Conclusions &amp; Remarks <span class="text-slate-500 normal-case font-normal">(one per line → numbered in PDF)</span></label>
-                            <textarea id="rep-conclusions" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Testing of the cell was carried out after incorporating the distribution system changes on 27th of March 2026.
+                            </h4>
+                            <svg id="step2-chevron" class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="step2-body" class="px-6 sm:px-8 pb-6 sm:pb-8 space-y-5 border-t border-white/5">
+                            <div class="group pt-4">
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Preamble &amp; Objective</label>
+                                <textarea id="rep-preamble" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Due to poor performance of the cooling tower, factors influencing the poor performance were identified to be progressively resolved. To carry out this procedure it was decided to carry out the changes on one cell and based on the result carry out the same on balance cell. This procedure had to be conducted both before change of gear box and fan and post change of gear box and fan to ascertain the effect on cold water temperature.</textarea>
+                            </div>
+                            <div class="group">
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Conclusions &amp; Remarks <span class="text-slate-500 normal-case font-normal">(one per line → numbered in PDF)</span></label>
+                                <textarea id="rep-conclusions" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Testing of the cell was carried out after incorporating the distribution system changes on 27th of March 2026.
 The additional head available caused flow to increase substantially. Even under these conditions the cell showed an improvement of approx. 0.5 °C above the post fan modification test.
 Single cell isolated testing involves UNCERTAINTY in measurement due to turbulent water flow.</textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -1247,6 +1263,17 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
     </main>
 
     <script type="module" src="./js/ui.js"></script>
+
+    <!-- Collapsible step panels (plain script — no module needed) -->
+    <script>
+        function repToggle(bodyId, chevronId) {
+            const body    = document.getElementById(bodyId);
+            const chevron = document.getElementById(chevronId);
+            if (!body || !chevron) return;
+            const isCollapsed = body.classList.toggle('hidden');
+            chevron.style.transform = isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+        }
+    </script>
 </body>
 
 </html>
