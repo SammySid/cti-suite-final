@@ -305,9 +305,9 @@ export async function previewAllTests(ui) {
         const design = _getDesign(ui);
         if (!design.flow) throw new Error('Design flow (Step 3) is required.');
 
-        const t1 = { flow: _n('rep-t1-flow',2998),    wbt: _n('rep-t1-wbt',25.25),  hwt: _n('rep-t1-hwt',44.67), cwt: _n('rep-t1-cwt',35.08), fan_power: _n('rep-t1-fanpow',97.04), air: _n('rep-t1-air',405.97) };
-        const t2 = { flow: _n('rep-t2-flow',3067.21),  wbt: _n('rep-t2-wbt',24.22),  hwt: _n('rep-t2-hwt',43.21), cwt: _n('rep-t2-cwt',32.89), fan_power: _n('rep-t2-fanpow',116.24),air: _n('rep-t2-air',499) };
-        const t3 = { flow: _n('rep-flow',3680),         wbt: _n('rep-test-wbt',21.7), hwt: _n('rep-hwt',42.13),   cwt: _n('rep-cwt',32.4),     fan_power: _n('rep-test-fanpow',117), air: _n('rep-air',485) };
+        const t1 = { flow: _n('rep-t1-flow',2998),    wbt: _n('rep-t1-wbt',25.25),  hwt: _n('rep-t1-hwt',44.67), cwt: _n('rep-t1-cwt',35.08), fan_power: _n('rep-t1-fanpow',97.04) };
+        const t2 = { flow: _n('rep-t2-flow',3067.21),  wbt: _n('rep-t2-wbt',24.22),  hwt: _n('rep-t2-hwt',43.21), cwt: _n('rep-t2-cwt',32.89), fan_power: _n('rep-t2-fanpow',116.24) };
+        const t3 = { flow: _n('rep-flow',3680),         wbt: _n('rep-test-wbt',21.7), hwt: _n('rep-hwt',42.13),   cwt: _n('rep-cwt',32.4),     fan_power: _n('rep-test-fanpow',117) };
 
         const [r1, r2, r3] = await Promise.all([
             _calcAtc(design, t1), _calcAtc(design, t2), _calcAtc(design, t3),
@@ -441,7 +441,6 @@ export async function generateReport(ui) {
             hwt:       _n('rep-t1-hwt',    44.67),
             cwt:       _n('rep-t1-cwt',    35.08),
             fan_power: _n('rep-t1-fanpow', 97.04),
-            air:       _n('rep-t1-air',    405.97),
         };
         const t2 = {
             flow:      _n('rep-t2-flow',   3067.21),
@@ -449,7 +448,6 @@ export async function generateReport(ui) {
             hwt:       _n('rep-t2-hwt',    43.21),
             cwt:       _n('rep-t2-cwt',    32.89),
             fan_power: _n('rep-t2-fanpow', 116.24),
-            air:       _n('rep-t2-air',    499),
         };
         const t3 = {
             flow:      _n('rep-flow',        3680),
@@ -457,7 +455,6 @@ export async function generateReport(ui) {
             hwt:       _n('rep-hwt',         42.13),
             cwt:       _n('rep-cwt',         32.4),
             fan_power: _n('rep-test-fanpow', 117),
-            air:       _n('rep-air',         485),
         };
 
         // ── Run all 3 ATC-105 calculations in parallel ────────────────────
