@@ -17,6 +17,7 @@ Primary outcomes supported:
 - Psychrometric property calculations
 - Professional Excel report export
 - Batch Excel filtering and consolidated workbook export
+- Automated ATC-105 PDF formatting and evaluation
 
 ---
 
@@ -42,6 +43,11 @@ Primary outcomes supported:
   - data tables for flow scenarios
   - helper columns and KPIs
   - performance charts
+
+### ATC-105 PDF Evaluation Engine
+- Intercepts full multi-state performance parameters and arrays via JSON to `/api/generate-pdf-report`.
+- Compiles rigorous mathematical intersections out of performance vectors using `matplotlib`.
+- Hydrates the visual output strictly utilizing an engineering `Jinja2` layout and `xhtml2pdf`.
 
 ### Excel filter tool
 - Supports:
@@ -94,8 +100,10 @@ Primary outcomes supported:
   - `POST /api/export-excel`
   - `POST /api/filter-excel`
   - `POST /api/filter-excel-local`
+  - `POST /api/generate-pdf-report`
 - `app/backend/excel_gen.py` generates thermal report workbook from frontend payload
 - `app/backend/excel_filter_service.py` performs filtering/merge/report-layout generation
+- `app/backend/report_service.py` performs mathematical plotting and PDF layout engine
 
 > **⚠️ Python Backend Initialization Gotcha:**  
 > The Math Engines (`merkel_engine.py` and `psychro_engine.py`) load crucial binary lookup tables into module-level variables on startup. To prevent them from duplicating into uninitialized instances (which drops accuracy to generic fallbacks), you **must use relative imports** for these engines inside the `core/` folder (e.g. `from .psychro_engine import init_psychro_engine` inside `calculations.py`).
@@ -141,6 +149,16 @@ Request:
 Response:
 - `200` XLSX binary
 - `400/413` JSON error: `{"error":"..."}` on validation/size failures
+
+## `POST /api/generate-pdf-report`
+Generates automated ATC-105 PDF evaluations.
+
+Request:
+- JSON full payload mapping of Client Context, Mathematical Results, and Data intersections.
+
+Response:
+- `200` PDF byte stream directly forcing browser download.
+- `500` Failure.
 
 ## `POST /api/filter-excel`
 Filters uploaded Excel files by time range.

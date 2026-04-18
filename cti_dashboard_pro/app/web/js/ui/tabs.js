@@ -4,10 +4,12 @@ export function switchTab(ui, tabId) {
     const psychroTab = document.getElementById('tabPsychro');
     const predictionTab = document.getElementById('tabPrediction');
     const filterTab = document.getElementById('tabFilter');
+    const reportTab = document.getElementById('tabReport');
     const thermalPanel = document.getElementById('thermalTabPanel');
     const psychroPanel = document.getElementById('psychroTabPanel');
     const filterPanel = document.getElementById('filterTabPanel');
     const predictionPanel = document.getElementById('predictionTabPanel');
+    const reportPanel = document.getElementById('reportTabPanel');
     const thermalSidebarInputs = document.getElementById('thermalSidebarInputs');
     const thermalSidebarExport = document.getElementById('thermalSidebarExport');
 
@@ -25,10 +27,12 @@ export function switchTab(ui, tabId) {
     setTabActive(predictionTab, tabId === 'prediction');
     setTabActive(psychroTab, tabId === 'psychro');
     setTabActive(filterTab, tabId === 'filter');
+    setTabActive(reportTab, tabId === 'report');
     thermalPanel?.classList.toggle('hidden', tabId !== 'thermal');
     psychroPanel?.classList.toggle('hidden', tabId !== 'psychro');
     filterPanel?.classList.toggle('hidden', tabId !== 'filter');
     predictionPanel?.classList.toggle('hidden', tabId !== 'prediction');
+    reportPanel?.classList.toggle('hidden', tabId !== 'report');
 
     // Sidebar controls (desktop): show only on thermal tab
     thermalSidebarInputs?.classList.toggle('hidden', tabId !== 'thermal');

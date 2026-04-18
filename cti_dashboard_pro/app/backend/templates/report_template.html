@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CTI ATC-105 Performance Report</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 2cm;
+            @frame footer {
+                -pdf-frame-content: footerContent;
+                bottom: 1cm;
+                margin-left: 2cm;
+                margin-right: 2cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 10pt;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+        h1 { text-align: center; color: #1e293b; font-size: 16pt; margin-bottom: 20px; }
+        h2 { color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; font-size: 13pt; margin-top: 20px; }
+        .center-bold { text-align: center; font-weight: bold; margin: 10px 0; }
+        
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 9pt; }
+        table.data-table th, table.data-table td { border: 1px solid #94a3b8; padding: 6px; text-align: center; }
+        table.data-table th { background-color: #e2e8f0; font-weight: bold; }
+        table.data-table td.left-align { text-align: left; font-weight: bold;}
+        
+        .page-break { -pdf-pagebreak: yes; }
+        .plot-container { text-align: center; margin-top: 10px; }
+        .plot-image { width: 100%; max-width: 650px; }
+
+        .list-section { margin-left: 20px; }
+        .list-section p { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div id="footerContent">
+        <p style="text-align: right; font-size: 8pt; color: #64748b; border-top: 1px solid #ccc; padding-top: 4px;">
+            Thermal Design, CT Assessment and upgrade, CT Testing, Technical Management & Training<br/>
+            Page <pdf:pagenumber> of <pdf:pagecount>
+        </p>
+    </div>
+
+    <!-- PAGE 1: COVER -->
+    <div style="margin-top: 100px;">
+        <h1 style="font-size: 20pt;">CT PERFORMANCE EVALUATION REPORT</h1>
+        <h3 class="center-bold">POST TEST OF ONE CELL AFTER CHANGE OF DISTRIBUTION SYSTEM AND FAN</h3>
+        <p class="center-bold" style="font-size: 14pt;">{{ asset }}</p>
+        
+        <div style="margin-top: 100px; text-align: center;">
+            <p><strong>OWNER – </strong> {{ client }}</p>
+            <p><strong>TESTING AGENCY – </strong> SS COOLING TOWER CONSULTANTS</p>
+            <br/><br/><br/>
+            <p><strong>DATE OF TEST:</strong> {{ test_date }}</p>
+            <p><strong>REPORT DATE:</strong> {{ report_date }}</p>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 2: PREAMBLE -->
+    <h2>PREAMBLE</h2>
+    {% for p in preamble_paragraphs %}
+        <p style="text-align: justify;">{{ p }}</p>
+    {% endfor %}
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 3: MEMBERS PRESENT -->
+    <h2>MEMBERS PRESENT FOR THE TEST</h2>
+    <div style="margin-top: 20px;">
+        <p><strong>CLIENT REPRESENTATIVES:</strong></p>
+        <ul style="list-style-type: disc;">
+            {% for m in members_client %}
+                <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
+        
+        <p style="margin-top: 20px;"><strong>SSCTC AGENCY:</strong></p>
+        <ul style="list-style-type: disc;">
+            {% for m in members_ssctc %}
+                <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 4: ASSESSMENT & INSTRUMENTS -->
+    <h2>ASSESSMENT METHOD & ANALYSIS</h2>
+    {% for a in assessment_method %}
+        <p style="text-align: justify;">{{ a }}</p>
+    {% endfor %}
+
+    <h2 style="margin-top: 30px;">INSTRUMENT PLACEMENT</h2>
+    <div class="list-section">
+        {% for inst in instrument_placement %}
+            <p>{{ inst }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 5: CONCLUSIONS -->
+    <h2>CONCLUSIONS AND REMARKS</h2>
+    <ol style="margin-left: 10px; text-align: justify;">
+        {% for c in conclusions %}
+            <li style="margin-bottom: 8px;">{{ c }}</li>
+        {% endfor %}
+    </ol>
+    
+    <h2 style="margin-top: 30px;">SUGGESTIONS & SPECIAL NOTES</h2>
+    <ol style="margin-left: 10px; text-align: justify;">
+        {% for s in suggestions %}
+            <li style="margin-bottom: 8px;">{{ s }}</li>
+        {% endfor %}
+    </ol>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 6: FINAL DATA TABLE -->
+    <h2>FINAL DATA AND CONCLUSION OF PRE AND POST TEST</h2>
+    <table class="data-table">
+        <tr>
+            <th>Parameter</th>
+            <th>Unit</th>
+            <th>TEST 1 (Pretest)</th>
+            <th>TEST 2 (Fan Change)</th>
+            <th>TEST 3 (Distr. Change)</th>
+        </tr>
+        {% for row in final_data_table %}
+        <tr>
+            <td class="left-align">{{ row.name }}</td>
+            <td>{{ row.unit }}</td>
+            <td>{{ row.test1 }}</td>
+            <td>{{ row.test2 }}</td>
+            <td>{{ row.test3 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div style="margin-top: 20px; font-size: 9pt;">
+        <p><strong>Notes / Mathematics Findings:</strong></p>
+        <ol>
+            {% for n in data_notes %}
+                <li>{{ n }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 7: AIR FLOW DATA -->
+    <h2>AIR FLOW (Anemometer Traverses)</h2>
+    <table class="data-table">
+        <tr>
+            <th>Metric</th>
+            <th>Calculated Value</th>
+        </tr>
+        <tr>
+            <td class="left-align">Average Velocity (m/s)</td>
+            <td>{{ airflow.avg_velocity }}</td>
+        </tr>
+        <tr>
+            <td class="left-align">Total Free Area (m2)</td>
+            <td>{{ airflow.area }}</td>
+        </tr>
+        <tr>
+            <td class="left-align">Total Flow (m3/s)</td>
+            <td>{{ airflow.total_flow }}</td>
+        </tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 8: ATC-105 PERFORMANCE CURVES -->
+    <h2>ATC-105 PERFORMANCE CURVES</h2>
+    
+    <div class="plot-container">
+        <p><strong>CROSS PLOT 1: CWT vs RANGE @ TEST WBT</strong></p>
+        <img class="plot-image" src="data:image/png;base64,{{ plot_1 }}" />
+    </div>
+    
+    <div style="margin-top: 30px; font-size: 9pt;">
+        <p><strong>Table 2 (Intersection Extractions):</strong></p>
+        <table class="data-table">
+            <tr>
+                <th>Flow State</th>
+                <th>Water Flow (m3/hr)</th>
+                <th>Intersect CWT (°C)</th>
+            </tr>
+            <tr>
+                <td>PURPLE (90%)</td>
+                <td>{{ intersect.f90_flow }}</td>
+                <td>{{ intersect.f90_cwt }}</td>
+            </tr>
+            <tr>
+                <td>GREEN (100%)</td>
+                <td>{{ intersect.f100_flow }}</td>
+                <td>{{ intersect.f100_cwt }}</td>
+            </tr>
+            <tr>
+                <td>BLUE (110%)</td>
+                <td>{{ intersect.f110_flow }}</td>
+                <td>{{ intersect.f110_cwt }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="page-break"></div>
+    
+    <!-- PAGE 9: SECOND PLOT & FINAL PREDICTION -->
+    <div class="plot-container">
+        <p><strong>CROSS PLOT 2: WATER FLOW vs CWT @ DESIGN RANGE</strong></p>
+        <img class="plot-image" src="data:image/png;base64,{{ plot_2 }}" />
+    </div>
+
+    <h2>FINAL MATHEMATICAL RESULTS (ATC-105)</h2>
+    <div style="margin-top: 20px; padding: 20px; background-color: #f8fafc; border: 1px solid #cbd5e1;">
+        <p><strong>Adjusted Water Flow Qwt(adj):</strong> {{ math_results.adj_flow }} m3/hr</p>
+        <p><strong>Predicted Cold Water Temperature (Expected):</strong> {{ math_results.pred_cwt }} °C</p>
+        <p><strong>Test Cold Water Temperature (Recorded):</strong> {{ math_results.test_cwt }} °C</p>
+        
+        <div style="margin-top: 15px; border-top: 2px dashed #94a3b8; padding-top: 15px; text-align: center;">
+            <p style="font-size: 12pt; color: #b91c1c;"><strong>Cooling Tower Shortfall:</strong> {{ math_results.shortfall }} °C</p>
+            <p style="font-size: 16pt; font-weight: bold; margin-top: 10px;">
+                FINAL CAPABILITY (%): <span style="color: #0369a1;">{{ math_results.capability }} %</span>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

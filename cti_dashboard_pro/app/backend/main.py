@@ -21,6 +21,7 @@ from core.merkel_engine import merkel_kavl
 from core.psychro_engine import psychrometrics
 from excel_gen import generate_excel_from_payload, sanitize_filename
 from excel_filter_service import generate_filtered_workbook, generate_filtered_workbook_from_directory
+from report_service import generate_pdf_report
 
 
 def _model_to_dict(model: BaseModel) -> dict:
@@ -239,6 +240,21 @@ async def filter_excel_local(req: LocalFilterRequest):
         )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Failed to filter files: {exc}")
+
+@app.post("/api/generate-pdf-report")
+def api_generate_pdf_report(payload: dict):
+    """
+    Renders and streams out the fully calculated ATC-105 PDF.
+    """
+    try:
+        pdf_bytes = generate_pdf_report(payload)
+        return Response(
+            content=pdf_bytes, 
+            media_type="application/pdf", 
+            headers={"Content-Disposition": "attachment; filename=CTI_Performance_Report_ATC105.pdf"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PDF Generation Failed: {str(e)}")
 
 # Serve UI
 app.mount("/css", StaticFiles(directory=str(WEB_ROOT / "css")), name="css")

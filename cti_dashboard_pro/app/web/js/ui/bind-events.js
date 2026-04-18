@@ -1,4 +1,5 @@
 import { INPUT_IDS, isCurveAffectingInput } from './constants.js';
+import { generateReport } from './report.js';
 
 export function bindEvents(ui) {
     const debouncedUpdateAll = ui.debounce(ui.updateAll, 300);
@@ -77,6 +78,9 @@ export function bindEvents(ui) {
     });
     document.getElementById('tabPsychro')?.addEventListener('click', () => ui.switchTab('psychro'));
     document.getElementById('tabFilter')?.addEventListener('click',   () => ui.switchTab('filter'));
+    document.getElementById('tabReport')?.addEventListener('click',   () => ui.switchTab('report'));
+
+    document.getElementById('generateReportBtn')?.addEventListener('click', () => generateReport(ui));
 
     // ── Filter tool ──────────────────────────────────────────────────────────
     document.getElementById('runFilterAction')?.addEventListener('click', () => ui.runFilterTool());
