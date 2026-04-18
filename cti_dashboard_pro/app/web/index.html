@@ -768,41 +768,41 @@
 
                     <!-- 5-step workflow overview -->
                     <div class="border-t border-white/5 pt-4">
-                        <p class="text-[9px] font-black uppercase tracking-[0.25em] text-slate-600 mb-3">How to use — follow the steps below</p>
+                        <p class="text-[9px] font-black uppercase tracking-[0.25em] text-slate-500 mb-3">Workflow — fill each step in order</p>
                         <div class="grid grid-cols-1 sm:grid-cols-5 gap-px bg-white/5 rounded-2xl overflow-hidden">
                             <div class="bg-slate-900/70 px-4 py-3 flex gap-3 items-start">
                                 <span class="shrink-0 mt-0.5 w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 text-[10px] font-black flex items-center justify-center border border-cyan-500/20">1</span>
                                 <div>
                                     <p class="text-[11px] font-bold text-slate-200">Metadata</p>
-                                    <p class="text-[9px] text-slate-500 leading-snug mt-0.5">Report title, client, dates &amp; members present</p>
+                                    <p class="text-[10px] text-slate-400 leading-snug mt-0.5">Title, client, dates &amp; members</p>
                                 </div>
                             </div>
                             <div class="bg-slate-900/70 px-4 py-3 flex gap-3 items-start">
                                 <span class="shrink-0 mt-0.5 w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 text-[10px] font-black flex items-center justify-center border border-cyan-500/20">2</span>
                                 <div>
                                     <p class="text-[11px] font-bold text-slate-200">Narrative</p>
-                                    <p class="text-[9px] text-slate-500 leading-snug mt-0.5">Preamble, objective &amp; conclusions for the report</p>
+                                    <p class="text-[10px] text-slate-400 leading-snug mt-0.5">Preamble &amp; conclusions text</p>
                                 </div>
                             </div>
                             <div class="bg-slate-900/70 px-4 py-3 flex gap-3 items-start">
                                 <span class="shrink-0 mt-0.5 w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 text-[10px] font-black flex items-center justify-center border border-cyan-500/20">3</span>
                                 <div>
                                     <p class="text-[11px] font-bold text-slate-200">ATC-105 Inputs</p>
-                                    <p class="text-[9px] text-slate-500 leading-snug mt-0.5">Design contract params + Test 3 (latest) site readings</p>
+                                    <p class="text-[10px] text-slate-400 leading-snug mt-0.5">Design params + Test 3 readings</p>
                                 </div>
                             </div>
                             <div class="bg-slate-900/70 px-4 py-3 flex gap-3 items-start">
                                 <span class="shrink-0 mt-0.5 w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 text-[10px] font-black flex items-center justify-center border border-cyan-500/20">4</span>
                                 <div>
                                     <p class="text-[11px] font-bold text-slate-200">Historical Tests</p>
-                                    <p class="text-[9px] text-slate-500 leading-snug mt-0.5">Test 1 (pre-test) &amp; Test 2 (post-fan) raw readings</p>
+                                    <p class="text-[10px] text-slate-400 leading-snug mt-0.5">Test 1 &amp; Test 2 site readings</p>
                                 </div>
                             </div>
                             <div class="bg-slate-900/70 px-4 py-3 flex gap-3 items-start">
                                 <span class="shrink-0 mt-0.5 w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-black flex items-center justify-center border border-emerald-500/20">5</span>
                                 <div>
                                     <p class="text-[11px] font-bold text-slate-200">Generate PDF</p>
-                                    <p class="text-[9px] text-slate-500 leading-snug mt-0.5">Add notes, click — PDF downloads automatically</p>
+                                    <p class="text-[10px] text-slate-400 leading-snug mt-0.5">Notes → click → auto-download</p>
                                 </div>
                             </div>
                         </div>
@@ -815,12 +815,15 @@
 
                     <!-- STEP 1: Metadata -->
                     <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 1</span> REPORT METADATA
-                            </h4>
-                            <p class="text-[11px] text-slate-500 mt-1.5 pl-0.5">Cover page information — appears at the top of the PDF. Enter the report title, client name, cooling tower ID, test date, report date, and all personnel present during testing.</p>
-                        </div>
+                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 1</span> REPORT METADATA
+                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                    Cover page information for the PDF. Enter the report title, client name, cooling tower ID, testing date, report date, and all personnel present during the test.
+                                </span>
+                            </span>
+                        </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="group">
                                 <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Report Title</label>
@@ -846,13 +849,13 @@
                         <!-- Members -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
                             <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Client Members Present <span class="text-slate-600 normal-case font-normal">(one per line)</span></label>
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Client Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
                                 <textarea id="rep-members-client" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr Shrikant Shrivastava ( Remote)
 Mr GAURAV HANTODKAR
 Mr PAWAN GAWANDE</textarea>
                             </div>
                             <div class="group">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">SSCTC Members Present <span class="text-slate-600 normal-case font-normal">(one per line)</span></label>
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">SSCTC Members Present <span class="text-slate-500 normal-case font-normal">(one per line)</span></label>
                                 <textarea id="rep-members-ssctc" class="w-full input-premium rounded-xl px-4 py-3 text-sm font-mono h-24 focus:outline-none focus:border-cyan-500/50">Mr SURESH SARMA
 Mr SANJAY GORAD
 Mr MRADUL VISHWAKARMA
@@ -864,18 +867,21 @@ Mr RAHUL MANKE</textarea>
 
                     <!-- STEP 2: Narrative -->
                     <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 2</span> NARRATIVE
-                            </h4>
-                            <p class="text-[11px] text-slate-500 mt-1.5 pl-0.5">Written content for the report body. The preamble sets the context; conclusions appear as a numbered list on the final page. Edit freely — these are plain text fields.</p>
-                        </div>
+                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 2</span> NARRATIVE
+                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                    Written content for the report body. The preamble sets the scene; conclusions are auto-numbered as a list on the final page. Both fields are plain text — edit freely.
+                                </span>
+                            </span>
+                        </h4>
                         <div class="group">
                             <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Preamble &amp; Objective</label>
                             <textarea id="rep-preamble" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Due to poor performance of the cooling tower, factors influencing the poor performance were identified to be progressively resolved. To carry out this procedure it was decided to carry out the changes on one cell and based on the result carry out the same on balance cell. This procedure had to be conducted both before change of gear box and fan and post change of gear box and fan to ascertain the effect on cold water temperature.</textarea>
                         </div>
                         <div class="group">
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Conclusions &amp; Remarks <span class="text-slate-600 normal-case font-normal">(one per line → numbered in PDF)</span></label>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Conclusions &amp; Remarks <span class="text-slate-500 normal-case font-normal">(one per line → numbered in PDF)</span></label>
                             <textarea id="rep-conclusions" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-28 focus:outline-none focus:border-cyan-500/50">Testing of the cell was carried out after incorporating the distribution system changes on 27th of March 2026.
 The additional head available caused flow to increase substantially. Even under these conditions the cell showed an improvement of approx. 0.5 °C above the post fan modification test.
 Single cell isolated testing involves UNCERTAINTY in measurement due to turbulent water flow.</textarea>
@@ -884,13 +890,16 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
 
                     <!-- STEP 3: Design + Test Conditions (ATC-105 inputs) -->
                     <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
-                        <div class="flex flex-wrap items-start justify-between gap-3">
-                            <div>
-                                <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                    <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 3</span> DESIGN &amp; TEST CONDITIONS
-                                </h4>
-                                <p class="text-[11px] text-slate-500 mt-1.5 pl-0.5">Enter the <strong class="text-slate-400">contract / nameplate design</strong> values on the left, and the <strong class="text-slate-400">Test 3 (Post-Distribution Change)</strong> site readings on the right. The <span class="text-cyan-400/80">L/G Ratio</span> is the key calibration parameter — match it to your tower's manufacturer curve for best accuracy. Use the auto-fill button if you have a filtered Excel output from the Data Filter tab.</p>
-                            </div>
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 3</span> DESIGN &amp; TEST CONDITIONS
+                                <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                    <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                    <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                        Left column: nameplate / contract design values. Right column: Test 3 (Post-Distribution Change) site readings. The L/G Ratio is the key calibration parameter — match it to your tower's manufacturer curve. Use the auto-fill button if you have a filtered Excel from the Data Filter tab.
+                                    </span>
+                                </span>
+                            </h4>
                             <button id="rep-sync-from-thermal" type="button"
                                 class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg border border-cyan-500/30 text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all">
                                 ↙ Sync Design from Thermal Tab
@@ -903,7 +912,7 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                                 Auto-Fill from Filter Tool Output
                             </p>
-                            <p class="text-[10px] text-slate-500">Upload the Excel file generated by the <strong class="text-slate-400">Data Filter</strong> tab. Test-condition averages (CWT, HWT, WBT…) will be extracted and filled in automatically.</p>
+                            <p class="text-[10px] text-slate-400">Upload the Excel file generated by the <strong class="text-slate-300">Data Filter</strong> tab. Test-condition averages (CWT, HWT, WBT…) will be extracted and filled in automatically.</p>
                             <div class="flex flex-wrap items-center gap-3">
                                 <label class="flex-1 cursor-pointer">
                                     <input id="rep-filter-upload" type="file" accept=".xlsx,.xls" class="sr-only">
@@ -925,30 +934,38 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <!-- Design Conditions -->
                             <div class="space-y-3">
-                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 border-b border-white/5 pb-2">Design / Contract Conditions</p>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-white/5 pb-2">Design / Contract Conditions</p>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">WBT Design (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">WBT Design (°C)</label>
                                         <input id="rep-design-wbt" type="number" step="0.1" value="29" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">CWT Design (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CWT Design (°C)</label>
                                         <input id="rep-design-cwt" type="number" step="0.1" value="33" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">HWT Design (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">HWT Design (°C)</label>
                                         <input id="rep-design-hwt" type="number" step="0.1" value="43" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Flow 100% (m³/hr)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Flow 100% (m³/hr)</label>
                                         <input id="rep-design-flow" type="number" step="1" value="3863.6" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Fan Power Design (kW)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Power Design (kW)</label>
                                         <input id="rep-design-fanpow" type="number" step="1" value="117" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 underline decoration-cyan-500/30">L/G Ratio</label>
+                                        <label class="block text-[10px] font-bold text-cyan-400/80 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                            L/G Ratio
+                                            <span class="relative group inline-flex items-center cursor-help">
+                                                <svg class="w-3 h-3 text-cyan-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                                <span class="pointer-events-none absolute left-0 top-4 z-50 w-72 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                                    Key calibration parameter. Match to your tower's manufacturer performance curve. Default 1.5 — use ~1.1 for the Dhariwal tower based on validation.
+                                                </span>
+                                            </span>
+                                        </label>
                                         <input id="rep-design-lg" type="number" step="0.01" value="1.5" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                 </div>
@@ -956,37 +973,37 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
 
                             <!-- Test Conditions — TEST 3 (Post-Distribution Change) -->
                             <div class="space-y-3">
-                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 border-b border-white/5 pb-2">
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-white/5 pb-2">
                                     Test 3 — Post-Distribution Change
-                                    <span class="text-cyan-500/60 normal-case font-normal ml-1">(current / latest test)</span>
+                                    <span class="text-cyan-400/60 normal-case font-normal ml-1">(current / latest test)</span>
                                 </p>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">WBT Test (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">WBT Test (°C)</label>
                                         <input id="rep-test-wbt" type="number" step="0.1" value="21.7" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">CWT Test (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CWT Test (°C)</label>
                                         <input id="rep-cwt" type="number" step="0.1" value="32.4" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">HWT Test (°C)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">HWT Test (°C)</label>
                                         <input id="rep-hwt" type="number" step="0.1" value="42.13" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Water Flow Test (m³/hr)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Water Flow Test (m³/hr)</label>
                                         <input id="rep-flow" type="number" step="1" value="3680" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Fan Power Test (kW)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Power Test (kW)</label>
                                         <input id="rep-test-fanpow" type="number" step="1" value="117" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Fan Air Flow (m³/s)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Air Flow (m³/s)</label>
                                         <input id="rep-air" type="number" step="0.1" value="485" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Fan Area (m²)</label>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Area (m²)</label>
                                         <input id="rep-fan-area" type="number" step="0.01" value="92.25" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                                     </div>
                                 </div>
@@ -994,114 +1011,111 @@ Single cell isolated testing involves UNCERTAINTY in measurement due to turbulen
 
                             <!-- Density ratio override -->
                             <div class="mt-4 bg-amber-950/20 border border-amber-500/20 rounded-xl p-4">
-                                <p class="text-[10px] font-black uppercase tracking-[0.15em] text-amber-400 mb-3">ATC-105 Density Ratio (Optional Override)</p>
-                                <div class="grid grid-cols-2 gap-4 items-end">
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
-                                            Density Test / Density Design
-                                            <span class="text-amber-400/70 ml-1">(from ATC-105 tables)</span>
-                                        </label>
-                                        <input id="rep-density-override" type="number" step="0.0001" placeholder="Auto (Kell 1975)"
-                                               class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
-                                    </div>
-                                    <div class="text-[10px] text-slate-500 leading-relaxed">
-                                        Leave blank to auto-compute from water temperature using the Kell (1975) formula.
-                                        Enter the value from the ATC-105 standard table (e.g. 1.0337) to match the CTI printout exactly.
-                                    </div>
-                                </div>
+                                <p class="text-[10px] font-black uppercase tracking-[0.15em] text-amber-400 mb-3 flex items-center gap-1.5">
+                                    ATC-105 Density Ratio
+                                    <span class="font-normal normal-case text-amber-500/70">(optional override)</span>
+                                    <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                        <svg class="w-3 h-3 text-amber-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                        <span class="pointer-events-none absolute left-0 top-4 z-50 w-72 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                            Leave blank to auto-compute ρ_test / ρ_design from water temperatures using the Kell (1975) formula. Enter the value from the ATC-105 standard table (e.g. 1.0337) to match a CTI printout exactly.
+                                        </span>
+                                    </span>
+                                </p>
+                                <input id="rep-density-override" type="number" step="0.0001" placeholder="Leave blank — auto from Kell (1975)"
+                                       class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono">
                             </div>
                         </div>
 
                         <!-- Live ATC-105 preview results -->
                         <div id="atcPreview" class="hidden border-t border-white/5 pt-5">
-                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400 mb-3">Live ATC-105 Preview</p>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400 mb-3">Live ATC-105 Preview <span class="text-slate-500 normal-case font-normal">(Test 3)</span></p>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div class="bg-slate-900/60 rounded-xl p-3 border border-white/5 text-center">
-                                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Test Range</p>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Test Range</p>
                                     <p id="atc-prev-range" class="text-lg font-black text-white font-mono">—</p>
                                 </div>
                                 <div class="bg-slate-900/60 rounded-xl p-3 border border-white/5 text-center">
-                                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Adj. Flow (m³/hr)</p>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Adj. Flow (m³/hr)</p>
                                     <p id="atc-prev-adjflow" class="text-lg font-black text-white font-mono">—</p>
                                 </div>
                                 <div class="bg-slate-900/60 rounded-xl p-3 border border-white/5 text-center">
-                                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Pred. CWT (°C)</p>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Pred. CWT (°C)</p>
                                     <p id="atc-prev-predcwt" class="text-lg font-black text-cyan-300 font-mono">—</p>
                                 </div>
                                 <div class="bg-slate-900/60 rounded-xl p-3 border border-white/5 text-center">
-                                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Shortfall (°C)</p>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Shortfall (°C)</p>
                                     <p id="atc-prev-shortfall" class="text-lg font-black text-rose-400 font-mono">—</p>
                                 </div>
                             </div>
                             <div class="mt-3 text-center">
-                                <p class="text-[9px] text-slate-500 uppercase tracking-widest">Capability</p>
+                                <p class="text-[9px] text-slate-400 uppercase tracking-widest">Capability</p>
                                 <p id="atc-prev-capability" class="text-3xl font-black text-cyan-400 font-mono">—</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- STEP 4: Supplementary data for the multi-test table -->
+                    <!-- STEP 4: Historical test data -->
                     <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 4</span> HISTORICAL TEST DATA
-                            </h4>
-                            <p class="text-[11px] text-slate-500 mt-1.5 pl-0.5">Raw site readings for the two earlier tests. The system runs a full ATC-105 analysis for each — these are not estimates. All three tests share the same design baseline (from Step 3) and the improvement deltas are computed automatically.</p>
-                        </div>
+                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-[9px] font-black">STEP 4</span> HISTORICAL TEST DATA
+                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                    Raw site readings for the two earlier tests. The engine runs a full ATC-105 analysis for each (not estimates). All three tests share the same design baseline from Step 3, and improvement deltas are computed automatically.
+                                </span>
+                            </span>
+                        </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-3">
-                                <div class="border-b border-white/5 pb-2">
-                                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Test 1 — Pre-Test</p>
-                                    <p class="text-[9px] text-slate-600 mt-0.5">Site conditions before any interventions</p>
-                                </div>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-white/5 pb-2">Test 1 — Pre-Test <span class="text-slate-500 normal-case font-normal">(before any interventions)</span></p>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Water Flow (m³/hr)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Water Flow (m³/hr)</label>
                                         <input id="rep-t1-flow" type="number" value="2998" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">WBT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">WBT (°C)</label>
                                         <input id="rep-t1-wbt" type="number" step="0.01" value="25.25" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">HWT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">HWT (°C)</label>
                                         <input id="rep-t1-hwt" type="number" step="0.01" value="44.67" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">CWT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CWT (°C)</label>
                                         <input id="rep-t1-cwt" type="number" step="0.01" value="35.08" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Fan Power (kW)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Power (kW)</label>
                                         <input id="rep-t1-fanpow" type="number" step="0.01" value="97.04" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Air Flow (m³/s)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Air Flow (m³/s)</label>
                                         <input id="rep-t1-air" type="number" step="0.01" value="405.97" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
                                 </div>
                             </div>
                             <div class="space-y-3">
-                                <div class="border-b border-white/5 pb-2">
-                                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Test 2 — Post Fan Change</p>
-                                    <p class="text-[9px] text-slate-600 mt-0.5">Site conditions after gear box / fan modification</p>
-                                </div>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-white/5 pb-2">Test 2 — Post Fan Change <span class="text-slate-500 normal-case font-normal">(after gear box / fan mod)</span></p>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Water Flow (m³/hr)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Water Flow (m³/hr)</label>
                                         <input id="rep-t2-flow" type="number" value="3067" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">WBT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">WBT (°C)</label>
                                         <input id="rep-t2-wbt" type="number" step="0.01" value="24.22" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">HWT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">HWT (°C)</label>
                                         <input id="rep-t2-hwt" type="number" step="0.01" value="43.21" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">CWT (°C)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CWT (°C)</label>
                                         <input id="rep-t2-cwt" type="number" step="0.01" value="32.89" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Fan Power (kW)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Fan Power (kW)</label>
                                         <input id="rep-t2-fanpow" type="number" step="0.01" value="116.24" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
-                                    <div><label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Air Flow (m³/s)</label>
+                                    <div><label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Air Flow (m³/s)</label>
                                         <input id="rep-t2-air" type="number" step="0.01" value="499" class="w-full input-premium rounded-lg px-3 py-2 text-sm font-mono"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- STEP 5: Verdict & Generate -->
+                    <!-- STEP 5: Generate -->
                     <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
+                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[9px] font-black">STEP 5</span> GENERATE REPORT
+                            <span class="relative group inline-flex items-center cursor-help ml-0.5">
+                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4m0-4h.01"/></svg>
+                                <span class="pointer-events-none absolute left-0 top-5 z-50 w-80 hidden group-hover:block bg-slate-800 border border-slate-700/80 rounded-xl p-3.5 text-[11px] leading-relaxed shadow-2xl font-normal normal-case tracking-normal text-slate-200">
+                                    Optionally add special notes or mathematical findings (one per line — they appear as a numbered list in the PDF). Click the button to run 3 × ATC-105 calculations in parallel, render cross plots server-side, and auto-download the PDF.
+                                </span>
+                            </span>
+                        </h4>
                         <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[9px] font-black">STEP 5</span> GENERATE REPORT
-                            </h4>
-                            <p class="text-[11px] text-slate-500 mt-1.5 pl-0.5">Add any special notes or mathematical findings (one per line — they appear numbered in the PDF). When ready, click the button below. The engine runs <strong class="text-slate-400">3 × ATC-105 calculations in parallel</strong>, generates cross plots, and downloads the PDF automatically.</p>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Data Notes <span class="text-slate-600 normal-case font-normal">(one per line → numbered in PDF)</span></label>
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Data Notes <span class="text-slate-500 normal-case font-normal">(one per line → numbered in PDF)</span></label>
                             <textarea id="rep-data-notes" class="w-full input-premium rounded-xl px-4 py-3 text-sm h-20 focus:outline-none focus:border-cyan-500/50">Improvement of 1.5 appears high in "TEST 2" so we consider that as 0.7 Deg C
 Single cell isolated testing involves UNCERTAINTY in measurement due to turbulent water flow</textarea>
                         </div>
