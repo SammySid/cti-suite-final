@@ -1,5 +1,5 @@
 import { INPUT_IDS, isCurveAffectingInput } from './constants.js';
-import { generateReport, updateAtcPreview, syncDesignFromThermal, bindFilterUpload } from './report.js';
+import { generateReport, updateAtcPreview, syncDesignFromThermal, bindFilterUpload, previewAllTests } from './report.js';
 
 export function bindEvents(ui) {
     const debouncedUpdateAll = ui.debounce(ui.updateAll, 300);
@@ -80,7 +80,8 @@ export function bindEvents(ui) {
     document.getElementById('tabFilter')?.addEventListener('click',   () => ui.switchTab('filter'));
     document.getElementById('tabReport')?.addEventListener('click',   () => ui.switchTab('report'));
 
-    document.getElementById('generateReportBtn')?.addEventListener('click', () => generateReport(ui));
+    document.getElementById('generateReportBtn')?.addEventListener('click',   () => generateReport(ui));
+    document.getElementById('previewAllTestsBtn')?.addEventListener('click', () => previewAllTests(ui));
 
     // ── ATC-105 Report Builder: live preview on input change ─────────────
     const atcInputIds = [

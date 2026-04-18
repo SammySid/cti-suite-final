@@ -219,6 +219,115 @@ async function _calcAtc(design, test) {
     return resp.json();
 }
 
+// ── Results preview (all 3 tests, no PDF) ─────────────────────────────────
+
+export async function previewAllTests(ui) {
+    const btn      = document.getElementById('previewAllTestsBtn');
+    const panel    = document.getElementById('previewResultsPanel');
+    const errorEl  = document.getElementById('previewError');
+    const origHtml = btn.innerHTML;
+
+    const _set = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+
+    const _imp = (delta) => {
+        if (delta == null || !isFinite(delta)) return { text: '—', cls: 'text-slate-500' };
+        const sign = delta >= 0 ? '+' : '';
+        const cls  = delta > 0 ? 'text-emerald-400' : delta < 0 ? 'text-rose-400' : 'text-slate-400';
+        return { text: `${sign}${delta.toFixed(2)} °C`, cls };
+    };
+
+    btn.innerHTML = `<svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Calculating…`;
+    btn.disabled = true;
+    if (errorEl) errorEl.classList.add('hidden');
+
+    try {
+        const design = _getDesign(ui);
+        if (!design.flow) throw new Error('Design flow (Step 3) is required.');
+
+        const t1 = { flow: _n('rep-t1-flow',2998),    wbt: _n('rep-t1-wbt',25.25),  hwt: _n('rep-t1-hwt',44.67), cwt: _n('rep-t1-cwt',35.08), fan_power: _n('rep-t1-fanpow',97.04), air: _n('rep-t1-air',405.97) };
+        const t2 = { flow: _n('rep-t2-flow',3067.21),  wbt: _n('rep-t2-wbt',24.22),  hwt: _n('rep-t2-hwt',43.21), cwt: _n('rep-t2-cwt',32.89), fan_power: _n('rep-t2-fanpow',116.24),air: _n('rep-t2-air',499) };
+        const t3 = { flow: _n('rep-flow',3680),         wbt: _n('rep-test-wbt',21.7), hwt: _n('rep-hwt',42.13),   cwt: _n('rep-cwt',32.4),     fan_power: _n('rep-test-fanpow',117), air: _n('rep-air',485) };
+
+        const [r1, r2, r3] = await Promise.all([
+            _calcAtc(design, t1), _calcAtc(design, t2), _calcAtc(design, t3),
+        ]);
+
+        // Populate TEST 1
+        _set('pv1-range',    r1.test_range  != null ? `${r1.test_range.toFixed(2)} °C`  : '—');
+        _set('pv1-flow',     r1.adj_flow    != null ? `${r1.adj_flow.toFixed(1)} m³/hr` : '—');
+        _set('pv1-cwt',      r1.pred_cwt    != null ? `${r1.pred_cwt.toFixed(2)} °C`    : '—');
+        _set('pv1-shortfall',r1.shortfall   != null ? `${r1.shortfall.toFixed(2)} °C`   : '—');
+        _set('pv1-cap',      r1.capability  != null ? `${r1.capability.toFixed(1)} %`   : '—');
+
+        // Colour capability
+        ['pv1-cap','pv2-cap','pv3-cap'].forEach(id => {
+            const el = document.getElementById(id); if (!el) return;
+            const v = parseFloat(el.innerText);
+            el.className = `font-mono font-bold ${v >= 100 ? 'text-emerald-400' : v >= 95 ? 'text-amber-400' : 'text-rose-400'}`;
+        });
+
+        // Populate TEST 2
+        _set('pv2-range',    r2.test_range  != null ? `${r2.test_range.toFixed(2)} °C`  : '—');
+        _set('pv2-flow',     r2.adj_flow    != null ? `${r2.adj_flow.toFixed(1)} m³/hr` : '—');
+        _set('pv2-cwt',      r2.pred_cwt    != null ? `${r2.pred_cwt.toFixed(2)} °C`    : '—');
+        _set('pv2-shortfall',r2.shortfall   != null ? `${r2.shortfall.toFixed(2)} °C`   : '—');
+        _set('pv2-cap',      r2.capability  != null ? `${r2.capability.toFixed(1)} %`   : '—');
+
+        // Populate TEST 3
+        _set('pv3-range',    r3.test_range  != null ? `${r3.test_range.toFixed(2)} °C`  : '—');
+        _set('pv3-flow',     r3.adj_flow    != null ? `${r3.adj_flow.toFixed(1)} m³/hr` : '—');
+        _set('pv3-cwt',      r3.pred_cwt    != null ? `${r3.pred_cwt.toFixed(2)} °C`    : '—');
+        _set('pv3-shortfall',r3.shortfall   != null ? `${r3.shortfall.toFixed(2)} °C`   : '—');
+        _set('pv3-cap',      r3.capability  != null ? `${r3.capability.toFixed(1)} %`   : '—');
+
+        // Re-colour capability after all are set
+        [['pv1-cap', r1.capability], ['pv2-cap', r2.capability], ['pv3-cap', r3.capability]].forEach(([id, v]) => {
+            const el = document.getElementById(id); if (!el || v == null) return;
+            el.className = `font-mono font-bold ${v >= 100 ? 'text-emerald-400' : v >= 95 ? 'text-amber-400' : 'text-rose-400'}`;
+        });
+
+        // Improvement deltas
+        const imp21 = (r1.shortfall != null && r2.shortfall != null) ? r1.shortfall - r2.shortfall : null;
+        const imp32 = (r2.shortfall != null && r3.shortfall != null) ? r2.shortfall - r3.shortfall : null;
+        const imp31 = (r1.shortfall != null && r3.shortfall != null) ? r1.shortfall - r3.shortfall : null;
+
+        const d21 = _imp(imp21); const d32 = _imp(imp32); const d31 = _imp(imp31);
+
+        const pv2imp = document.getElementById('pv2-imp');
+        if (pv2imp) { pv2imp.innerText = d21.text; pv2imp.className = `text-[11px] font-mono font-black ${d21.cls}`; }
+
+        const pv3imp = document.getElementById('pv3-imp');
+        if (pv3imp) { pv3imp.innerText = d32.text; pv3imp.className = `text-[11px] font-mono font-black ${d32.cls}`; }
+
+        const pvCum = document.getElementById('pv-cumulative');
+        if (pvCum) { pvCum.innerText = d31.text; pvCum.className = `text-2xl font-black font-mono ${d31.cls}`; }
+
+        if (panel) panel.classList.remove('hidden');
+
+        // Also update the live Test-3 preview card at top of Step 3
+        ['atc-prev-range','atc-prev-adjflow','atc-prev-predcwt','atc-prev-shortfall','atc-prev-capability'].forEach(id => {
+            const el = document.getElementById(id); if (!el) return;
+        });
+        const pv = document.getElementById('atcPreview');
+        if (pv) {
+            _set('atc-prev-range',      r3.test_range  != null ? `${r3.test_range.toFixed(2)} °C` : '—');
+            _set('atc-prev-adjflow',    r3.adj_flow    != null ? r3.adj_flow.toFixed(1)           : '—');
+            _set('atc-prev-predcwt',    r3.pred_cwt    != null ? r3.pred_cwt.toFixed(2)           : '—');
+            _set('atc-prev-shortfall',  r3.shortfall   != null ? r3.shortfall.toFixed(2)          : '—');
+            _set('atc-prev-capability', r3.capability  != null ? `${r3.capability.toFixed(1)} %`  : '—');
+            pv.classList.remove('hidden');
+        }
+
+    } catch (err) {
+        if (errorEl) { errorEl.innerText = `Preview failed: ${err.message}`; errorEl.classList.remove('hidden'); }
+    } finally {
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+    }
+}
+
 // ── Main report generator ──────────────────────────────────────────────────
 
 export async function generateReport(ui) {
