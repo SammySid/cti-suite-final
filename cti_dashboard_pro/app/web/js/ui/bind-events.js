@@ -1,5 +1,5 @@
 import { INPUT_IDS, isCurveAffectingInput } from './constants.js';
-import { generateReport } from './report.js';
+import { generateReport, updateAtcPreview, syncDesignFromThermal } from './report.js';
 
 export function bindEvents(ui) {
     const debouncedUpdateAll = ui.debounce(ui.updateAll, 300);
@@ -81,6 +81,20 @@ export function bindEvents(ui) {
     document.getElementById('tabReport')?.addEventListener('click',   () => ui.switchTab('report'));
 
     document.getElementById('generateReportBtn')?.addEventListener('click', () => generateReport(ui));
+
+    // ── ATC-105 Report Builder: live preview on input change ─────────────
+    const atcInputIds = [
+        'rep-design-wbt','rep-design-cwt','rep-design-hwt','rep-design-flow','rep-design-fanpow',
+        'rep-design-lg','rep-design-c','rep-design-m',
+        'rep-test-wbt','rep-cwt','rep-hwt','rep-flow','rep-test-fanpow',
+    ];
+    const debouncedAtcPreview = ui.debounce(() => updateAtcPreview(ui), 500);
+    atcInputIds.forEach(id => {
+        document.getElementById(id)?.addEventListener('input', debouncedAtcPreview);
+    });
+
+    // Sync design values from Thermal tab into the Report tab
+    document.getElementById('rep-sync-from-thermal')?.addEventListener('click', () => syncDesignFromThermal(ui));
 
     // ── Filter tool ──────────────────────────────────────────────────────────
     document.getElementById('runFilterAction')?.addEventListener('click', () => ui.runFilterTool());

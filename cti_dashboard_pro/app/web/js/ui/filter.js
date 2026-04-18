@@ -44,8 +44,8 @@ function _normalizeTimeText(raw) {
         if (h === 0) h = 12;
         if (h > 12)  h = h % 12 || 12;
     } else {
-        // No am/pm typed — default to PM (industrial/afternoon use case)
-        ampm = h >= 12 ? 'PM' : 'PM';
+        // No am/pm typed — assume PM for afternoon industrial readings
+        ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
     }
 
