@@ -7,3 +7,6 @@ xlsxwriter
 openpyxl
 xlrd
 python-dateutil
+jinja2
+xhtml2pdf
+matplotlib
