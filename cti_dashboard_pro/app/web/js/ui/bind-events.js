@@ -1,5 +1,5 @@
 import { INPUT_IDS, isCurveAffectingInput } from './constants.js';
-import { generateReport, updateAtcPreview, syncDesignFromThermal } from './report.js';
+import { generateReport, updateAtcPreview, syncDesignFromThermal, bindFilterUpload } from './report.js';
 
 export function bindEvents(ui) {
     const debouncedUpdateAll = ui.debounce(ui.updateAll, 300);
@@ -95,6 +95,9 @@ export function bindEvents(ui) {
 
     // Sync design values from Thermal tab into the Report tab
     document.getElementById('rep-sync-from-thermal')?.addEventListener('click', () => syncDesignFromThermal(ui));
+
+    // Bind the Filter-Excel upload parser in the Report Builder
+    bindFilterUpload(ui);
 
     // ── Filter tool ──────────────────────────────────────────────────────────
     document.getElementById('runFilterAction')?.addEventListener('click', () => ui.runFilterTool());

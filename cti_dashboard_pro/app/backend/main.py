@@ -354,6 +354,109 @@ async def export_excel(payload: dict):
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Failed to generate report: {exc}")
 
+@app.post("/api/parse-filter-excel")
+async def api_parse_filter_excel(file: UploadFile = File(...)):
+    """
+    Parse a Filter Tool output Excel and extract averaged test values
+    (CWT, HWT, WBT, DBT, flow, fan power) for auto-filling the Report Builder.
+    Reads the "Filtered Data" sheet and identifies the COLUMN AVERAGE row,
+    then classifies columns by keyword (cwt/hwt/wbt/dbt) or by Source File name.
+    """
+    import pandas as pd
+    from io import BytesIO
+
+    content = await file.read()
+    df = None
+    for sheet_arg in ['Filtered Data', 0]:
+        try:
+            df = pd.read_excel(BytesIO(content), sheet_name=sheet_arg)
+            break
+        except Exception:
+            continue
+    if df is None:
+        raise HTTPException(status_code=400, detail="Cannot read Excel file")
+
+    # ── Locate the COLUMN AVERAGE row ────────────────────────────────────────
+    avg_row_data: dict = {}
+    for i in range(max(0, len(df) - 5), len(df)):
+        first = str(df.iloc[i, 0]).strip().upper()
+        if 'AVERAGE' in first:
+            for col_idx, col_name in enumerate(df.columns):
+                try:
+                    fval = float(df.iloc[i, col_idx])
+                    if math.isfinite(fval) and 0 < abs(fval) < 1e12:
+                        avg_row_data[str(col_name)] = round(fval, 4)
+                except (ValueError, TypeError):
+                    pass
+            break
+
+    # Fallback: compute averages from all numeric data rows (skip OL values)
+    if not avg_row_data:
+        skip_kw = {'source', 'file', 'date', 'time', 'scan', 'number'}
+        for col in df.columns:
+            if any(k in str(col).lower() for k in skip_kw):
+                continue
+            series = pd.to_numeric(df[col], errors='coerce')
+            series = series[series.abs() < 1e12]
+            if series.notna().sum() >= 2:
+                avg_row_data[str(col)] = round(float(series.mean()), 4)
+
+    # ── Classify by column name keyword ──────────────────────────────────────
+    cwt_vals, hwt_vals, wbt_vals, dbt_vals, flow_vals, power_vals = [], [], [], [], [], []
+    for col_name, avg_val in avg_row_data.items():
+        cl = col_name.lower()
+        if 'cwt' in cl or 'cold' in cl:
+            cwt_vals.append(avg_val)
+        elif 'hwt' in cl or 'hot' in cl:
+            hwt_vals.append(avg_val)
+        elif 'wbt' in cl or 'wet' in cl:
+            wbt_vals.append(avg_val)
+        elif 'dbt' in cl or 'dry' in cl:
+            dbt_vals.append(avg_val)
+        elif 'flow' in cl:
+            flow_vals.append(avg_val)
+        elif 'kw' in cl or 'power' in cl:
+            power_vals.append(avg_val)
+
+    # ── Fallback: classify by Source File name (multi-file layout) ───────────
+    if not any([cwt_vals, hwt_vals, wbt_vals]) and 'Source File' in df.columns:
+        skip_kw2 = {'source file', 'date', 'time', 'scan'}
+        val_col = next(
+            (c for c in df.columns
+             if c not in ['Source File'] and 'time' not in c.lower() and 'date' not in c.lower()
+             and pd.api.types.is_numeric_dtype(df[c])), None)
+        if val_col:
+            for src_file, group in df.groupby('Source File'):
+                src_lower = str(src_file).lower()
+                series = pd.to_numeric(group[val_col], errors='coerce')
+                series = series[series.abs() < 1e12]
+                if series.notna().sum() < 2:
+                    continue
+                avg_v = round(float(series.mean()), 4)
+                if 'cwt' in src_lower:
+                    cwt_vals.append(avg_v)
+                elif 'hwt' in src_lower:
+                    hwt_vals.append(avg_v)
+                elif 'wbt' in src_lower:
+                    wbt_vals.append(avg_v)
+                elif 'dbt' in src_lower:
+                    dbt_vals.append(avg_v)
+
+    def _mean(vals):
+        return round(sum(vals) / len(vals), 3) if vals else None
+
+    return {
+        "cwt":        _mean(cwt_vals),
+        "hwt":        _mean(hwt_vals),
+        "wbt":        _mean(wbt_vals),
+        "dbt":        _mean(dbt_vals),
+        "flow":       _mean(flow_vals),
+        "fan_power":  _mean(power_vals),
+        "all_averages": avg_row_data,
+        "columns": list(df.columns.astype(str)),
+    }
+
+
 # Filter Excel
 @app.post("/api/filter-excel")
 async def filter_excel(
