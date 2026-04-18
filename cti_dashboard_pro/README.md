@@ -1,38 +1,88 @@
-# CTI Analysis Dashboard (PRO Full-Stack Version)
+# CTI Dashboard Pro — Full-Stack ATC-105 Performance Analysis Suite
 
-The `cti_dashboard_pro` is the **Full-Stack, Python-backed** evolution of the CTI Analysis suite. 
-
-While the standard `cti_dashboard` operates entirely in the browser using static HTML/JS (requiring ZERO dependencies beyond a basic HTTP server), this **PRO** version integrates a robust Python backend to support **Heavy Data Filtering and Professional Excel Generation**.
-
-### Key Differences & Additions
-
-- **Secure Python Backend Engine**: Employs an active high-performance `main.py` (FastAPI) daemon running on port 8000. It dynamically intercepts `/api/calculate`, `/api/export-excel` and `/api/filter-excel` routes, completely hiding your Trade Secrets and proprietary math from the frontend web browser.
-- **Excel Filter System**: Capable of processing massive multiphase `.xlsx` datasets. The Python backend extracts sensor columns, interpolates rows by matching timestamps, styles the output using XlsxWriter, and serves the file securely via JSON payloads and Multipart.
-- **Excel Report Generator**: Intercepts calculations processed asynchronously via your web workers (the 320 probe Tchebeycheff algorithms) and builds automated professional thermal reports directly to `.xlsx`.
-- **ATC-105 Automated PDF Engine**: An advanced HTML-to-PDF compiler using `xhtml2pdf`, `Jinja2`, and `matplotlib`. Evaluates Pre and Post multi-state testing data and mathematically constructs 17-page industry-grade ATC-105 compliance reports with precise visual graphs.
-
-### Requirements
-
-Unlike the static version, this requires Python (>= 3.9) and several Data Science libraries natively installed:
-```bash
-pip install pandas openpyxl xlsxwriter python-dateutil fastapi uvicorn pydantic python-multipart jinja2 xhtml2pdf matplotlib
-```
-
-### Starting the Environment
-If you are running this locally:
-- Simply run `start_dashboard.bat`. It will verify dependencies and immediately launch the unified UI in your browser.
-
-If you are running this on a VPS:
-- The app is containerised with Docker. See [`VPS_HOSTING_GUIDE.md`](../VPS_HOSTING_GUIDE.md) for the full architecture and deployment guide.
-- **Live URL:** `https://ct.ftp.sh` (Oracle UK VPS — protected by Authelia SSO)
-- **Live URL:** `https://ct.ftp.sh` (Oracle UK VPS — protected by Authelia SSO)
-- **Auto-deploy:** Push to `master` on GitHub → VPS auto-syncs within 5 minutes via `auto_sync.sh`
+`cti_dashboard_pro` is the **enterprise FastAPI-backed** evolution of the CTI Analysis Suite. It runs at **`https://ct.ftp.sh`** (Oracle UK VPS, protected by Authelia SSO).
 
 ---
 
-### Engineering & Logic Guide
-For a deep dive into the "First Principles" of cooling towers, Merkel's Method, and the physics behind the dashboard, see:
-- [COOLING_TOWER_FUNDAMENTALS.md](docs/COOLING_TOWER_FUNDAMENTALS.md)
+## What it does
 
-### Mobile UX Architecture
-The **Thermal Analysis** tab moves all operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) **inline** in the main panel on mobile/tablet devices (`lg:hidden`). On desktop the inputs remain in the left sidebar. The hamburger menu on mobile shows only project metadata (client name, engineer, date) and export buttons — no keyboard inputs — eliminating the historical bug where tapping a sidebar input closed the menu. This design is consistent with the other tabs (Psychrometric, Performance Prediction, Excel Filter) which have always used inline inputs.
+| Feature | Description |
+|---|---|
+| **Thermal Analysis** | Live Merkel-based performance curves at 90/100/110% flow — supply vs demand KaV/L, approach, range, CWT prediction |
+| **Psychrometric Calculator** | Full Hyland-Wexler psychrometrics (DP, HR, RH, H, SV, density) with altitude correction |
+| **Excel Data Filter** | Filters multi-file time-series `.xlsx` datasets by time window; interpolates, merges, exports consolidated workbook |
+| **Excel Report Export** | Generates branded professional thermal report `.xlsx` from current analysis inputs |
+| **ATC-105 PDF Report Engine** | Full 5-step CTI ATC-105 performance evaluation — calculates Table 1, Cross Plot 1 & 2, adjusted flow, predicted CWT, shortfall, capability, and generates a professional 11-page PDF report |
+| **Excel Auto-Fill** | Upload the filtered Excel output directly into the report builder to auto-populate test condition fields |
+
+---
+
+## ATC-105 Report Engine
+
+The report builder follows the **CTI ATC-105 standard** exactly:
+
+| Step | What happens |
+|---|---|
+| **STEP 1** | Computes 3×3 CWT grid (Table 1) from Merkel engine at test WBT for 3 ranges × 3 flows |
+| **STEP 2** | Interpolates Cross Plot 1 → Table 2 (CWT at test range for each flow %) |
+| **STEP 3** | Plots Cross Plot 2: Water Flow vs CWT from Table 2 data |
+| **STEP 4** | Calculates Adjusted Water Flow (`Q_adj = Q_test × (Wd/Wt)^⅓ × ρ^⅓`) |
+| **STEP 5** | Reads Predicted CWT from Cross Plot 2, computes shortfall and capability (%) |
+
+All plots are generated dynamically with Matplotlib. The Merkel and psychrometric engines are **not modified** — calibrated tower constants (LG ratio, C, m) are supplied by the user via the Thermal Analysis tab or Report Builder inputs.
+
+### Density Ratio Override
+The standard formula uses a water density ratio (ρ_test/ρ_design). The backend auto-computes this using the Kell (1975) formula. Users can override it by entering the value from ATC-105 standard tables (e.g., `1.0337` for specific test conditions) in the **ATC-105 Density Ratio** field.
+
+### Excel Auto-Fill
+After running the Excel Data Filter tool, click **"Upload Filter Output → Auto-Fill"** in the Report Builder tab to automatically populate:
+- Cold Water Temperature (CWT)
+- Hot Water Temperature (HWT)
+- Wet Bulb Temperature (WBT)
+- Water Flow
+- Fan Power
+
+---
+
+## Quick Start (Local)
+
+```bash
+pip install fastapi uvicorn pydantic python-multipart pandas openpyxl xlsxwriter python-dateutil jinja2 xhtml2pdf matplotlib
+```
+
+Then from `cti_dashboard_pro/`:
+```bash
+python -m uvicorn app.backend.main:app --host 127.0.0.1 --port 8000
+```
+Or simply run `start_dashboard.bat` (Windows).
+
+---
+
+## VPS Deployment
+
+The app is containerised with Docker and deployed to **Oracle UK VPS**.
+
+```bash
+# Deploy immediately (commits, pushes, SSH-triggers VPS rebuild)
+python deploy_pro_to_vps.py
+```
+
+Or push to `master` — the VPS auto-syncs within 5 minutes via `auto_sync.sh`.
+
+See [`VPS_HOSTING_GUIDE.md`](../VPS_HOSTING_GUIDE.md) for full architecture.
+
+---
+
+## Engineering Reference
+
+- [DOCUMENTATION.md](docs/DOCUMENTATION.md) — full API reference and architecture
+- [COOLING_TOWER_FUNDAMENTALS.md](docs/COOLING_TOWER_FUNDAMENTALS.md) — first-principles physics guide
+- [HANDOFF.md](../HANDOFF.md) — engine reverse-engineering history
+
+---
+
+## ⚠️ Critical — Do Not Touch
+
+The Merkel engine (`core/merkel_engine.py`) and Psychrometrics engine (`core/psychro_engine.py`) achieved **100% accuracy** vs the CTI binary after extensive reverse-engineering and probing. **Never modify these engines.** All calculation improvements must go through the `ATC-105` layer in `main.py`, not the core engines.
+
+Inside `core/`, always use **relative imports** (`from .psychro_engine import ...`) to prevent Python from creating duplicate module instances that would break the binary lookup tables.

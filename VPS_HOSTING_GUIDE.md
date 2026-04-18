@@ -1,23 +1,23 @@
 # VPS Hosting Guide: CTI Dashboard Pro
 
-The `cti_dashboard_pro` is fully containerised and deployed on the **UK Oracle VPS** (`ct.ftp.sh`) via Docker. This guide covers the live architecture, how to deploy updates, and the automated sync system.
+> **Last updated:** 2026-04-18 | **Live:** `https://ct.ftp.sh`
 
-> **Last updated:** 2026-03-20
+The `cti_dashboard_pro` is fully containerised and deployed on the **Oracle UK VPS** via Docker with automatic GitHub sync.
 
 ---
 
-## 🌐 Live Production URL
+## 🌐 Live Production
 
 **`https://ct.ftp.sh`** — Protected by Authelia SSO (login required)
 
 | Detail | Value |
 |--------|-------|
 | **VPS** | Oracle Cloud UK — `130.162.191.58` |
-| **SSH** | `ssh ubuntu@130.162.191.58` (password: on file) |
+| **SSH** | `ssh ubuntu@130.162.191.58` |
 | **Container** | `cti-dashboard-pro` |
 | **Network** | `options-network` (shared Docker bridge) |
-| **Proxy** | `trading-nginx` container → ports 80 / 443 |
-| **Auth** | `authelia` container (SSO guard) |
+| **Proxy** | `trading-nginx` → ports 80/443 |
+| **Auth** | `authelia` container (SSO gate) |
 | **SSL** | Let's Encrypt — `/etc/letsencrypt/live/ct.ftp.sh/` |
 
 ---
@@ -40,48 +40,46 @@ All four containers (`trading-nginx`, `authelia`, `cpr-options-dashboard`, `cti-
 
 ---
 
-## 🔄 Deploying Updates — Two Methods
+## 🔄 Deploying Updates
 
-### Method 1: Push to GitHub (Recommended — Fully Automatic ✅)
+### Method 1: `deploy_pro_to_vps.py` (Recommended — Immediate ✅)
 
-Just **push your changes** to the `master` branch of `github.com/SammySid/cti-suite-final`.
-
-A **systemd timer** on the VPS runs `/home/ubuntu/cooling-tower_pro/auto_sync.sh` every **5 minutes**. It:
-
-1. Sparse-clones only `cti_dashboard_pro/` from GitHub (`master` branch)
-2. Compares the remote SHA to the last deployed SHA (`.last_deployed_sha`)
-3. If changed — rsyncs new code into `/home/ubuntu/cooling-tower_pro/` (excluding `__pycache__`, `.pyc`, `Dockerfile`, `docker-compose.yml`, `requirements.txt`, `auto_sync.sh`, `.last_deployed_sha`)
-4. Rebuilds the Docker image and restarts the container
-5. Logs everything to `/var/log/cti_autosync.log`
-
-To deploy immediately without waiting for the 5-minute timer, run `deploy_pro_to_vps.py`:
 ```bash
 python deploy_pro_to_vps.py
 ```
-This commits + pushes to GitHub, then SSH's into the VPS and triggers `auto_sync.sh` on-demand.
 
-**Check auto-sync status on VPS:**
+This script:
+1. Commits and pushes all local changes to `master` on GitHub
+2. SSHs into the VPS via `paramiko`
+3. Triggers `auto_sync.sh` on-demand (no waiting for the 5-minute timer)
+4. Tails the Docker rebuild log until completion
+
+### Method 2: Push to GitHub (Auto-sync — up to 5 min delay)
+
+Push to `master` — a **systemd timer** on the VPS fires `auto_sync.sh` every 5 minutes:
+
+1. Sparse-clones only `cti_dashboard_pro/` from GitHub (`master` branch)
+2. Compares remote SHA to `.last_deployed_sha` — skips if unchanged
+3. rsyncs new code into `/home/ubuntu/cooling-tower_pro/`  
+   _(excludes `__pycache__`, `.pyc`, `docker-compose.yml`, `requirements.txt`, `auto_sync.sh`, `.last_deployed_sha`)_  
+   _(note: `Dockerfile` is now synced — was previously excluded, causing build failures)_
+4. Rebuilds Docker image and restarts the container
+5. Logs everything to `/var/log/cti_autosync.log`
+
 ```bash
+# Check auto-sync status on VPS
 sudo systemctl status cti-autosync.timer
 sudo tail -f /var/log/cti_autosync.log
 ```
 
----
-
-### Method 2: Manual Deploy (Emergency / Immediate)
-
-SSH in and rebuild manually:
+### Method 3: Manual Deploy (Emergency)
 
 ```bash
 ssh ubuntu@130.162.191.58
-
-# Navigate to app directory
 cd /home/ubuntu/cooling-tower_pro
+/home/ubuntu/cooling-tower_pro/auto_sync.sh   # pull + rebuild
 
-# Pull latest from GitHub manually
-/home/ubuntu/cooling-tower_pro/auto_sync.sh
-
-# Or force a full rebuild without pulling
+# Or force rebuild without pulling
 docker compose down
 docker compose up -d --build
 
@@ -98,13 +96,13 @@ docker logs cti-dashboard-pro --tail 50 -f
 /home/ubuntu/
 ├── cooling-tower_pro/          ← CTI Dashboard Pro app root
 │   ├── app/
-│   │   ├── backend/            ← FastAPI Python backend (main.py)
-│   │   └── web/                ← Static frontend assets
-│   ├── Dockerfile
-│   ├── docker-compose.yml      ← Connects to options-network (external)
+│   │   ├── backend/            ← FastAPI Python backend (main.py, report_service.py, etc.)
+│   │   └── web/                ← Static frontend assets (index.html, js/, css/)
+│   ├── Dockerfile              ← python:3.11-slim + cairo build deps
+│   ├── docker-compose.yml
 │   ├── requirements.txt
-│   ├── auto_sync.sh            ← GitHub auto-sync script (runs every 5 min)
-│   └── .last_deployed_sha      ← Tracks last deployed GitHub commit SHA
+│   ├── auto_sync.sh            ← GitHub auto-sync (runs every 5 min via systemd)
+│   └── .last_deployed_sha      ← Tracks last deployed SHA
 ├── nginx-trading.conf          ← Nginx config (mounted into trading-nginx)
 ├── nginx-compose.yml           ← Docker Compose for nginx + authelia + cpr
 ├── certs/                      ← Self-signed certs (trading-nginx fallback)
@@ -113,22 +111,45 @@ docker logs cti-dashboard-pro --tail 50 -f
 
 ---
 
+## 🐳 Dockerfile
+
+The container uses `python:3.11-slim` with full build toolchain for `pycairo` (required by `xhtml2pdf`):
+
+```dockerfile
+FROM python:3.11-slim
+RUN apt-get update && apt-get install -y \
+    gcc g++ build-essential \
+    libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev \
+    libffi-dev libxml2-dev libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+> ⚠️ If you ever see a `502 Bad Gateway`, check Docker logs first:  
+> `docker logs cti-dashboard-pro --tail 30`  
+> The most common cause is `pycairo` failing to compile (check if `libcairo2-dev` is missing from the image build).
+
+---
+
 ## 🔧 Key Management Commands
 
 ```bash
-# Check all running containers
+# All running containers
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# CTI Dashboard logs
+docker logs cti-dashboard-pro --tail 50 -f
+
+# Rebuild without auto-sync
+cd /home/ubuntu/cooling-tower_pro
+docker compose down && docker compose up -d --build
 
 # Restart nginx (if config changed)
 cd /home/ubuntu && docker compose -f nginx-compose.yml restart nginx
 
-# View nginx logs
+# Nginx logs
 docker logs trading-nginx --tail 50 -f
 
-# View CTI dashboard logs
-docker logs cti-dashboard-pro --tail 50 -f
-
-# View Authelia logs
+# Authelia logs
 docker logs authelia --tail 50 -f
 
 # Reload nginx config without downtime
@@ -140,65 +161,59 @@ docker exec trading-nginx nginx -t
 
 ---
 
-## ⚠️ Known Issues — Fixed
+## 🩹 Known Issues — All Fixed
 
-### Fixed 2026-03-19
-**Symptom:** `ct.ftp.sh` returning "Unable to connect" / `trading-nginx` stuck in crash loop.
+### Fixed 2026-04-18 — `502 Bad Gateway` after Dashboard Update
+**Symptom:** `ct.ftp.sh` showing `502 Bad Gateway` after a `cti_dashboard_pro` code push.
 
-**Root Cause:** A stray `}` brace in `/home/ubuntu/nginx-trading.conf` caused nginx to fail its config syntax check on startup, putting the container into a crash-restart loop.
+**Root cause:** The `Dockerfile` was outdated on the VPS (using `python:3.9-slim`, missing `libcairo2-dev` and other build tools). `pycairo` (required by `xhtml2pdf`) failed to compile during Docker image rebuild. Additionally, `auto_sync.sh` had `--exclude="Dockerfile"` in its rsync command, preventing the fixed Dockerfile from reaching the VPS.
 
-**Fix Applied:** Rewrote `nginx-trading.conf` with corrected syntax and modernised `http2 on` directive.
-
----
-
-### Fixed 2026-03-20 — Mobile Hamburger Menu / Input Focus Bug
-**Symptom:** On mobile (`ct.ftp.sh`), opening the hamburger menu in the Thermal Analysis tab and tapping any input field caused the menu to immediately close before the input could receive focus.
-
-**Root Cause:** The backdrop `<div>` covered the full viewport. Touch events on sidebar inputs bubbled up through the DOM to the backdrop's `click` listener, firing `closeIfOpen()` before focus landed on the input.
-
-**Fix Applied — 3-layer approach:**
-1. **Inputs moved inline (primary fix):** All operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) are now rendered inline within the `thermalTabPanel` on mobile (`lg:hidden`). On desktop they remain in the sidebar. This matches the UX pattern of all other tabs and eliminates the bug entirely for operational use.
-2. **`data-mobile-mirror` sync:** Mobile inputs use `data-mobile-mirror="<id>"` attributes (no duplicate IDs). `bind-events.js` wires bidirectional sync — changes to either set propagate to `ui.inputs` and keep both in sync.
-3. **`stopPropagation` safety net:** `mobile-nav.js` adds `sidebar.addEventListener('click', e => e.stopPropagation())` so any remaining sidebar taps cannot bubble to the backdrop.
-
-**Files changed:** `index.html`, `js/ui/bind-events.js`, `js/ui/mobile-nav.js`, `js/ui/tabs.js`, `js/ui/export.js`
+**Fix applied:**
+1. Updated `Dockerfile`: `FROM python:3.9-slim` → `FROM python:3.11-slim` + added all required build-time dependencies
+2. Removed `--exclude="Dockerfile"` from `auto_sync.sh` rsync command
+3. Manually ran `docker compose down && docker compose up -d --build` on VPS to apply immediately
 
 ---
 
-### Fixed 2026-03-20 — auto_sync.sh branch mismatch
+### Fixed 2026-03-20 — `auto_sync.sh` Branch Mismatch
 **Symptom:** VPS auto-sync failing every 5 minutes with `fatal: couldn't find remote ref main`.
 
-**Root Cause:** `auto_sync.sh` had `BRANCH="main"` but the GitHub repo uses `master` as the default branch.
+**Root cause:** `auto_sync.sh` had `BRANCH="main"` but the GitHub repo uses `master`.
 
-**Fix Applied:** Updated `BRANCH="master"` in `auto_sync.sh` on the VPS and in `deploy_pro_to_vps.py` locally. Also hardened rsync excludes to prevent `__pycache__`, `auto_sync.sh`, and `.last_deployed_sha` from being deleted during sync.
+**Fix:** Updated `BRANCH="master"` in `auto_sync.sh` on VPS and in `deploy_pro_to_vps.py` locally.
+
+---
+
+### Fixed 2026-03-19 — `trading-nginx` Crash Loop
+**Symptom:** `ct.ftp.sh` returning "Unable to connect" — `trading-nginx` stuck in crash loop.
+
+**Root cause:** Stray `}` brace in `/home/ubuntu/nginx-trading.conf` — nginx failed its config syntax check on startup.
+
+**Fix:** Rewrote `nginx-trading.conf` with corrected syntax and modernised `http2 on` directive.
 
 ---
 
 ## 💾 Automated Backups
-
-A daily backup to Google Drive runs automatically:
 
 | Detail | Value |
 |--------|-------|
 | **Service** | `backup-trading-vps.timer` (systemd) |
 | **Schedule** | Daily at ~07:30 IST |
 | **Destination** | `gdrive-vps:Vps Backup/backup images/uk-trading-vps/` |
-| **Retention** | 5 most recent archives kept |
+| **Retention** | 5 most recent archives |
 | **Log** | `/var/log/backup-trading-vps.log` |
 
 ```bash
-# Check backup timer
 sudo systemctl status backup-trading-vps.timer
-
-# View backup log
 sudo tail -50 /var/log/backup-trading-vps.log
 ```
 
 ---
 
-## 5. Verify the Installation
+## ✅ Verify Installation
 
-Navigate to `https://ct.ftp.sh` in a browser:
-1. You should be redirected to the **Authelia login page**
-2. After logging in, the CTI Dashboard Pro should load fully
-3. Test the Excel Data Filter tab and Performance Prediction tab to confirm the FastAPI backend is healthy
+1. Go to `https://ct.ftp.sh` → should redirect to Authelia login
+2. After login, CTI Dashboard Pro loads
+3. Test **Thermal Analysis** tab — curves should render
+4. Test **ATC-105 Report Builder** tab — Live Preview should update on input
+5. Test **Excel Data Filter** — upload + filter should produce a download

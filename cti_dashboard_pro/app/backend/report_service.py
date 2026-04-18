@@ -401,16 +401,20 @@ def generate_pdf_report(payload: dict):
     density_r  = atc.get("density_ratio_used", atc.get("density_ratio", "—"))
 
     math_results = {
-        "adj_flow":      adj_flow,
-        "pred_cwt":      pred_cwt,
-        "test_cwt":      test_cwt,
-        "shortfall":     shortfall,
-        "capability":    capability,
-        "density_ratio": density_r,
-        "pred_flow":     pred_flow,
-        "design_wbt":    atc.get("design_wbt",  "—"),
-        "test_wbt":      atc.get("test_wbt",    "—"),
-        "test_flow":     atc.get("cross_plot_2", {}).get("flows", [None])[0],
+        "adj_flow":        adj_flow,
+        "pred_cwt":        pred_cwt,
+        "test_cwt":        test_cwt,
+        "test_hwt":        atc.get("test_hwt", "—"),
+        "test_approach":   atc.get("test_approach", "—"),
+        "shortfall":       shortfall,
+        "capability":      capability,
+        "density_ratio":   density_r,
+        "pred_flow":       pred_flow,
+        "design_wbt":      atc.get("design_wbt",  "—"),
+        "test_wbt":        atc.get("test_wbt",    "—"),
+        "test_flow":       atc.get("test_flow",   atc.get("cross_plot_2", {}).get("flows", [None])[0]),
+        "fan_power_design": atc.get("fan_power_design", None),
+        "fan_power_test":   atc.get("fan_power_test",   None),
     }
 
     # ── Table 1 (3×3 CWT grid) ────────────────────────────────────────────────
@@ -481,9 +485,10 @@ def generate_pdf_report(payload: dict):
         "design_cwt":   atc.get("design_cwt",   "—"),
         "design_hwt":   atc.get("design_hwt",   "—"),
         "design_flow":  atc.get("design_flow",  "—"),
-        "test_cwt":     test_cwt,
-        "test_hwt":     atc.get("test_hwt",    "—"),
-        "test_flow":    atc.get("test_flow",   "—"),
+        "test_cwt":      test_cwt,
+        "test_hwt":      atc.get("test_hwt",      "—"),
+        "test_flow":     atc.get("test_flow",     "—"),
+        "test_approach": atc.get("test_approach", "—"),
         # Pre-computed flow values
         "flow_90":  flow_90,
         "flow_100": flow_100,

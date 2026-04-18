@@ -1,327 +1,355 @@
-# SS Cooling Tower Dashboard - Complete Documentation
+# CTI Dashboard Pro — Complete Technical Documentation
 
-> **Last updated:** 2026-03-20
-
-## 1) Project Overview
-
-This project is a local-first engineering dashboard for cooling tower thermal analysis, psychrometric calculations, and Excel data processing/export.
-
-The dashboard is built as:
-- A static frontend (`app/web/index.html` + modular JS/CSS)
-- A high-performance Python FastAPI server (`app/backend/main.py`)
-- Backend services for Excel report generation and Excel time-window filtering
-
-Primary outcomes supported:
-- Live thermal curve generation (90/100/110% flow scenarios)
-- Thermal KPI display (supply/demand KaV/L, approach, range)
-- Psychrometric property calculations
-- Professional Excel report export
-- Batch Excel filtering and consolidated workbook export
-- Automated ATC-105 PDF formatting and evaluation
+> **Last updated:** 2026-04-18
 
 ---
 
-## 2) Core Features
+## 1. Project Overview
 
-### Thermal analysis engine
-- Computes demand KaV/L using Merkel integration logic.
-- Computes supply KaV/L from L/G and constants C, m.
-- Renders 3 performance charts:
-  - Low flow (90%)
-  - Nominal flow (100%)
-  - High flow (110%)
+A full-stack engineering dashboard for cooling tower thermal analysis, psychrometric calculations, Excel data processing, and automated ATC-105 PDF report generation.
 
-### Psychrometric calculator
-- Inputs: DBT, WBT, altitude
-- Outputs: humidity ratio, dew point, RH, enthalpy, specific volume, density, pressure
-- Validation: rejects invalid state `WBT > DBT`
-
-### Excel export (thermal report)
-- Frontend sends payload to `/api/export-excel`
-- Backend generates formatted workbook with:
-  - metadata and branded layout
-  - data tables for flow scenarios
-  - helper columns and KPIs
-  - performance charts
-
-### ATC-105 PDF Evaluation Engine
-- Intercepts full multi-state performance parameters and arrays via JSON to `/api/generate-pdf-report`.
-- Compiles rigorous mathematical intersections out of performance vectors using `matplotlib`.
-- Hydrates the visual output strictly utilizing an engineering `Jinja2` layout and `xhtml2pdf`.
-
-### Excel filter tool
-- Supports:
-  - local source folder path mode (`/api/filter-excel-local`)
-  - uploaded files mode (`/api/filter-excel`)
-- Optional Destination path input to bypass browser download and save the output directly to disk.
-- Filters by start/end time.
-- Produces:
-  - filtered data sheet
-  - summary sheet
-  - dynamic date-based report layout sheets (e.g., `12-11-2023`, `13-11-2023`) or a `Consolidated` sheet if only one date is present.
-
-### Responsive UX
-- **Thermal Analysis tab:** operational inputs (WBT, CWT, HWT, L/G ratio, constants, chart scaling) displayed **inline** in main content on mobile/tablet (`lg:hidden`); sidebar on desktop (`hidden lg:block` managed by tabs.js). Mobile export buttons also rendered inline in the same panel.
-- **Other tabs** (Psychrometric, Performance Prediction, Excel Filter): inputs always inline — no sidebar involvement.
-- Hamburger menu (mobile): shows only project metadata (client, engineer, date) and export actions — no keyboard inputs, eliminating the focus/close race condition.
-- Tablet/desktop adaptive layout with sticky mobile header and touch-friendly actions.
-- Print-focused formatting for engineering reports.
+**Stack:**
+- Frontend: Single-page HTML/CSS/JS (Tailwind CDN, Chart.js, modular ES6)
+- Backend: Python 3.11 + FastAPI + Uvicorn
+- PDF reports: Jinja2 + xhtml2pdf + Matplotlib
+- Deployment: Docker (python:3.11-slim) on Oracle UK VPS via `auto_sync.sh`
 
 ---
 
-## 3) Architecture
+## 2. Core Features
 
-## Frontend
-- `app/web/index.html`: full dashboard UI and panel structure
-- `app/web/css/main.css`: visual style, responsive behavior, print rules
-- `app/web/js/ui.js`: central state + orchestration
-- `app/web/js/ui/*`: modular UI features
+### Thermal Analysis Engine
+- Demand KaV/L: Merkel 4-point Chebyshev integration (Kell 1975 psychrometrics)
+- Supply KaV/L: `C × (L/G)^(-m)` — user-defined tower characteristic constants
+- 3 performance curves rendered: 90%, 100%, 110% water flow
+- Live KPI cards: approach, range, supply KaV/L, demand KaV/L, curve balance point
 
-### Frontend module map
-- `app/web/js/ui/constants.js` - shared field lists and curve-affecting input map
-- `app/web/js/ui/bind-events.js` - event wiring for sidebar inputs, mobile mirror inputs (via `data-mobile-mirror`), export buttons (desktop + mobile), tabs, filter, psychro, prediction, print mode
-- `app/web/js/ui/mobile-nav.js` - drawer open/close logic; `stopPropagation` on sidebar to prevent backdrop swallowing input taps
-- `app/web/js/ui/tabs.js` - tab activation, panel switching, sidebar/inline panel visibility toggling
-- `app/web/js/ui/psychro.js` - psychrometric rendering/validation
-- `app/web/js/ui/filter.js` - filter tool state + request flow
-- `app/web/js/ui/export.js` - export state + download flow; syncs status text to both desktop (`#exportStatus`) and mobile (`#exportStatusMobile`) elements
-- `app/web/js/ui/prediction.js` - CWT prediction engine wrapper
+### Psychrometric Calculator
+- Inputs: DBT, WBT, altitude (m)
+- Outputs: humidity ratio (HR), dew point (DP), RH, enthalpy (H), specific volume (SV), density
+- Validation: rejects `WBT > DBT` states
 
-### Calculation layer
-- `app/web/js/worker.js` - async fetch wrapper offloading curve generation arrays to the API
-- `app/web/js/charts.js` - Chart.js rendering wrapper
+### Excel Data Filter
+- Accepts uploaded `.xlsx` files or local folder path
+- Filters rows by start/end time window
+- Outputs: filtered data sheet + summary sheet + date-based layout sheets
+- Auto-detects time column and header row
+- Produces a "COLUMN AVERAGE" row for use with the ATC-105 auto-fill feature
 
-## Backend (IP Secured)
-- `app/backend/main.py` provides static file serving + FastAPI routes:
-  - `POST /api/calculate/kavl`
-  - `POST /api/calculate/psychro`
-  - `POST /api/calculate/predict`
-  - `POST /api/calculate/curves`
-  - `POST /api/export-excel`
-  - `POST /api/filter-excel`
-  - `POST /api/filter-excel-local`
-  - `POST /api/generate-pdf-report`
-- `app/backend/excel_gen.py` generates thermal report workbook from frontend payload
-- `app/backend/excel_filter_service.py` performs filtering/merge/report-layout generation
-- `app/backend/report_service.py` performs mathematical plotting and PDF layout engine
+### Excel Report Export
+- Generates branded thermal report `.xlsx` from current analysis inputs
+- Includes flow scenario data tables and KPIs
 
-> **⚠️ Python Backend Initialization Gotcha:**  
-> The Math Engines (`merkel_engine.py` and `psychro_engine.py`) load crucial binary lookup tables into module-level variables on startup. To prevent them from duplicating into uninitialized instances (which drops accuracy to generic fallbacks), you **must use relative imports** for these engines inside the `core/` folder (e.g. `from .psychro_engine import init_psychro_engine` inside `calculations.py`).
+### ATC-105 PDF Report Engine (full 5-step CTI method)
 
----
+See Section 4 for the complete calculation flow.
 
-## 4) Data Flow
+- **Table 1** — 3×3 CWT grid (3 ranges × 3 flows) at test WBT from Merkel engine
+- **Cross Plot 1** — CWT vs Range with test-range vertical marker; professional Matplotlib output
+- **Table 2** — CWT at test range for each flow (read from Cross Plot 1 intersections)
+- **Cross Plot 2** — Water Flow vs CWT with crosshair step annotations (adj flow → pred CWT → pred flow)
+- **Steps 4–5** — Adjusted flow, predicted CWT, shortfall, capability
+- **PDF layout** — 11-page Jinja2 template: cover, preamble, members, assessment, instruments, conclusions, suggestions, data table, air flow, ATC-105 calculation pages, final results
 
-### Thermal charts
-1. User updates thermal or axis inputs.
-2. UI updates KPI cards immediately.
-3. Worker receives `CALCULATE_CURVE` per flow percent.
-4. Worker returns curve datasets.
-5. UI renders charts and updates export readiness.
-
-### Excel export
-1. UI ensures curves are ready.
-2. UI sends payload (`inputs`, `data90`, `data100`, `data110`) to backend.
-3. Backend validates payload and writes workbook in temp directory.
-4. Backend returns XLSX bytes as downloadable response.
-
-### Excel filtering
-1. User provides time range and source path OR uploaded files.
-2. Backend parses files, detects time column/header, filters rows.
-3. Backend generates filtered master workbook and summary.
-4. Browser downloads result.
+### Excel Auto-Fill (Report Builder)
+- Upload the filtered `.xlsx` output from the Excel Data Filter
+- Backend parses "COLUMN AVERAGE" row, classifies columns by type (CWT, HWT, WBT, flow, fan power)
+- Auto-populates test condition fields in the Report Builder tab
+- Triggers live ATC-105 preview update
 
 ---
 
-## 5) API Reference
+## 3. Architecture
 
-## `POST /api/export-excel`
-Generates professional thermal report workbook.
+### Frontend Modules
 
-Request:
-- JSON body
-- Required keys:
-  - `inputs`
-  - `data90`
-  - `data100`
-  - `data110`
+| File | Purpose |
+|---|---|
+| `js/ui.js` | Central state store + orchestration |
+| `js/worker.js` | Web Worker proxy for curve API calls |
+| `js/charts.js` | Chart.js rendering wrapper |
+| `js/ui/bind-events.js` | All event listeners — inputs, buttons, tabs, file uploads |
+| `js/ui/report.js` | ATC-105 report builder logic: `_buildAtc105Payload`, `updateAtcPreview`, `syncDesignFromThermal`, `bindFilterUpload`, `generateReport` |
+| `js/ui/filter.js` | Excel filter state + request flow |
+| `js/ui/export.js` | Excel export state + download |
+| `js/ui/prediction.js` | CWT prediction wrapper |
+| `js/ui/psychro.js` | Psychrometric display + validation |
+| `js/ui/tabs.js` | Tab activation + sidebar/inline panel toggling |
+| `js/ui/mobile-nav.js` | Mobile drawer open/close |
 
+### Backend Files
+
+| File | Purpose |
+|---|---|
+| `backend/main.py` | FastAPI app: all endpoints + `Atc105Request` Pydantic model |
+| `backend/report_service.py` | `create_cross_plot_1`, `create_cross_plot_2`, `generate_pdf_report` |
+| `backend/excel_gen.py` | Thermal report `.xlsx` builder |
+| `backend/excel_filter_service.py` | Time-window filter service |
+| `backend/core/calculations.py` | `find_cwt`, `calculate_demand_kavl`, `calculate_supply_kavl` |
+| `backend/core/merkel_engine.py` | 🔒 Merkel KaV/L — **DO NOT MODIFY** |
+| `backend/core/psychro_engine.py` | 🔒 Psychrometrics — **DO NOT MODIFY** |
+| `backend/core/data/merkel_poly.bin` | 29.8 KB Chebyshev coefficients |
+| `backend/core/data/psychro_f_alt.bin` | 2D probed enhancement factor table |
+| `backend/templates/report_template.html` | Jinja2 PDF template (11 pages) |
+
+### ⚠️ Critical — Python Backend Import Rule
+The Math Engines load binary lookup tables into **module-level globals** at startup. To prevent Python's `sys.modules` from creating two isolated engine instances (which causes lookup tables to be empty during API calls), **always use relative imports** inside `core/`:
+
+```python
+# ✅ CORRECT (inside calculations.py)
+from .merkel_engine import merkel_kavl, find_cwt
+from .psychro_engine import psychro_properties
+```
+
+---
+
+## 4. ATC-105 Calculation Flow
+
+### Pydantic Request Model (`Atc105Request`)
+```
+design_wbt, design_cwt, design_hwt     — °C
+design_flow                             — m³/hr at 100% flow
+design_fan_power                        — kW (default 117)
+test_wbt, test_cwt, test_hwt           — °C
+test_flow                               — m³/hr
+test_fan_power                          — kW (default 117)
+lg_ratio, constant_c, constant_m        — tower characteristic constants
+density_ratio_override                  — optional float (uses Kell formula if None)
+```
+
+### Step-by-step computation (`/api/calculate/atc105`)
+
+**STEP 1 — Table 1 (3×3 CWT grid)**
+- Flow percentages: 90%, 100%, 110%
+- Range percentages: 80%, 100%, 120% (of design range)
+- For each (flow%, range%) combination: calls `find_cwt(inputs, test_wbt, range_pct, flow_pct)` → CWT
+- `find_cwt` balances supply KaV/L = C × (LG)^(-m) against demand KaV/L (Merkel integration)
+
+**STEP 2 — Cross Plot 1 / Table 2**
+- Interpolates across the range dimension at `test_range` (= test_hwt − test_cwt)
+- For each flow%: linear interpolation of Table 1 CWTs at test_range → `cross1[flow_pct]`
+
+**STEP 3 — Cross Plot 2 data**
+- Three (flow, CWT) pairs from Table 2 form the performance curve
+
+**STEP 4 — Adjusted Water Flow**
+```
+density_ratio = ρ_water(avg_test_T) / ρ_water(avg_design_T)   [Kell 1975]
+effective_density_ratio = density_ratio_override or density_ratio
+adj_flow = test_flow × (design_fan_power / test_fan_power)^(1/3) × effective_density_ratio^(1/3)
+```
+
+**STEP 5 — Predicted CWT, Shortfall, Capability**
+```
+pred_cwt  = interpolate/extrapolate Cross Plot 2 curve at adj_flow (x→y)
+pred_flow = interpolate/extrapolate Cross Plot 2 curve at design_cwt (y→x)
+shortfall = test_cwt - pred_cwt
+capability = (adj_flow / pred_flow) × 100   [%]
+```
+
+### API Response Keys
+```json
+{
+  "design_range", "test_range", "test_range_pct",
+  "ranges_abs",           // {80: 8.0, 100: 10.0, 120: 12.0}
+  "flows_m3h",            // {90: 3477, 100: 3864, 110: 4250}
+  "table1",               // {"90": {"80": cwt, "100": cwt, "120": cwt}, ...}
+  "cross_plot_1": {
+    "ranges_abs", "cwt_90", "cwt_100", "cwt_110",
+    "test_range", "f90_cwt", "f100_cwt", "f110_cwt"
+  },
+  "cross_plot_2": {
+    "flows", "cwts", "adj_flow", "pred_flow", "pred_cwt", "test_cwt", "design_cwt"
+  },
+  "density_test", "density_design", "density_ratio", "density_ratio_used",
+  "adj_flow", "pred_cwt", "pred_flow", "shortfall", "capability",
+  "design_wbt", "design_cwt", "design_hwt", "design_flow",
+  "test_wbt", "test_cwt", "test_hwt", "test_flow"
+}
+```
+
+---
+
+## 5. API Reference
+
+### `POST /api/calculate/atc105`
+Full 5-step CTI ATC-105 performance evaluation.
+
+Request: `Atc105Request` JSON (see Section 4).
+Response: Full calculation JSON (all steps, tables, cross-plot data, final results).
+
+### `POST /api/parse-filter-excel`
+Parses filtered Excel output for report auto-fill.
+
+Request: `multipart/form-data` with single `file` (`.xlsx`).
 Response:
-- `200` XLSX binary
-- `400/413` JSON error: `{"error":"..."}` on validation/size failures
+```json
+{
+  "cwt": 32.4, "hwt": 42.13, "wbt": 21.7,
+  "flow": 3680.0, "fan_power": 117.0, "dbt": null,
+  "columns_found": ["CWT", "HWT", "WBT", "FLOW", "FANPOWER"]
+}
+```
 
-## `POST /api/generate-pdf-report`
-Generates automated ATC-105 PDF evaluations.
+### `POST /api/generate-pdf-report`
+Renders and streams the ATC-105 PDF report.
 
-Request:
-- JSON full payload mapping of Client Context, Mathematical Results, and Data intersections.
+Request JSON keys:
+```
+report_title, client, asset, test_date, report_date
+atc105                  ← full response from /api/calculate/atc105
+preamble_paragraphs     ← list of strings
+members_client          ← list of strings
+members_ssctc           ← list of strings
+assessment_method       ← list of strings
+instrument_placement    ← list of strings
+conclusions             ← list of strings
+suggestions             ← list of strings
+final_data_table        ← list of {name, unit, test1, test2, test3}
+data_notes              ← list of strings
+airflow                 ← {avg_velocity, area, total_flow}
+```
 
-Response:
-- `200` PDF byte stream directly forcing browser download.
-- `500` Failure.
+Response: `200` PDF binary stream / `500` JSON error with traceback.
 
-## `POST /api/filter-excel`
-Filters uploaded Excel files by time range.
+### `POST /api/export-excel`
+Generates thermal analysis report `.xlsx`.
 
-Request:
-- `multipart/form-data`
-- fields:
-  - `startTime`
-  - `endTime`
-  - one or more `files` (`.xlsx`)
+Request: `{inputs, data90, data100, data110}` JSON.
+Response: `200` XLSX binary.
 
-Response:
-- `200` XLSX binary
-- `400/413` JSON error
+### `POST /api/filter-excel`
+Filters uploaded `.xlsx` files by time range.
 
-## `POST /api/filter-excel-local`
-Filters `.xlsx` files found in a local folder path.
+Request: `multipart/form-data` — `startTime`, `endTime`, one or more `files`.
+Response: `200` XLSX binary / `400` error.
 
-Request:
-- JSON body with:
-  - `startTime`
-  - `endTime`
-  - `sourcePath`
-  - `destPath` (optional)
+### `POST /api/filter-excel-local`
+Filters `.xlsx` files from a local folder path.
 
-Response:
-- `200` JSON `{"message": "..."}` if `destPath` is provided (file saved directly to disk)
-- `200` XLSX binary if `destPath` is omitted
-- `400/413` JSON error
+Request: `{startTime, endTime, sourcePath, destPath?}` JSON.
+Response: `200` XLSX binary (or JSON message if `destPath` provided).
 
----
+### `POST /api/calculate/kavl`
+Single Merkel KaV/L point: `{wbt, hwt, cwt, lg}` → `{kavl}`.
 
-## 6) Directory and File Guide
+### `POST /api/calculate/psychro`
+Psychrometric properties: `{dbt, wbt, alt}` → `{hr, dp, rh, h, sv, density}`.
 
-Key runtime files:
-- `app/web/index.html` - dashboard entry
-- `app/web/css/main.css` - styling + print overrides
-- `app/web/js/ui.js` - central orchestrator
-- `app/web/js/ui/` - modular UI code
-- `app/web/js/worker.js` - background curve calculations
-- `app/backend/main.py` - FastAPI server + backend endpoints
-- `app/backend/core/merkel_engine.py` - IP Secured Merkel integration
-- `app/backend/core/psychro_engine.py` - IP Secured Psychrometrics
-- `app/backend/excel_gen.py` - report generation
-- `app/backend/excel_filter_service.py` - filter service
-- `start_dashboard.bat` - one-click launch
-- `app/scripts/test_backend.mjs` - backend/engine smoke test
-
-Supporting folders:
-- `app/backend/core/data/` - binary tables serving python engines
-- `app/reports/` - generated outputs and stored exports
-- `docs/` - documentation and references
+### `POST /api/calculate/curves`
+Full 3-flow performance curves for Chart.js rendering.
 
 ---
 
-## 7) Setup and Run
+## 6. Report Service — Plot Details
 
-## Windows quick start (recommended)
-1. Open `Caclulator/start_dashboard.bat`
-2. It:
-   - verifies Python availability
-   - installs required Python packages if needed
-   - starts server on `http://localhost:8000`
-3. Keep terminal open while using dashboard. Press `Ctrl+C` for a graceful shutdown.
+### `create_cross_plot_1(cp1)`
+- White background, clean professional axes
+- Three smooth interpolated curves: 90% (purple), 100% (green), 110% (blue)
+- Test-range vertical line (red) with shaded band
+- Intersection points annotated with coloured bbox labels + `-|>` arrowheads
+- Horizontal dashed guide lines from intersections to Y-axis
+- TABLE 2 summary inset box (lower right)
 
-## Manual run
-From `cti_dashboard_pro/`:
-- `python app/backend/main.py`
+### `create_cross_plot_2(cp2)`
+- Piecewise-linear curve from Table 2 data (extrapolated with last-segment slope)
+- Orange vertical line: adjusted water flow
+- Cyan dashed horizontal: predicted CWT
+- Purple dashed horizontal + green vertical: design CWT → predicted flow crosshair
+- Red solid horizontal: test CWT
+- All key points annotated with coloured bbox labels + arrows
 
-Then open:
-- `http://localhost:8000`
-
-Python dependencies (auto-installed by launcher):
-- `fastapi`
-- `uvicorn`
-- `pydantic`
-- `python-multipart`
-- `xlsxwriter`
-- `pandas`
-- `openpyxl`
-- `python-dateutil`
+### `generate_pdf_report(payload)`
+- Calls `create_cross_plot_1` and `create_cross_plot_2`
+- Renders `report_template.html` with Jinja2
+- Passes `_f0`, `_f1`, `_f2` format-helper callables to the template
+- Converts rendered HTML → PDF bytes via `xhtml2pdf.pisa.CreatePDF`
+- Returns raw PDF bytes (streamed to browser as attachment)
 
 ---
 
-## 8) Performance and UX Notes
+## 7. PDF Report Layout (11 pages)
 
-Implemented hardening includes:
-- Worker-based curve generation (no heavy UI blocking)
-- Debounced heavy recalculation
-- Recalculation only for curve-affecting inputs
-- Duplicate curve-request skipping via signature checks
-- Mobile drawer behavior and state management
-- Improved export/filter status handling
-- Psychrometric readiness guard during engine initialization
-- Invalid psychrometric state clears stale output values
+| Page | Content |
+|---|---|
+| 1 | Cover — title, asset, owner, dates, SSCTC attribution |
+| 2 | Preamble |
+| 3 | Members Present |
+| 4 | Assessment Method + Instrument Placement |
+| 5 | Conclusions + Suggestions |
+| 6 | Final Data Table (3-test comparison) |
+| 7 | Air Flow Data (anemometer traverses) |
+| 8 | ATC-105 design vs test conditions + Table 1 + Table 2 |
+| 9 | Cross Plot 1 |
+| 10 | Steps 3–4 + Adjusted Flow table + Cross Plot 2 |
+| 11 | Step 5 — Predicted CWT, shortfall, capability (verdict box) |
 
----
-
-## 9) Testing and Validation
-
-## Smoke test
-Run from `Caclulator/`:
-- `node app/scripts/test_backend.mjs`
-
-This verifies:
-- psychrometric output path
-- Merkel KaV/L computation path
-- top-level calculations pipeline consistency
-
-## Manual QA checklist
-- Thermal/Psychro/Filter/Prediction tab switching
-- **Mobile:** operational inputs visible inline under result cards (no hamburger required)
-- **Mobile:** hamburger opens → shows only project scope + export → tapping inputs/buttons does NOT close menu
-- **Desktop:** sidebar shows full inputs + export sidebar on thermal tab; hides on other tabs
-- Mobile Export Excel and Report PDF buttons function identically to sidebar buttons
-- Export status text updates in both sidebar and mobile inline panel
-- Export button disable/enable state transition (both desktop and mobile buttons)
-- Changing an input on mobile updates sidebar canonical value and vice-versa (bidirectional sync)
-- Psychrometric validation (`WBT > DBT`)
-- Filter validation errors and successful download flow
-- Print preview/report layout readability
+SSCTC header bar appears at top of pages 2–11. Page numbers appear in footer.
 
 ---
 
-## 10) Troubleshooting
+## 8. Data Flow
 
-## Dashboard not loading
-- Confirm server is running at `http://localhost:8000`
-- Ensure no port conflict on `8000`
+### ATC-105 Report Generation
+1. User fills Design Conditions (or clicks "Sync from Thermal Tab")
+2. User fills Test Conditions (manually or via "Auto-Fill from Filter Output")
+3. Live ATC-105 Preview updates on every input change (debounced)
+4. User clicks "Generate Report" → `report.js` calls `/api/calculate/atc105`
+5. Full atc105 result + narrative payload → `POST /api/generate-pdf-report`
+6. PDF bytes streamed → browser download
 
-## Export button stays disabled
-- Wait for curves to complete.
-- Check invalid axis ranges (`X min < X max`, `Y min < Y max`).
+### Excel Auto-Fill Flow
+1. User runs Excel Data Filter → downloads filtered `.xlsx`
+2. In Report Builder tab, user uploads the file via "Auto-Fill from Filter Output"
+3. `POST /api/parse-filter-excel` → extracts COLUMN AVERAGE row
+4. Frontend auto-fills: `rep-cwt`, `rep-hwt`, `rep-test-wbt`, `rep-flow`, `rep-test-fanpow`
+5. Live ATC-105 Preview updates automatically
 
-## Psychrometric shows `--`
-- Check DBT/WBT/Altitude are numeric
-- Ensure `WBT <= DBT`
-- Wait for engine initialization to complete
-
-## Filter export fails
-- Verify time values and source path
-- Ensure files are valid `.xlsx`
-- Confirm time column exists in source sheets
-
-## Tailwind CDN warning in console
-- Current UI uses CDN script for convenience in local environment.
-- For production hardening, migrate to local Tailwind build pipeline.
+### Thermal Chart Flow
+1. Input change → debounced → `CALCULATE_CURVE` message to worker
+2. Worker calls `/api/calculate/curves` → returns curve datasets
+3. Charts rendered via Chart.js; KPI cards updated
 
 ---
 
-## 11) Security and operational notes
+## 9. Known Bugs Fixed
 
-- Server enforces payload size limits for JSON/multipart routes.
-- Filenames are sanitized before report generation.
-- Local-path filtering is intended for trusted local use.
-- Keep this service local/network-restricted unless further hardened.
+| Date | Bug | Fix |
+|---|---|---|
+| 2026-04-18 | `502 Bad Gateway` on `ct.ftp.sh` after Dockerfile update | Upgraded `FROM python:3.9-slim` → `python:3.11-slim`; added `libcairo2-dev`, `libpango1.0-dev` and other build tools for pycairo compilation; removed `--exclude="Dockerfile"` from `auto_sync.sh` |
+| 2026-04-18 | Blank charts on Thermal Analysis tab | Fixed `try:` (Python syntax) → `try {` (JS syntax) in `report.js` — SyntaxError broke the module |
+| 2026-04-18 | AM/PM assignment bug in Excel filter | `filter.js` line 48: `h >= 12 ? 'PM' : 'PM'` → `h >= 12 ? 'PM' : 'AM'` |
+| 2026-04-18 | `'float' object is not iterable` in PDF generation | `report_service.py`: `max(flows[0] ...)` → `(flows[-1] if pred_flow is None else max(...))` |
+| 2026-03-20 | Mobile hamburger closes on input tap | Moved operational inputs inline in `thermalTabPanel`; added `stopPropagation` on sidebar |
+| 2026-03-20 | `auto_sync.sh` branch mismatch (`main` vs `master`) | Updated `BRANCH="master"` in `auto_sync.sh` |
+| 2026-03-19 | `trading-nginx` crash loop | Fixed stray `}` in `nginx-trading.conf` |
 
 ---
 
-## 12) Future recommendations
+## 10. Setup and Run
 
-- Replace Tailwind CDN with build-time Tailwind output.
-- Add automated browser regression suite (desktop/tablet/mobile).
-- Add API contract tests for export/filter endpoints.
-- Package as installable desktop app if required.
+### Windows (recommended)
+```bash
+start_dashboard.bat   # validates Python, installs deps, starts server
+```
 
+### Manual
+```bash
+cd cti_dashboard_pro
+pip install fastapi uvicorn pydantic python-multipart pandas openpyxl xlsxwriter python-dateutil jinja2 xhtml2pdf matplotlib
+python -m uvicorn app.backend.main:app --host 127.0.0.1 --port 8000
+```
+Open `http://localhost:8000`.
+
+### Docker (production)
+See `VPS_HOSTING_GUIDE.md`.
+
+---
+
+## 11. Security and Operational Notes
+
+- Payload size limits enforced on JSON and multipart routes
+- Filenames sanitized before report generation
+- Local-path filtering intended for trusted local use only
+- Core math engines (merkel, psychro) are compiled to binary tables — IP protected
+- VPS: protected by Authelia SSO (`https://ct.ftp.sh`)

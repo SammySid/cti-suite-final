@@ -7,13 +7,13 @@
         /* ── Page setup ─────────────────────────────────────────────────────── */
         @page {
             size: A4 portrait;
-            margin-top: 1.8cm;
-            margin-bottom: 1.8cm;
+            margin-top: 2.0cm;
+            margin-bottom: 2.0cm;
             margin-left: 1.8cm;
             margin-right: 1.8cm;
             @frame footer_frame {
                 -pdf-frame-content: pageFooterContent;
-                bottom: 0.3cm;
+                bottom: 0.4cm;
                 margin-left: 1.8cm;
                 margin-right: 1.8cm;
                 height: 0.7cm;
@@ -25,40 +25,90 @@
             font-family: Helvetica, Arial, sans-serif;
             font-size: 9.5pt;
             color: #1e293b;
-            line-height: 1.55;
+            line-height: 1.6;
+        }
+
+        /* ── Running page header ───────────────────────────────────────────── */
+        .ssctc-hdr {
+            border-bottom: 1.5px solid #1e3a5f;
+            padding-bottom: 4px;
+            margin-bottom: 14px;
+        }
+        .ssctc-hdr table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ssctc-hdr td.hdr-brand {
+            font-size: 8pt;
+            font-weight: bold;
+            color: #1e3a5f;
+            vertical-align: middle;
+        }
+        .ssctc-hdr td.hdr-sub {
+            font-size: 7pt;
+            color: #64748b;
+            vertical-align: middle;
+            text-align: right;
         }
 
         /* ── Section header bar ────────────────────────────────────────────── */
         .section-bar {
             background-color: #1e3a5f;
             color: white;
-            font-size: 10.5pt;
+            font-size: 10pt;
             font-weight: bold;
-            padding: 5px 10px;
-            letter-spacing: 0.04em;
-            margin-top: 18px;
-            margin-bottom: 8px;
+            padding: 6px 12px;
+            letter-spacing: 0.05em;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
         .section-bar-light {
             background-color: #dbeafe;
             color: #1e3a5f;
-            font-size: 10pt;
+            font-size: 9.5pt;
             font-weight: bold;
-            padding: 4px 10px;
+            padding: 5px 10px;
             border-left: 4px solid #1e3a5f;
             margin-top: 14px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
-        /* ── SSCTC running header (inline, on non-cover pages) ─────────────── */
-        .ssctc-hdr {
-            border-bottom: 2px solid #1e3a5f;
-            padding-bottom: 3px;
-            margin-bottom: 10px;
-            font-size: 7.5pt;
-            color: #475569;
+        /* ── Step header (table-based for xhtml2pdf alignment) ─────────────── */
+        table.step-hdr {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            margin-bottom: 6px;
         }
-        .ssctc-hdr strong { color: #1e3a5f; font-size: 8pt; }
+        table.step-hdr td.step-num {
+            width: 58px;
+            background-color: #1d4ed8;
+            color: white;
+            font-size: 8.5pt;
+            font-weight: bold;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+            letter-spacing: 0.08em;
+        }
+        table.step-hdr td.step-title {
+            padding: 6px 14px;
+            font-size: 9.5pt;
+            font-weight: bold;
+            color: #1e3a5f;
+            background-color: #eff6ff;
+            border-left: 3px solid #1d4ed8;
+            vertical-align: middle;
+        }
+        p.step-desc {
+            font-size: 8pt;
+            color: #475569;
+            margin: 4px 0 10px 0;
+            line-height: 1.55;
+            font-style: italic;
+            padding-left: 4px;
+            border-left: 2px solid #e2e8f0;
+        }
 
         /* ── Tables ─────────────────────────────────────────────────────────── */
         table.data-table {
@@ -66,84 +116,127 @@
             border-collapse: collapse;
             margin-top: 8px;
             font-size: 8.5pt;
+            page-break-inside: avoid;
         }
         table.data-table th {
             background-color: #1e3a5f;
             color: white;
             font-weight: bold;
-            padding: 5px 7px;
+            padding: 6px 8px;
             text-align: center;
             border: 1px solid #1e3a5f;
         }
         table.data-table td {
             border: 1px solid #cbd5e1;
-            padding: 4px 7px;
+            padding: 5px 8px;
             text-align: center;
             vertical-align: middle;
         }
         table.data-table td.left { text-align: left; font-weight: 600; color: #0f172a; }
         table.data-table tr:nth-child(even) td { background-color: #f8fafc; }
         table.data-table tr.highlight td { background-color: #dbeafe; font-weight: bold; }
-        table.data-table tr.total-row td  { background-color: #1e3a5f; color: white; font-weight: bold; }
+        table.data-table tr.total-row td { background-color: #1e3a5f; color: white; font-weight: bold; }
 
-        /* ── Step label badge ───────────────────────────────────────────────── */
-        .step-badge {
-            display: inline-block;
-            background-color: #1d4ed8;
-            color: white;
-            font-size: 8pt;
-            font-weight: bold;
-            padding: 2px 10px;
-            border-radius: 2px;
-            letter-spacing: 0.06em;
-            margin-bottom: 4px;
-        }
-
-        /* ── Result / conclusion boxes ──────────────────────────────────────── */
+        /* ── Result panels ──────────────────────────────────────────────────── */
         .result-panel {
             border: 1.5px solid #93c5fd;
             background-color: #eff6ff;
-            padding: 10px 14px;
-            margin-top: 10px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            page-break-inside: avoid;
         }
         .result-panel h4 {
-            margin: 0 0 6px 0;
+            margin: 0 0 8px 0;
             color: #1e3a5f;
             font-size: 9.5pt;
             border-bottom: 1px solid #bfdbfe;
-            padding-bottom: 3px;
+            padding-bottom: 4px;
         }
 
+        /* ── Notes panel ────────────────────────────────────────────────────── */
+        .notes-panel {
+            margin-top: 16px;
+            background-color: #f8fafc;
+            border-left: 4px solid #1e3a5f;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            page-break-inside: avoid;
+        }
+        .notes-panel p.notes-title {
+            font-weight: bold;
+            color: #1e3a5f;
+            font-size: 9pt;
+            margin: 0 0 8px 0;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 4px;
+        }
+        .notes-panel ol {
+            margin: 0 0 0 18px;
+            padding: 0;
+            line-height: 1.75;
+        }
+        .notes-panel ol li {
+            margin-bottom: 5px;
+            font-size: 8.5pt;
+            color: #334155;
+        }
+
+        /* ── Conclusion / shortfall boxes ──────────────────────────────────── */
         .conclusion-panel {
             border: 2px solid #fca5a5;
             background-color: #fef2f2;
-            padding: 12px 16px;
-            margin-top: 14px;
+            padding: 14px 18px;
+            margin-top: 16px;
             text-align: center;
+            page-break-inside: avoid;
         }
-        .shortfall-num { font-size: 20pt; font-weight: bold; color: #b91c1c; }
+        .shortfall-num  { font-size: 20pt; font-weight: bold; color: #b91c1c; }
         .capability-num { font-size: 26pt; font-weight: bold; color: #1d4ed8; }
 
+        /* ── Plot frame ─────────────────────────────────────────────────────── */
+        .plot-frame {
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            padding: 8px;
+            margin: 12px 0 4px 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        .plot-frame img {
+            width: 100%;
+            max-width: 640px;
+        }
+        .plot-caption {
+            font-size: 7.5pt;
+            color: #475569;
+            font-style: italic;
+            text-align: center;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
         /* ── Utility ────────────────────────────────────────────────────────── */
-        .page-break { -pdf-pagebreak: yes; }
-        .plot-wrap   { text-align: center; margin: 10px 0 6px 0; }
-        .plot-wrap img { width: 100%; max-width: 680px; }
-        .txt-center  { text-align: center; }
-        .txt-justify { text-align: justify; }
-        .txt-small   { font-size: 8pt; color: #475569; }
-        .txt-note    { font-size: 8pt; color: #334155; font-style: italic; }
-        p.body { margin: 0 0 6px 0; text-align: justify; }
-        ol.report-list { margin-left: 18px; text-align: justify; line-height: 1.65; }
-        ol.report-list li { margin-bottom: 5px; }
-        ul.member-list { list-style: disc; margin-left: 20px; line-height: 1.7; }
+        .page-break    { -pdf-pagebreak: yes; }
+        .avoid-break   { page-break-inside: avoid; }
+        .txt-center    { text-align: center; }
+        .txt-justify   { text-align: justify; }
+        .txt-small     { font-size: 8pt; color: #475569; }
+        .txt-note      { font-size: 8pt; color: #334155; font-style: italic; }
+        p.body         { margin: 0 0 7px 0; text-align: justify; line-height: 1.65; }
+        ol.report-list { margin-left: 20px; text-align: justify; line-height: 1.7; }
+        ol.report-list li { margin-bottom: 6px; }
+        ul.member-list { list-style: disc; margin-left: 22px; line-height: 1.75; }
     </style>
 </head>
 <body>
 
 <!-- ═══ Footer ═══════════════════════════════════════════════════════════════ -->
 <div id="pageFooterContent">
-    <div style="border-top: 1px solid #cbd5e1; padding-top: 2px; font-size: 7.5pt; color: #64748b; text-align: right;">
-        COOLING TOWER TESTING BY SSCTC &nbsp;|&nbsp; {{ report_title }} &nbsp;|&nbsp;
+    <div style="border-top: 1px solid #cbd5e1; padding-top: 2px; font-size: 7pt;
+                color: #64748b; text-align: right;">
+        SS COOLING TOWER CONSULTANTS &nbsp;|&nbsp; {{ report_title }} &nbsp;|&nbsp;
         Page <pdf:pagenumber> of <pdf:pagecount>
     </div>
 </div>
@@ -151,79 +244,87 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 1 : COVER
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div style="margin-top: 60px; text-align: center;">
+<div style="margin-top: 55px; text-align: center;">
 
     <!-- Header stripe -->
     <div style="background-color: #1e3a5f; padding: 18px 30px; margin-bottom: 0;">
-        <p style="color: white; font-size: 8pt; letter-spacing: 0.15em; margin: 0 0 4px 0;">
+        <p style="color: white; font-size: 9pt; letter-spacing: 0.14em; margin: 0 0 5px 0; font-weight: bold;">
             SS COOLING TOWER CONSULTANTS
         </p>
-        <p style="color: #bfdbfe; font-size: 7.5pt; margin: 0;">
-            Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training
+        <p style="color: #bfdbfe; font-size: 7.5pt; margin: 0; letter-spacing: 0.02em;">
+            Thermal Design &nbsp;&middot;&nbsp; CT Assessment &amp; Upgrade &nbsp;&middot;&nbsp;
+            CT Testing &nbsp;&middot;&nbsp; Technical Management &amp; Training
         </p>
     </div>
 
     <!-- Title block -->
-    <div style="border: 1.5px solid #1e3a5f; border-top: none; padding: 28px 30px 20px;">
-        <p style="font-size: 17pt; font-weight: bold; color: #0f172a; margin: 0 0 6px 0; letter-spacing: 0.01em;">
+    <div style="border: 1.5px solid #1e3a5f; border-top: none; padding: 30px 30px 22px;">
+        <p style="font-size: 16pt; font-weight: bold; color: #0f172a; margin: 0 0 8px 0;
+                  letter-spacing: 0.01em; line-height: 1.3;">
             {{ report_title }}
         </p>
-        <p style="font-size: 10pt; color: #475569; margin: 0; font-weight: bold; letter-spacing: 0.04em;">
+        <p style="font-size: 9.5pt; color: #475569; margin: 0; font-weight: bold;
+                  letter-spacing: 0.05em;">
             POST TEST — SINGLE CELL AFTER DISTRIBUTION SYSTEM &amp; FAN CHANGE
         </p>
     </div>
 
     <!-- Asset block -->
     <div style="background-color: #dbeafe; border: 1.5px solid #1e3a5f; border-top: none;
-                padding: 10px 30px;">
+                padding: 11px 30px;">
         <p style="font-size: 14pt; font-weight: bold; color: #1e3a5f; margin: 0;">{{ asset }}</p>
     </div>
 
-    <!-- Metadata -->
-    <div style="margin-top: 40px; font-size: 10pt; text-align: left;
-                border: 1px solid #cbd5e1; padding: 16px 24px;">
+    <!-- Metadata table -->
+    <div style="margin-top: 36px; text-align: left; border: 1px solid #cbd5e1; padding: 18px 24px;">
         <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-                <td style="width: 42%; padding: 5px 0; color: #475569; font-size: 9pt;">
-                    <strong>OWNER / CLIENT</strong>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="width: 44%; padding: 7px 0; color: #64748b; font-size: 8.5pt; vertical-align: top;">
+                    <strong style="color: #475569;">OWNER / CLIENT</strong>
                 </td>
-                <td style="padding: 5px 0; font-weight: bold; color: #0f172a;">
+                <td style="padding: 7px 0; font-weight: bold; color: #0f172a; font-size: 9.5pt;">
                     {{ client }}
                 </td>
             </tr>
-            <tr>
-                <td style="padding: 5px 0; color: #475569; font-size: 9pt;">
-                    <strong>TESTING AGENCY &amp; EQUIPMENT PROVIDER</strong>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 7px 0; color: #64748b; font-size: 8.5pt; vertical-align: top;">
+                    <strong style="color: #475569;">TESTING AGENCY &amp; EQUIPMENT PROVIDER</strong>
                 </td>
-                <td style="padding: 5px 0; font-weight: bold; color: #0f172a;">
+                <td style="padding: 7px 0; font-weight: bold; color: #0f172a; font-size: 9.5pt;">
                     SS COOLING TOWER CONSULTANTS (SSCTC)
                 </td>
             </tr>
-            <tr>
-                <td style="padding: 5px 0; color: #475569; font-size: 9pt;">
-                    <strong>DATE OF TEST</strong>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 7px 0; color: #64748b; font-size: 8.5pt;">
+                    <strong style="color: #475569;">DATE OF TEST</strong>
                 </td>
-                <td style="padding: 5px 0; font-weight: bold; color: #0f172a;">{{ test_date }}</td>
+                <td style="padding: 7px 0; font-weight: bold; color: #0f172a; font-size: 9.5pt;">
+                    {{ test_date }}
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 7px 0; color: #64748b; font-size: 8.5pt;">
+                    <strong style="color: #475569;">REPORT DATE</strong>
+                </td>
+                <td style="padding: 7px 0; font-weight: bold; color: #0f172a; font-size: 9.5pt;">
+                    {{ report_date }}
+                </td>
             </tr>
             <tr>
-                <td style="padding: 5px 0; color: #475569; font-size: 9pt;">
-                    <strong>REPORT DATE</strong>
+                <td style="padding: 7px 0; color: #64748b; font-size: 8.5pt;">
+                    <strong style="color: #475569;">ASSESSMENT METHOD</strong>
                 </td>
-                <td style="padding: 5px 0; font-weight: bold; color: #0f172a;">{{ report_date }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 5px 0; color: #475569; font-size: 9pt;">
-                    <strong>ASSESSMENT METHOD</strong>
+                <td style="padding: 7px 0; font-weight: bold; color: #0f172a; font-size: 9.5pt;">
+                    CTI ATC-105 Merkel Method
                 </td>
-                <td style="padding: 5px 0; font-weight: bold; color: #0f172a;">CTI ATC-105 Merkel Method</td>
             </tr>
         </table>
     </div>
 
-    <!-- Footer on cover -->
-    <div style="margin-top: 50px; border-top: 1px solid #e2e8f0; padding-top: 10px;
+    <!-- Cover footer -->
+    <div style="margin-top: 48px; border-top: 1px solid #e2e8f0; padding-top: 10px;
                 font-size: 7.5pt; color: #94a3b8; text-align: center;">
-        7 Uma Sada – RCHS, CA Road, Chembur, Mumbai – 400071 &nbsp;|&nbsp; www.ssctc.org
+        7 Uma Sada – RCHS, CA Road, Chembur, Mumbai – 400071 &nbsp;&middot;&nbsp; www.ssctc.org
     </div>
 </div>
 
@@ -232,7 +333,14 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 2 : PREAMBLE
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; 7 Uma Sada – RCHS, CA Road, Chembur, Mumbai – 400071 &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 <div class="section-bar">PREAMBLE</div>
 {% for p in preamble_paragraphs %}
 <p class="body">{{ p }}</p>
@@ -243,7 +351,14 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 3 : MEMBERS PRESENT
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 <div class="section-bar">MEMBERS PRESENT FOR THE TEST</div>
 
 {% if members_client %}
@@ -254,7 +369,7 @@
 {% endif %}
 
 {% if members_ssctc %}
-<div class="section-bar-light" style="margin-top: 14px;">SS COOLING TOWER CONSULTANTS (SSCTC)</div>
+<div class="section-bar-light" style="margin-top: 16px;">SS COOLING TOWER CONSULTANTS (SSCTC)</div>
 <ul class="member-list">
     {% for m in members_ssctc %}<li>{{ m }}</li>{% endfor %}
 </ul>
@@ -265,7 +380,14 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 4 : ASSESSMENT METHOD & INSTRUMENT PLACEMENT
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 {% if assessment_method %}
 <div class="section-bar">ASSESSMENT METHOD &amp; ANALYSIS</div>
 {% for a in assessment_method %}
@@ -285,7 +407,14 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 5 : CONCLUSIONS & SUGGESTIONS
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 {% if conclusions %}
 <div class="section-bar">CONCLUSION AND REMARKS</div>
 <ol class="report-list">
@@ -294,7 +423,7 @@
 {% endif %}
 
 {% if suggestions %}
-<div class="section-bar" style="margin-top: 20px;">SUGGESTIONS AND SPECIAL NOTES</div>
+<div class="section-bar" style="margin-top: 22px;">SUGGESTIONS AND SPECIAL NOTES</div>
 <ol class="report-list">
     {% for s in suggestions %}<li>{{ s }}</li>{% endfor %}
 </ol>
@@ -305,18 +434,25 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 6 : FINAL DATA TABLE (PRE / POST COMPARISON)
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 {% if final_data_table %}
 <div class="section-bar">FINAL DATA AND CONCLUSION OF PRE AND POST TEST</div>
 
-<table class="data-table">
+<table class="data-table avoid-break">
     <thead>
         <tr>
-            <th style="width:34%; text-align:left;">Parameter</th>
+            <th style="width:34%; text-align:left; padding: 7px 8px;">Parameter</th>
             <th style="width:8%;">Unit</th>
-            <th>TEST 1<br/><span style="font-weight:normal; font-size:7.5pt;">Pre-Test</span></th>
-            <th>TEST 2<br/><span style="font-weight:normal; font-size:7.5pt;">Post Fan Change</span></th>
-            <th>TEST 3<br/><span style="font-weight:normal; font-size:7.5pt;">Post Distr. Change</span></th>
+            <th>TEST 1<br/><span style="font-weight:normal; font-size:7pt;">Pre-Test</span></th>
+            <th>TEST 2<br/><span style="font-weight:normal; font-size:7pt;">Post Fan Change</span></th>
+            <th>TEST 3<br/><span style="font-weight:normal; font-size:7pt;">Post Distr. Change</span></th>
         </tr>
     </thead>
     <tbody>
@@ -333,12 +469,17 @@
 </table>
 
 {% if data_notes %}
-<div style="margin-top: 12px; font-size: 8.5pt; background-color: #f8fafc;
-            border-left: 3px solid #1e3a5f; padding: 8px 12px;">
-    <p style="font-weight: bold; margin: 0 0 4px 0;">Notes / Mathematical Findings:</p>
-    <ol style="margin: 0 0 0 16px; padding: 0; line-height: 1.6;">
+<div class="notes-panel">
+    <p class="notes-title">Notes / Mathematical Findings:</p>
+    <ol>
         {% for n in data_notes %}<li>{{ n }}</li>{% endfor %}
     </ol>
+    <p style="margin: 10px 0 0 0; font-size: 7.5pt; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 6px;">
+        <strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp;
+        Thermal Design &nbsp;&middot;&nbsp; CT Assessment &amp; Upgrade &nbsp;&middot;&nbsp;
+        CT Testing &nbsp;&middot;&nbsp; Technical Management &amp; Training &nbsp;|&nbsp;
+        www.ssctc.org
+    </p>
 </div>
 {% endif %}
 {% endif %}
@@ -348,20 +489,37 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 7 : AIR FLOW DATA
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 {% if airflow and airflow.avg_velocity %}
 <div class="section-bar">AIR FLOW DATA — ANEMOMETER TRAVERSES (CTI ATC-143)</div>
 
-<table class="data-table" style="max-width: 380px;">
-    <thead><tr><th style="text-align:left;">Metric</th><th>Value</th><th>Unit</th></tr></thead>
+<table class="data-table avoid-break" style="max-width: 380px;">
+    <thead>
+        <tr>
+            <th style="text-align:left;">Metric</th>
+            <th>Value</th>
+            <th>Unit</th>
+        </tr>
+    </thead>
     <tbody>
         <tr><td class="left">Average Measured Velocity</td><td>{{ airflow.avg_velocity }}</td><td>m/s</td></tr>
         <tr><td class="left">Total Free Area</td>          <td>{{ airflow.area }}</td>        <td>m²</td></tr>
-        <tr class="highlight"><td class="left">Total Air Flow</td><td><strong>{{ airflow.total_flow }}</strong></td><td>m³/s</td></tr>
+        <tr class="highlight">
+            <td class="left">Total Air Flow</td>
+            <td><strong>{{ airflow.total_flow }}</strong></td>
+            <td>m³/s</td>
+        </tr>
     </tbody>
 </table>
 
-<p class="txt-note" style="margin-top: 8px;">
+<p class="txt-note" style="margin-top: 10px;">
     Air flow measured per CTI ATC-143 Method of Equal Area — 10 traverses per quadrant (40 readings total for one fan).
 </p>
 <div class="page-break"></div>
@@ -370,11 +528,18 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 8 : ATC-105 DESIGN CONDITIONS
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 <div class="section-bar">ATC-105 PERFORMANCE EVALUATION — CTI METHOD</div>
 
 <!-- Design vs Test conditions summary -->
-<table class="data-table" style="max-width: 540px; margin-bottom: 14px;">
+<table class="data-table avoid-break" style="max-width: 540px; margin-bottom: 18px;">
     <thead>
         <tr>
             <th style="text-align:left; width:46%;">Parameter</th>
@@ -384,33 +549,40 @@
         </tr>
     </thead>
     <tbody>
-        <tr><td class="left">Water Flow Rate</td>     <td>M³/hr</td><td>{{ design_flow }}</td><td>{{ test_flow if test_flow else "—" }}</td></tr>
-        <tr><td class="left">Hot Water Temperature</td><td>Deg C</td><td>{{ design_hwt }}</td><td>{{ test_hwt if test_hwt else "—" }}</td></tr>
+        <tr><td class="left">Water Flow Rate</td>      <td>M³/hr</td><td>{{ design_flow }}</td><td>{{ test_flow if test_flow else "—" }}</td></tr>
+        <tr><td class="left">Hot Water Temperature</td> <td>Deg C</td><td>{{ design_hwt }}</td><td>{{ test_hwt if test_hwt else "—" }}</td></tr>
         <tr><td class="left">Cold Water Temperature</td><td>Deg C</td><td>{{ design_cwt }}</td><td>{{ test_cwt }}</td></tr>
-        <tr><td class="left">Wet Bulb Temperature</td> <td>Deg C</td><td>{{ design_wbt }}</td><td>{{ test_wbt }}</td></tr>
-        <tr><td class="left">Range</td>               <td>Deg C</td><td>{{ design_range }}</td><td>{{ test_range }}</td></tr>
+        <tr><td class="left">Wet Bulb Temperature</td>  <td>Deg C</td><td>{{ design_wbt }}</td><td>{{ test_wbt }}</td></tr>
+        <tr><td class="left">Range</td>                <td>Deg C</td><td>{{ design_range }}</td><td>{{ test_range }}</td></tr>
     </tbody>
 </table>
 
-<!-- Step 1 -->
-<span class="step-badge">STEP 1</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 2px 0;">
-    Table 1 — CWT vs Range at Test WBT = {{ test_range }}°C &nbsp;|&nbsp; (Design Range = {{ design_range }}°C)
-</p>
-<p class="txt-small" style="margin-bottom: 6px;">
-    3 performance curves at 90%, 100% and 110% water flow. A vertical line is drawn at the test WBT
-    to intersect each of the 3 Range conditions. CWT values are read at each intersection.
+<!-- ── STEP 1 ──────────────────────────────────────────────────────────────── -->
+<table class="step-hdr avoid-break">
+    <tr>
+        <td class="step-num">STEP 1</td>
+        <td class="step-title">
+            Table 1 — CWT vs Range at Test WBT = {{ test_wbt }}°C
+            &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+            Design Range = {{ design_range }}°C
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    Performance curves at 90%, 100% and 110% water flow are plotted. A vertical line is drawn
+    at the test range of {{ test_range }}°C to intersect each flow curve.
+    The CWT values at each intersection are recorded in Table 1 below.
 </p>
 
 {% if table1_rows %}
-<table class="data-table">
+<table class="data-table avoid-break">
     <thead>
         <tr>
-            <th style="text-align:left;">Range (%)</th>
-            <th>Range (°C)</th>
-            <th style="color:#c4b5fd;">CWT @ 90% Flow<br/>({{ flow_90 }} m³/hr)</th>
-            <th style="color:#86efac;">CWT @ 100% Flow<br/>({{ flow_100 }} m³/hr)</th>
-            <th style="color:#93c5fd;">CWT @ 110% Flow<br/>({{ flow_110 }} m³/hr)</th>
+            <th style="text-align:left; width:12%;">Range (%)</th>
+            <th style="width:14%;">Range (°C)</th>
+            <th style="color:#c4b5fd;">CWT @ 90% Flow<br/><span style="font-weight:normal; font-size:7pt;">({{ flow_90 }} m³/hr)</span></th>
+            <th style="color:#86efac;">CWT @ 100% Flow<br/><span style="font-weight:normal; font-size:7pt;">({{ flow_100 }} m³/hr)</span></th>
+            <th style="color:#93c5fd;">CWT @ 110% Flow<br/><span style="font-weight:normal; font-size:7pt;">({{ flow_110 }} m³/hr)</span></th>
         </tr>
     </thead>
     <tbody>
@@ -427,16 +599,22 @@
 </table>
 {% endif %}
 
-<!-- Step 2 -->
-<div style="margin-top: 16px;">
-<span class="step-badge">STEP 2</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 2px 0;">
-    Table 2 — CWT vs Water Flow at Test Range = {{ test_range }}°C &nbsp; (Cross Plot 1 intersections)
+<!-- ── STEP 2 ──────────────────────────────────────────────────────────────── -->
+<table class="step-hdr avoid-break">
+    <tr>
+        <td class="step-num">STEP 2</td>
+        <td class="step-title">
+            Table 2 — CWT vs Water Flow at Test Range = {{ test_range }}°C
+            &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+            Cross Plot 1 Intersections
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    From Cross Plot 1 — draw a vertical line at the test range of {{ test_range }}°C to read
+    CWT at each of the three water flow conditions. These values form the data points for Cross Plot 2.
 </p>
-<p class="txt-small" style="margin-bottom: 6px;">
-    From Cross Plot 1 — draw a vertical line at the test range to read CWT at each of the three water flows.
-</p>
-<table class="data-table" style="max-width: 500px;">
+<table class="data-table avoid-break" style="max-width: 500px;">
     <thead>
         <tr>
             <th style="text-align:left;">Flow Condition</th>
@@ -450,30 +628,41 @@
         <tr><td class="left">110% Flow (Blue)</td>  <td>{{ intersect.f110_flow }}</td><td>{{ intersect.f110_cwt }}</td></tr>
     </tbody>
 </table>
-</div>
 
 <div class="page-break"></div>
 
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 9 : CROSS PLOT 1
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
-<span class="step-badge">STEP 2 — CROSS PLOT 1</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 8px 0;">
-    CWT vs RANGE @ Test WBT — Three Water Flow Curves with Test Range Intersection
-</p>
-<p class="txt-small" style="margin-bottom: 8px;">
-    Plot CWT (Y-axis) vs Range (X-axis) for 90%, 100% and 110% water flows.
-    Draw a vertical line (red) at the test range of {{ test_range }}°C.
-    The intersection points give the Table 2 values used in Cross Plot 2.
-</p>
-
-<div class="plot-wrap">
-    <img src="data:image/png;base64,{{ plot_1 }}" style="width:100%; max-width:680px;" />
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
 </div>
 
-<p class="txt-note" style="margin-top: 6px; text-align: center;">
-    FIGURE 1 — Cross Plot 1: CWT vs RANGE at Test WBT = {{ test_wbt }}°C &nbsp;|&nbsp; Test Range (vertical red line) = {{ test_range }}°C
+<table class="step-hdr">
+    <tr>
+        <td class="step-num">STEP 2</td>
+        <td class="step-title">
+            CROSS PLOT 1 — CWT vs Range at Test WBT = {{ test_wbt }}°C
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    CWT (Y-axis) vs Range (X-axis) for 90%, 100% and 110% water flow curves.
+    The vertical red line marks the test range of {{ test_range }}°C.
+    Intersection points yield the Table 2 values used in Cross Plot 2.
+</p>
+
+<div class="plot-frame">
+    <img src="data:image/png;base64,{{ plot_1 }}" />
+</div>
+<p class="plot-caption">
+    FIGURE 1 — Cross Plot 1: CWT vs RANGE at Test WBT = {{ test_wbt }}°C
+    &nbsp;&middot;&nbsp; Test Range (red vertical line) = {{ test_range }}°C
 </p>
 
 <div class="page-break"></div>
@@ -481,36 +670,64 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 10 : STEP 3 + STEP 4 + CROSS PLOT 2
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
-<span class="step-badge">STEP 3</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 2px 0;">
-    Plot Cross Plot 2 — Water Flow (X) vs CWT (Y) from Table 2 data
-</p>
-<p class="txt-small" style="margin-bottom: 10px;">
-    Using the three data points from Table 2, plot CWT on Y-axis and Water Flow on X-axis.
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
+
+<!-- STEP 3 -->
+<table class="step-hdr">
+    <tr>
+        <td class="step-num">STEP 3</td>
+        <td class="step-title">
+            Cross Plot 2 — Water Flow (X-axis) vs CWT (Y-axis) from Table 2 Data
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    Using the three data points from Table 2, plot CWT on the Y-axis and Water Flow on the X-axis.
     Extend the curve to cover the adjusted water flow range.
 </p>
 
-<span class="step-badge">STEP 4</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 2px 0;">
-    Calculation of Adjusted Water Flow (Q<sub>adj</sub>)
+<!-- STEP 4 -->
+<table class="step-hdr">
+    <tr>
+        <td class="step-num">STEP 4</td>
+        <td class="step-title">
+            Calculation of Adjusted Water Flow (Q<sub>adj</sub>)
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    The test water flow is corrected for fan power and air density differences between
+    design and test conditions to obtain the adjusted flow used in Cross Plot 2.
 </p>
 
-<div class="result-panel" style="max-width: 520px; margin-bottom: 12px;">
-    <h4>Step 4 Input Parameters</h4>
+<div class="result-panel" style="max-width:520px; margin-bottom:14px;">
+    <h4>Step 4 — Input Parameters &amp; Adjusted Flow Calculation</h4>
     <table class="data-table">
-        <tr><th style="text-align:left; width:5%;">Ref</th><th style="text-align:left;">Parameter</th><th>Value</th><th>Unit</th></tr>
-        <tr><td>a</td><td class="left">Fan Power Design (W<sub>d</sub>)</td><td>117</td><td>KW</td></tr>
-        <tr><td>b</td><td class="left">Fan Power Test (W<sub>t</sub>)</td>  <td>117</td><td>KW</td></tr>
-        <tr><td>c</td><td class="left">Hot Water Temp. (Test)</td>          <td>{{ math_results.test_cwt }}</td><td>Deg C</td></tr>
-        <tr><td>d</td><td class="left">Cold Water Temp. (Test)</td>         <td>{{ test_cwt }}</td><td>Deg C</td></tr>
-        <tr><td>e</td><td class="left">Range (Test)</td>                    <td>{{ test_range }}</td><td>Deg K</td></tr>
-        <tr><td>f</td><td class="left">WBT (Test)</td>                      <td>{{ test_wbt }}</td><td>Deg C</td></tr>
-        <tr><td>h</td><td class="left">Test Flow (Q<sub>wt</sub>)</td>      <td>{{ _f0(math_results.test_flow) if math_results.test_flow else "3680" }}</td><td>M³/hr</td></tr>
-        <tr><td>i</td><td class="left">Density Ratio (ρ<sub>test</sub>/ρ<sub>design</sub>)</td><td>{{ math_results.density_ratio }}</td><td>—</td></tr>
+        <tr>
+            <th style="text-align:left; width:5%;">Ref</th>
+            <th style="text-align:left;">Parameter</th>
+            <th>Value</th>
+            <th>Unit</th>
+        </tr>
+        <tr><td>a</td><td class="left">Fan Power Design (W<sub>d</sub>)</td>  <td>{{ math_results.fan_power_design if math_results.fan_power_design else "117" }}</td><td>kW</td></tr>
+        <tr><td>b</td><td class="left">Fan Power Test (W<sub>t</sub>)</td>    <td>{{ math_results.fan_power_test if math_results.fan_power_test else "117" }}</td><td>kW</td></tr>
+        <tr><td>c</td><td class="left">Hot Water Temperature (Test)</td>       <td>{{ math_results.test_hwt if math_results.test_hwt else test_hwt }}</td><td>Deg C</td></tr>
+        <tr><td>d</td><td class="left">Cold Water Temperature (Test)</td>      <td>{{ test_cwt }}</td><td>Deg C</td></tr>
+        <tr><td>e</td><td class="left">Range (Test)</td>                       <td>{{ test_range }}</td><td>Deg K</td></tr>
+        <tr><td>f</td><td class="left">WBT (Test)</td>                         <td>{{ test_wbt }}</td><td>Deg C</td></tr>
+        <tr><td>g</td><td class="left">Approach (Test)</td>                    <td>{{ math_results.test_approach if math_results.test_approach else test_approach if test_approach else "—" }}</td><td>Deg C</td></tr>
+        <tr><td>h</td><td class="left">Test Flow (Q<sub>wt</sub>)</td>         <td>{{ _f0(math_results.test_flow) if math_results.test_flow else test_flow }}</td><td>M³/hr</td></tr>
+        <tr><td>i</td><td class="left">Density Ratio (&#961;<sub>test</sub>/&#961;<sub>design</sub>)</td><td>{{ math_results.density_ratio }}</td><td>—</td></tr>
         <tr class="highlight">
             <td colspan="2" class="left" style="font-weight:bold;">
-                Adjusted Flow Q<sub>adj</sub> = Q<sub>wt</sub> × (W<sub>d</sub>/W<sub>t</sub>)<sup>⅓</sup> × ρ<sup>⅓</sup>
+                Adjusted Flow Q<sub>adj</sub> = Q<sub>wt</sub> &times; (W<sub>d</sub>/W<sub>t</sub>)<sup>&#8531;</sup> &times; &#961;<sup>&#8531;</sup>
             </td>
             <td style="font-weight:bold; font-size:10pt;">{{ _f2(math_results.adj_flow) }}</td>
             <td>m³/hr</td>
@@ -519,12 +736,12 @@
 </div>
 
 <!-- Cross Plot 2 -->
-<div class="plot-wrap">
-    <img src="data:image/png;base64,{{ plot_2 }}" style="width:100%; max-width:680px;" />
+<div class="plot-frame">
+    <img src="data:image/png;base64,{{ plot_2 }}" />
 </div>
-<p class="txt-note" style="margin-top: 6px; text-align: center;">
-    FIGURE 2 — Cross Plot 2: Water Flow vs CWT @ Design WBT &amp; Design Range &nbsp;|&nbsp;
-    Adj. Flow = {{ _f2(math_results.adj_flow) }} m³/hr
+<p class="plot-caption">
+    FIGURE 2 — Cross Plot 2: Water Flow vs CWT @ Design WBT &amp; Design Range
+    &nbsp;&middot;&nbsp; Adjusted Flow = {{ _f2(math_results.adj_flow) }} m³/hr
 </p>
 
 <div class="page-break"></div>
@@ -532,15 +749,30 @@
 <!-- ════════════════════════════════════════════════════════════════════════════
      PAGE 11 : STEP 5 — FINAL ATC-105 RESULTS
  ═══════════════════════════════════════════════════════════════════════════════ -->
-<div class="ssctc-hdr"><strong>SS COOLING TOWER CONSULTANTS</strong> &nbsp;|&nbsp; Thermal Design · CT Assessment &amp; Upgrade · CT Testing · Technical Management &amp; Training &nbsp;|&nbsp; www.ssctc.org</div>
+<div class="ssctc-hdr">
+    <table>
+        <tr>
+            <td class="hdr-brand">SS COOLING TOWER CONSULTANTS</td>
+            <td class="hdr-sub">Thermal Design · CT Assessment &amp; Upgrade · CT Testing · www.ssctc.org</td>
+        </tr>
+    </table>
+</div>
 <div class="section-bar">FINAL ATC-105 MATHEMATICAL RESULTS</div>
 
-<span class="step-badge">STEP 5</span>
-<p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; margin: 4px 0 8px 0;">
-    Predicted CWT, Performance Shortfall and Cooling Tower Capability
+<table class="step-hdr">
+    <tr>
+        <td class="step-num">STEP 5</td>
+        <td class="step-title">
+            Predicted CWT, Performance Shortfall and Cooling Tower Capability
+        </td>
+    </tr>
+</table>
+<p class="step-desc">
+    Mark the Adjusted Water Flow on the X-axis of Cross Plot 2 and project vertically to
+    intersect the performance curve. Read off the Predicted CWT at that intersection.
 </p>
 
-<table class="data-table" style="max-width: 560px;">
+<table class="data-table avoid-break" style="max-width: 560px; margin-top: 10px;">
     <thead>
         <tr>
             <th style="text-align:left; width:5%;">Ref</th>
@@ -558,9 +790,9 @@
         </tr>
         <tr>
             <td>ii</td>
-            <td class="left">From adj. flow draw vertical line → intersect curve → read CWT</td>
+            <td class="left">Project vertical line → intersect curve → read CWT</td>
             <td colspan="2" style="font-size:8pt; color:#475569; text-align:left; padding-left:8px;">
-                (see Cross Plot 2, orange vertical line)
+                See Cross Plot 2 — orange vertical line
             </td>
         </tr>
         <tr class="highlight">
@@ -597,43 +829,46 @@
 </table>
 
 <!-- Conclusion box -->
-<div class="conclusion-panel" style="margin-top: 18px;">
-    <p style="font-size: 9pt; color: #374151; margin: 0 0 4px 0; font-weight: bold; letter-spacing: 0.04em;">
-        CONCLUSION
+<div class="conclusion-panel">
+    <p style="font-size: 8.5pt; color: #374151; margin: 0 0 6px 0; font-weight: bold;
+              letter-spacing: 0.06em; text-transform: uppercase;">
+        Conclusion
     </p>
     <p class="shortfall-num">{{ _f2(math_results.shortfall) }} °C</p>
-    <p style="font-size: 10pt; color: #374151; margin: 2px 0 10px 0;">
+    <p style="font-size: 10pt; color: #374151; margin: 3px 0 12px 0;">
         <strong>Cooling Tower Shortfall in Performance</strong><br/>
-        <span class="txt-small">
-            Test CWT ({{ test_cwt }}°C) is higher than Predicted CWT ({{ _f2(math_results.pred_cwt) }}°C)
-            by {{ _f2(math_results.shortfall) }}°C
+        <span style="font-size: 8pt; color: #6b7280;">
+            Test CWT ({{ test_cwt }}°C) is higher than Predicted CWT
+            ({{ _f2(math_results.pred_cwt) }}°C) by {{ _f2(math_results.shortfall) }}°C
         </span>
     </p>
 
-    <div style="border-top: 1px solid #fca5a5; padding-top: 10px; margin-top: 4px;">
+    <div style="border-top: 1px solid #fca5a5; padding-top: 12px; margin-top: 4px;">
         <p class="capability-num">{{ math_results.capability }} %</p>
-        <p style="font-size: 9.5pt; font-weight: bold; color: #1d4ed8; margin: 2px 0 4px 0;">
+        <p style="font-size: 9.5pt; font-weight: bold; color: #1d4ed8; margin: 3px 0 5px 0;">
             COOLING TOWER CAPABILITY
         </p>
-        <p class="txt-small">
-            Capability (%) = (Adjusted Water Flow / Predicted Water Flow) × 100<br/>
-            = {{ _f2(math_results.adj_flow) }} / {{ _f2(math_results.pred_flow) }} × 100
+        <p style="font-size: 8pt; color: #6b7280; margin: 0;">
+            Capability (%) = (Adjusted Water Flow / Predicted Water Flow) &times; 100<br/>
+            = {{ _f2(math_results.adj_flow) }} / {{ _f2(math_results.pred_flow) }} &times; 100
         </p>
     </div>
 </div>
 
 <!-- Hence statement -->
-<div style="margin-top: 14px; border: 1.5px solid #1e3a5f; background-color: #eff6ff;
-            padding: 10px 16px; font-size: 9.5pt;">
-    <p style="margin: 0; font-weight: bold; color: #1e3a5f;">
-        ∴ Hence cooling tower shortfall in performance is
-        <span style="color: #b91c1c; font-size: 11pt;">{{ _f2(math_results.shortfall) }} °C</span> &nbsp;|&nbsp;
+<div style="margin-top: 16px; border: 1.5px solid #1e3a5f; background-color: #eff6ff;
+            padding: 12px 18px; font-size: 9.5pt; page-break-inside: avoid;">
+    <p style="margin: 0 0 6px 0; font-weight: bold; color: #1e3a5f;">
+        &#8756; Hence, cooling tower shortfall in performance is
+        <span style="color: #b91c1c; font-size: 11pt;">{{ _f2(math_results.shortfall) }} °C</span>
+        &nbsp;&nbsp;&middot;&nbsp;&nbsp;
         Capability = <span style="color: #1d4ed8; font-size: 11pt;">{{ math_results.capability }} %</span>
     </p>
-    <p style="margin: 6px 0 0 0; font-size: 8.5pt; color: #475569;">
-        In the above case, the "Test Cold Water" is higher than "Predicted Cold Water" by {{ _f2(math_results.shortfall) }}°C.
-        Mark the Adjusted Water Flow in X-axis and project the line to intersect the Flow vs CWT graph (Cross Plot 2).
-        Capability (%) = (Adjusted Water Flow / Predicted Water Flow) × 100.
+    <p style="margin: 0; font-size: 8.5pt; color: #475569; line-height: 1.6;">
+        In this case, the Test Cold Water Temperature is higher than the Predicted Cold Water
+        Temperature by {{ _f2(math_results.shortfall) }}°C. The Adjusted Water Flow is marked on
+        the X-axis of Cross Plot 2 and projected upward to intersect the Flow vs CWT performance
+        curve. Cooling Tower Capability (%) = Adjusted Water Flow / Predicted Water Flow &times; 100.
     </p>
 </div>
 
