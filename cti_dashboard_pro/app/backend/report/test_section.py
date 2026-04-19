@@ -249,7 +249,8 @@ def _page_d(ctx: dict, label: str, styles: dict) -> list:
     s5_desc = Paragraph(
         'Compare the Predicted CWT (from Cross Plot 2 at Q_adj) with the Test CWT. '
         'CWT Shortfall = Test CWT \u2212 Predicted CWT. '
-        'A negative shortfall means the tower performed below specification. '
+        'A positive shortfall means the tower performed below specification '
+        '(actual CWT is higher than the tower should achieve at these conditions). '
         'Capability % = (Q_adj / Predicted Flow) \u00d7 100.',
         styles['StepDesc'],
     )

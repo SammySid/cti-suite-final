@@ -212,13 +212,16 @@ def result_card(
     try:
         sf_val  = float(shortfall)
         cap_val = float(capability)
-        if sf_val < 0:
-            txt = (f'Tower is <b>BELOW specification</b> by {abs(sf_val):.2f}°C '
+        # Shortfall = Test CWT − Predicted CWT.
+        # Positive → actual CWT higher than predicted → tower underperforming (below spec).
+        # Negative → actual CWT lower than predicted → tower exceeding specification.
+        if sf_val > 0:
+            txt = (f'Tower is <b>BELOW specification</b> by {sf_val:.2f}°C '
                    f'\u2014 Capability: <b>{cap_val:.1f}%</b>')
         elif sf_val == 0:
             txt = f'Tower <b>MEETS design specification</b> \u2014 Capability: <b>{cap_val:.1f}%</b>'
         else:
-            txt = (f'Tower <b>EXCEEDS design</b> by {sf_val:.2f}°C '
+            txt = (f'Tower <b>EXCEEDS design specification</b> by {abs(sf_val):.2f}°C '
                    f'\u2014 Capability: <b>{cap_val:.1f}%</b>')
     except (TypeError, ValueError):
         txt = 'ATC-105 Analysis Complete'
