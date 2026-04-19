@@ -211,8 +211,9 @@ def _page_c(ctx: dict, label: str, styles: dict) -> list:
     s4_hdr  = step_header('4', 'CROSS PLOT 2 \u2014 Water Flow vs CWT (Design WBT & Range)', styles)
     s4_desc = Paragraph(
         'Plot (Water Flow, CWT) pairs from Table 2. Locate Q_adj on the performance curve '
-        'to read the Predicted CWT. Then find the water flow where the curve meets the Design CWT '
-        '\u2014 this is the Predicted Flow used in Step 5.',
+        'to read the Predicted CWT. Then draw a horizontal line from the Test CWT across to '
+        'intersect the performance curve \u2014 the flow at that intersection is the '
+        'Predicted Flow used in Step 5 (per CTI ATC-105 Appendix C).',
         styles['StepDesc'],
     )
     items.append(KeepTogether([s4_hdr, Spacer(1, 9), s4_desc]))
@@ -262,7 +263,7 @@ def _page_d(ctx: dict, label: str, styles: dict) -> list:
         ('i',   'Q_adj \u2014 Adjusted Water Flow (density corrected)',              f'{_fmt(adj_flow)} m\u00b3/hr'),
         ('ii',  'Predicted CWT \u2014 from Cross Plot 2 at Q_adj',                   f'{_fmt(pred_cwt)} \u00b0C'),
         ('iii', 'Test CWT \u2014 Recorded during test',                              f'{_fmt(test_cwt)} \u00b0C'),
-        ('iv',  'Predicted Water Flow \u2014 at Design CWT on Cross Plot 2',         f'{_fmt(pred_flow)} m\u00b3/hr'),
+        ('iv',  'Predicted Water Flow \u2014 at Test CWT on Cross Plot 2 (ATC-105 App. C)', f'{_fmt(pred_flow)} m\u00b3/hr'),
         ('v',   'CWT Shortfall = Test CWT \u2212 Predicted CWT',                    f'{_fmt(shortfall)} \u00b0C'),
         ('vi',  'Cooling Tower Capability = (Q_adj / Pred. Flow) \u00d7 100',       f'{_fmt(capability)} %'),
         ('vii', 'Air Density Ratio applied',                                          f'{_fmt(density_r)}'),

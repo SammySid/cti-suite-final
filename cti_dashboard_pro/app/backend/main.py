@@ -287,8 +287,9 @@ async def api_calc_atc105(req: Atc105Request):
         vf = [p[0] for p in valid_pairs]
         vc = [p[1] for p in valid_pairs]
 
-        pred_cwt  = round(_interp_curve(adj_flow,       vf, vc), 3) if vf else None
-        pred_flow = round(_interp_curve(req.design_cwt, vc, vf), 2) if vf else None
+        pred_cwt  = round(_interp_curve(adj_flow,      vf, vc), 3) if vf else None
+        # ATC-105 Appendix C: draw horizontal from Test CWT to the curve → read Predicted Flow
+        pred_flow = round(_interp_curve(req.test_cwt, vc, vf), 2) if vf else None
 
         shortfall  = round(req.test_cwt - pred_cwt, 3) if pred_cwt is not None else None
         capability = round((adj_flow / pred_flow) * 100, 1) if pred_flow and pred_flow > 0 else None

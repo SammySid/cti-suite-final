@@ -275,8 +275,8 @@ function _buildCalcHtml(d, t, r) {
   </div>
 
   <div class="space-y-0.5">
-    <p class="text-[8px] font-bold uppercase tracking-widest text-violet-400/80">⑤ Capability — Cross Plot 2</p>
-    <p class="text-slate-400">pred_flow = flow on Cross Plot 2 at <b>Design CWT = ${f2(d.cwt)} °C</b> (not Test CWT)</p>
+    <p class="text-[8px] font-bold uppercase tracking-widest text-violet-400/80">⑤ Capability — Cross Plot 2 (ATC-105 Appendix C)</p>
+    <p class="text-slate-400">Horizontal from Test CWT (${f2(t.cwt)} °C) → intersects curve → pred_flow</p>
     <p class="text-slate-400">(Q_adj / pred_flow) × 100 = <span class="${capColor} font-bold">${f1(r.capability)} %</span></p>
     <p class="text-[9px] text-slate-600">≥100% = adjusted flow exceeds predicted flow → tower meets specification.</p>
   </div>

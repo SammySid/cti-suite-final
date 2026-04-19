@@ -249,20 +249,23 @@ def create_cross_plot_2(cp2: dict, label: str = ""):
         ax.plot(adj_flow, pred_cwt, 'o', color=_CYAN, markersize=9,
                 markeredgecolor='white', markeredgewidth=1.5, zorder=6)
 
-    if design_cwt is not None and pred_flow is not None:
-        ax.hlines(design_cwt, xmin=f_min, xmax=pred_flow,
-                  colors=_CLR['90'], linestyles='--', linewidth=1.8, zorder=3)
-        ax.vlines(pred_flow, ymin=min(cwts) - 1.5, ymax=design_cwt,
+    # ATC-105 Appendix C: Predicted Flow is found where the Test CWT horizontal
+    # line intersects the performance curve.  The red test_cwt line already spans
+    # the full plot; we add a vertical drop at pred_flow and a marker at that point.
+    if test_cwt is not None and pred_flow is not None:
+        ax.vlines(pred_flow, ymin=min(cwts) - 1.5, ymax=test_cwt,
                   colors=_CLR['100'], linestyles='--', linewidth=1.8, zorder=3)
-        ax.plot(pred_flow, design_cwt, 'o', color=_CLR['100'], markersize=9,
+        ax.plot(pred_flow, test_cwt, 'o', color=_CLR['100'], markersize=9,
                 markeredgecolor='white', markeredgewidth=1.5, zorder=6)
-        # Label the Design CWT line so it is not confused with Test CWT
+
+    # Design CWT — thin dotted reference line (not used for pred_flow calculation)
+    if design_cwt is not None:
+        ax.axhline(design_cwt, color=_CLR['90'], linestyle=':', linewidth=1.0,
+                   alpha=0.55, zorder=2)
         ax.text(f_min + (f_max - f_min) * 0.01, design_cwt + 0.12,
-                f'Design CWT = {design_cwt:.2f} °C',
-                fontsize=8, color=_CLR['90'], fontweight='bold',
-                ha='left', va='bottom', zorder=7,
-                bbox=dict(boxstyle='round,pad=0.25', facecolor='white',
-                          edgecolor=_CLR['90'], linewidth=0.8, alpha=0.9))
+                f'Design CWT = {design_cwt:.2f} °C (ref)',
+                fontsize=7.5, color=_CLR['90'], ha='left', va='bottom',
+                zorder=7, alpha=0.75)
 
     if test_cwt is not None:
         ax.hlines(test_cwt, xmin=f_min, xmax=f_max * 0.98,
@@ -302,12 +305,11 @@ def create_cross_plot_2(cp2: dict, label: str = ""):
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='#fef2f2',
                           edgecolor=_RED, linewidth=1.0, alpha=0.95))
 
-    if pred_flow is not None:
+    if pred_flow is not None and test_cwt is not None:
         ax.annotate(
             f'Pred. Flow\n{pred_flow:.0f} m³/hr',
-            xy=(pred_flow, design_cwt if design_cwt else cwts[-1]),
-            xytext=(pred_flow + (f_max - f_min) * 0.04,
-                    (design_cwt if design_cwt else cwts[-1]) - 0.7),
+            xy=(pred_flow, test_cwt),
+            xytext=(pred_flow + (f_max - f_min) * 0.04, test_cwt - 0.7),
             fontsize=8.5, color=_CLR['100'], fontweight='bold', ha='left',
             arrowprops=dict(arrowstyle='-|>', color=_CLR['100'], lw=1.5, mutation_scale=12),
             bbox=dict(boxstyle='round,pad=0.3', facecolor='#f0fdf4',
@@ -327,10 +329,6 @@ def create_cross_plot_2(cp2: dict, label: str = ""):
         legend_elements.append(
             plt.Line2D([0], [0], color=_RED, linewidth=1.8,
                        label=f'Test CWT = {test_cwt:.2f} °C'))
-    if design_cwt is not None:
-        legend_elements.append(
-            plt.Line2D([0], [0], color=_CLR['90'], linewidth=1.8,
-                       linestyle='--', label=f'Design CWT = {design_cwt:.2f} °C'))
     if pred_flow:
         legend_elements.append(
             plt.Line2D([0], [0], color=_CLR['100'], linewidth=1.8,
