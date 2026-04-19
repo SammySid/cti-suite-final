@@ -7,7 +7,7 @@ import matplotlib.ticker as ticker
 import matplotlib.patches as mpatches
 import numpy as np
 from jinja2 import Environment, FileSystemLoader
-from xhtml2pdf import pisa
+from weasyprint import HTML as WeasyprintHTML
 from fastapi import HTTPException
 
 matplotlib.use('Agg')
@@ -554,11 +554,12 @@ def generate_pdf_report(payload: dict):
 
     html_out = template.render(template_vars)
 
-    pdf_buffer = io.BytesIO()
-    pisa_status = pisa.CreatePDF(io.StringIO(html_out), dest=pdf_buffer)
+    try:
+        pdf_bytes = WeasyprintHTML(
+            string=html_out,
+            base_url=template_dir,   # allows relative image/font URLs if ever needed
+        ).write_pdf()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"WeasyPrint PDF render error: {exc}")
 
-    if pisa_status.err:
-        raise HTTPException(status_code=500, detail="xhtml2pdf error rendering PDF.")
-
-    pdf_buffer.seek(0)
-    return pdf_buffer.read()
+    return pdf_bytes

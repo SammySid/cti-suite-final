@@ -1,13 +1,7 @@
-{# _narrative.html
-   Pages: Preamble, Members Present, Assessment Method,
-          Instrument Placement, Conclusions, Suggestions.
+{# _narrative.html — Preamble, Members, Assessment Method, Conclusions
+   Page breaks via standard CSS: <div class="page-break"> triggers break-before:page
    Variables: preamble_paragraphs, members_client, members_ssctc,
-              assessment_method, instrument_placement, conclusions, suggestions,
-              client
-
-   Page breaks: <pdf:nextpage /> is the xhtml2pdf native hard-break tag.
-   Never use <div class="page-break"> for section boundaries — it is CSS-only
-   and unreliable when the HTML structure is large.
+              assessment_method, instrument_placement, conclusions, suggestions, client
 #}
 
 <!-- ── Preamble ─────────────────────────────────────────────────────────── -->
@@ -17,7 +11,7 @@
 <p class="body">{{ p }}</p>
 {% endfor %}
 
-<pdf:nextpage />
+<div class="page-break"></div>
 
 <!-- ── Members Present ──────────────────────────────────────────────────── -->
 {% include '_page_header.html' %}
@@ -37,7 +31,7 @@
 </ul>
 {% endif %}
 
-<pdf:nextpage />
+<div class="page-break"></div>
 
 <!-- ── Assessment Method & Instrument Placement ─────────────────────────── -->
 {% include '_page_header.html' %}
@@ -56,7 +50,7 @@
 {% endfor %}
 {% endif %}
 
-<pdf:nextpage />
+<div class="page-break"></div>
 
 <!-- ── Conclusions & Suggestions ────────────────────────────────────────── -->
 {% include '_page_header.html' %}
@@ -75,4 +69,4 @@
 </ol>
 {% endif %}
 
-<pdf:nextpage />
+<div class="page-break"></div>

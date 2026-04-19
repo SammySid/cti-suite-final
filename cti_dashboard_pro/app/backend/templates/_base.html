@@ -1,42 +1,59 @@
 <style>
     /* ═══════════════════════════════════════════════════════════════════════
-       _base.html  —  Design system / CSS only.
-       Include this inside <head> of report_template.html.
-       Contains: @page setup, typography, all component classes.
+       _base.html  —  Design system CSS (WeasyPrint-compatible).
+       WeasyPrint supports CSS3, standard @page, margin boxes, and
+       page-break properties fully — no proprietary tags needed.
     ═══════════════════════════════════════════════════════════════════════ */
+
+    /* ── Google Fonts via @import (WeasyPrint supports this) ─────────────── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     /* ── PDF page setup ──────────────────────────────────────────────────── */
     @page {
         size: A4 portrait;
-        margin-top: 1.8cm;
-        margin-bottom: 1.6cm;
-        margin-left: 1.8cm;
-        margin-right: 1.8cm;
-        @frame footer_frame {
-            -pdf-frame-content: pageFooterContent;
-            bottom: 0.35cm;
-            margin-left: 1.8cm;
-            margin-right: 1.8cm;
-            height: 0.6cm;
+        margin: 1.8cm 1.8cm 1.6cm 1.8cm;
+
+        /* Running footer in the bottom margin box */
+        @bottom-center {
+            content: element(page-footer);
+            border-top: 1px solid #cbd5e1;
+            padding-top: 3px;
+            font-size: 6.5pt;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #64748b;
         }
     }
 
-    /* ── Design tokens (comments only — xhtml2pdf has no CSS vars) ─────────
-       --navy   #1e3a5f  dark section bars, table headers, borders
-       --blue   #1d4ed8  step badge, accent borders
-       --sky    #dbeafe  light row highlight
-       --slate  #475569  secondary body text
-       --border #cbd5e1  table cell borders
-       --paper  #f8fafc  alternating row background
-    ─────────────────────────────────────────────────────────────────────── */
+    /* ── Design tokens ───────────────────────────────────────────────────── */
+    /* --navy   #1e3a5f  dark section bars, table headers          */
+    /* --blue   #1d4ed8  step badge, accent borders                */
+    /* --sky    #dbeafe  light row highlight                        */
+    /* --slate  #475569  secondary body text                       */
+    /* --border #cbd5e1  table cell borders                        */
+    /* --paper  #f8fafc  alternating row background                */
 
     /* ── Base typography ─────────────────────────────────────────────────── */
     body {
-        font-family: Helvetica, Arial, sans-serif;
+        font-family: 'Inter', Helvetica, Arial, sans-serif;
         font-size: 9pt;
         color: #1e293b;
         line-height: 1.55;
     }
+
+    /* ── Running page footer (WeasyPrint CSS Running Elements) ──────────── */
+    #page-footer {
+        position: running(page-footer);
+        font-size: 6.5pt;
+        color: #64748b;
+        text-align: right;
+        width: 100%;
+    }
+    #page-footer .footer-inner {
+        border-top: 1px solid #cbd5e1;
+        padding-top: 2px;
+    }
+    .page-number::before { content: counter(page); }
+    .page-count::before  { content: counter(pages); }
 
     /* ── Running page-header strip ──────────────────────────────────────── */
     .page-hdr {
@@ -46,7 +63,7 @@
     }
     .page-hdr table { width: 100%; border-collapse: collapse; }
     .page-hdr .hdr-brand {
-        font-size: 7.5pt; font-weight: bold;
+        font-size: 7.5pt; font-weight: 700;
         color: #1e3a5f; vertical-align: middle;
     }
     .page-hdr .hdr-sub {
@@ -54,43 +71,42 @@
         vertical-align: middle; text-align: right;
     }
 
-    /* ── Section bars — two hierarchy levels ────────────────────────────── */
-    /* Level 1: major sections */
+    /* ── Section bars — two levels ──────────────────────────────────────── */
     .sec-bar {
         background-color: #1e3a5f;
         color: white;
         font-size: 9.5pt;
-        font-weight: bold;
+        font-weight: 700;
         padding: 5px 10px;
         letter-spacing: 0.04em;
         margin-top: 16px;
         margin-bottom: 8px;
     }
-    /* Level 2: sub-sections */
     .sec-bar-sub {
         background-color: #e0eaf8;
         color: #1e3a5f;
         font-size: 9pt;
-        font-weight: bold;
+        font-weight: 700;
         padding: 4px 10px;
         border-left: 3px solid #1d4ed8;
         margin-top: 12px;
         margin-bottom: 6px;
     }
 
-    /* ── Step header — compact inline badge ─────────────────────────────── */
+    /* ── Step header ─────────────────────────────────────────────────────── */
     table.step-hdr {
         width: 100%;
         border-collapse: collapse;
         margin-top: 14px;
         margin-bottom: 4px;
+        break-inside: avoid;
     }
     table.step-hdr td.step-badge {
         width: 48px;
         background-color: #1d4ed8;
         color: white;
         font-size: 7pt;
-        font-weight: bold;
+        font-weight: 700;
         padding: 4px 6px;
         text-align: center;
         vertical-align: middle;
@@ -100,7 +116,7 @@
     table.step-hdr td.step-title {
         padding: 4px 12px;
         font-size: 9pt;
-        font-weight: bold;
+        font-weight: 700;
         color: #1e3a5f;
         background-color: #f0f6ff;
         border-left: 3px solid #1d4ed8;
@@ -119,43 +135,38 @@
     /* ── Data tables ─────────────────────────────────────────────────────── */
     table.data-tbl {
         width: 100%;
-        table-layout: fixed;
         border-collapse: collapse;
         margin-top: 6px;
         font-size: 8.5pt;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     table.data-tbl th {
         background-color: #1e3a5f;
         color: white;
-        font-weight: bold;
-        padding: 5px 5px;
+        font-weight: 700;
+        padding: 5px 6px;
         text-align: center;
         border: 1px solid #1e3a5f;
-        word-wrap: break-word;
-        overflow: hidden;
     }
     table.data-tbl td {
         border: 1px solid #cbd5e1;
-        padding: 4px 5px;
+        padding: 4px 6px;
         text-align: center;
         vertical-align: middle;
-        word-wrap: break-word;
-        overflow: hidden;
     }
     table.data-tbl td.td-left  { text-align: left; font-weight: 600; color: #0f172a; }
     table.data-tbl tr:nth-child(even) td { background-color: #f8fafc; }
-    table.data-tbl tr.row-hi td          { background-color: #dbeafe; font-weight: bold; }
-    table.data-tbl tr.row-total td       { background-color: #1e3a5f; color: white; font-weight: bold; }
+    table.data-tbl tr.row-hi td          { background-color: #dbeafe; font-weight: 700; }
+    table.data-tbl tr.row-total td       { background-color: #1e3a5f; color: white; font-weight: 700; }
 
-    /* ── Step 3 calculation sub-panel ───────────────────────────────────── */
+    /* ── Calculation sub-panel (Step 3) ──────────────────────────────────── */
     .calc-panel {
         border: 1px solid #93c5fd;
         background-color: #f0f6ff;
         padding: 8px 14px;
         margin-top: 8px;
         margin-bottom: 14px;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .calc-panel h4 {
         margin: 0 0 6px 0;
@@ -165,21 +176,20 @@
         padding-bottom: 3px;
     }
 
-    /* ── Unified result card (Shortfall + Capability side-by-side) ──────── */
+    /* ── Unified result card ─────────────────────────────────────────────── */
     .result-card {
         border: 1.5px solid #1e3a5f;
         background-color: #f0f6ff;
-        padding: 0;
         margin-top: 14px;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .result-card .rc-header {
         background-color: #1e3a5f;
         color: white;
         font-size: 8pt;
-        font-weight: bold;
+        font-weight: 700;
         letter-spacing: 0.06em;
-        padding: 5px 12px;
+        padding: 6px 12px;
         text-transform: uppercase;
     }
     table.rc-metrics {
@@ -188,10 +198,9 @@
     }
     table.rc-metrics td {
         width: 50%;
-        padding: 14px 16px;
+        padding: 16px 18px;
         text-align: center;
         vertical-align: middle;
-        border: none;
     }
     table.rc-metrics td.rc-divider {
         border-left: 1.5px solid #93c5fd;
@@ -199,21 +208,21 @@
     .rc-label {
         font-size: 7pt;
         color: #64748b;
-        font-weight: bold;
+        font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin: 0 0 4px 0;
+        margin: 0 0 6px 0;
     }
-    .rc-value-red  { font-size: 22pt; font-weight: bold; color: #b91c1c; margin: 0; }
-    .rc-value-blue { font-size: 22pt; font-weight: bold; color: #1d4ed8; margin: 0; }
+    .rc-value-red  { font-size: 24pt; font-weight: 700; color: #b91c1c; margin: 0; }
+    .rc-value-blue { font-size: 24pt; font-weight: 700; color: #1d4ed8; margin: 0; }
     .rc-sub {
         font-size: 7pt;
         color: #475569;
-        margin: 4px 0 0 0;
+        margin: 6px 0 0 0;
         line-height: 1.5;
     }
 
-    /* ── Result summary bar ─────────────────────────────────────────────── */
+    /* ── Result summary bar ──────────────────────────────────────────────── */
     .result-summary-bar {
         border: 1px solid #bfdbfe;
         background-color: #eff6ff;
@@ -221,7 +230,7 @@
         margin-top: 8px;
         font-size: 8.5pt;
         color: #1e3a5f;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
 
     /* ── End-of-report marker ────────────────────────────────────────────── */
@@ -230,7 +239,7 @@
         border-top: 2px solid #1e3a5f;
         padding-top: 14px;
         text-align: center;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .eor-marker p { font-size: 8pt; color: #64748b; margin: 3px 0; }
 
@@ -241,7 +250,7 @@
         padding: 6px;
         margin: 10px 0 3px 0;
         text-align: center;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .plot-wrap img { width: 100%; max-width: 620px; }
     .plot-caption {
@@ -261,18 +270,22 @@
         border-right: 1px solid #e2e8f0;
         border-bottom: 1px solid #e2e8f0;
         padding: 10px 14px;
-        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .notes-panel .notes-title {
-        font-weight: bold; color: #1e3a5f;
+        font-weight: 700; color: #1e3a5f;
         font-size: 8.5pt; margin: 0 0 6px 0;
         border-bottom: 1px solid #cbd5e1; padding-bottom: 3px;
     }
     .notes-panel ol { margin: 0 0 0 16px; padding: 0; line-height: 1.7; }
     .notes-panel ol li { margin-bottom: 4px; font-size: 8pt; color: #334155; }
 
-    /* ── Utility helpers ─────────────────────────────────────────────────── */
-    .avoid-break   { page-break-inside: avoid; }
+    /* ── Page-break helpers ──────────────────────────────────────────────── */
+    /* WeasyPrint uses standard CSS3 break properties */
+    .page-break  { break-before: page; }
+    .avoid-break { break-inside: avoid; }
+
+    /* ── Text utilities ──────────────────────────────────────────────────── */
     p.body         { margin: 0 0 6px 0; text-align: justify; line-height: 1.6; }
     ol.rpt-list    { margin-left: 18px; text-align: justify; line-height: 1.65; }
     ol.rpt-list li { margin-bottom: 5px; }

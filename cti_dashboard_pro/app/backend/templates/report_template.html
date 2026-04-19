@@ -1,62 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>CTI ATC-105 Performance Report</title>
 
     {#
-      ── Template Architecture ─────────────────────────────────────────────
-        _base.html           → <style> CSS design-system only (no HTML tags)
-        _page_header.html    → Reusable brand/tagline strip (included per page)
+      ── Template Architecture ────────────────────────────────────────────
+        _base.html           → <style> CSS design-system (WeasyPrint CSS3)
+        _page_header.html    → Reusable brand/tagline strip per page
         _cover.html          → Cover page
-        _narrative.html      → Preamble, Members Present, Methodology, Conclusions
+        _narrative.html      → Preamble, Members, Methodology, Conclusions
         _summary_table.html  → Final 3-test comparison table
-        _test_section.html   → Full ATC-105 analysis for ONE test (4 pages)
+        _test_section.html   → Full ATC-105 analysis for ONE test (~4 pages)
 
-      Naming convention:
-        _<name>.html          → partial (never rendered standalone)
-        report_template.html  → sole entry-point passed to Jinja2 env.get_template()
-
-      Page-break strategy:
-        <pdf:nextpage/>  → hard page break (xhtml2pdf native tag, 100% reliable)
-        page-break CSS   → soft hint only; NOT used for critical section breaks
+      PDF Engine: WeasyPrint (replaces xhtml2pdf)
+        - Standard CSS3 break-before/break-inside properties work correctly
+        - @page margin boxes for running footer (no proprietary tags)
+        - No <pdf:nextpage/> — use  <div class="page-break"></div>  instead
+          which triggers break-before: page via CSS class in _base.html
     #}
 
     {% include '_base.html' %}
 </head>
 <body>
 
-<!-- ══ PDF Running Footer — referenced by @page footer_frame in _base.html ═══ -->
-<div id="pageFooterContent">
-    <div style="border-top: 1px solid #cbd5e1; padding-top: 2px;
-                font-size: 6.5pt; color: #64748b; text-align: right;">
+<!-- ══ Running Footer — WeasyPrint CSS Running Element ═══════════════════════
+     This div is pulled into the @bottom-center margin box by CSS position:running()
+     It renders on every page automatically.  Standard CSS — no xhtml2pdf tags.
+═══════════════════════════════════════════════════════════════════════════ -->
+<div id="page-footer">
+    <div class="footer-inner">
         SS COOLING TOWER CONSULTANTS &nbsp;|&nbsp; {{ report_title }}
-        &nbsp;|&nbsp; Page <pdf:pagenumber> of <pdf:pagecount>
+        &nbsp;|&nbsp; Page <span class="page-number"></span> of <span class="page-count"></span>
     </div>
 </div>
 
 <!-- ══ COVER PAGE ════════════════════════════════════════════════════════════ -->
 {% include '_cover.html' %}
 
-<pdf:nextpage />
+<div class="page-break"></div>
 
-<!-- ══ NARRATIVE (Preamble → Members → Methodology → Conclusions) ═══════════ -->
+<!-- ══ NARRATIVE — Preamble → Members → Methodology → Conclusions ════════════ -->
 {% include '_narrative.html' %}
 
 <!-- ══ FINAL 3-TEST COMPARISON TABLE ════════════════════════════════════════ -->
 {% include '_summary_table.html' %}
 
-<!-- ══ ATC-105 PER-TEST ANALYSIS — 3 tests × ~4 pages each ═════════════════ -->
+<!-- ══ ATC-105 PER-TEST ANALYSIS — 3 tests × ~4 pages ══════════════════════ -->
 {% for test in tests %}
     {% include '_test_section.html' %}
     {% if not loop.last %}
-    <pdf:nextpage />
+    <div class="page-break"></div>
     {% endif %}
 {% endfor %}
 
-<!-- ══ END OF REPORT MARKER ══════════════════════════════════════════════════ -->
+<!-- ══ END OF REPORT ═════════════════════════════════════════════════════════ -->
 <div class="eor-marker">
-    <p style="font-size: 9pt; font-weight: bold; color: #1e3a5f; letter-spacing: 0.06em;">
+    <p style="font-size: 9pt; font-weight: 700; color: #1e3a5f; letter-spacing: 0.06em;">
         &#x2014; END OF REPORT &#x2014;
     </p>
     <p>SS COOLING TOWER CONSULTANTS &nbsp;&middot;&nbsp; www.ssctc.org</p>

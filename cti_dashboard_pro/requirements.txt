@@ -8,5 +8,5 @@ openpyxl
 xlrd
 python-dateutil
 jinja2
-xhtml2pdf==0.2.16
+weasyprint
 matplotlib
