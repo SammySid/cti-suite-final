@@ -588,7 +588,14 @@ export async function generateReport(ui) {
             },
         };
 
-        // ── POST to generate PDF ──────────────────────────────────────────
+        // ── POST to generate PDF (Step 1: server stores PDF, returns token) ─
+        // We use a two-step token download instead of a blob:// URL so that
+        // external download managers like IDM can fetch the file via a real
+        // HTTP GET URL without running into the blob:// sandbox restriction.
+        const safeName = _v('rep-client', 'Report').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 40);
+        const filename  = `ATC105_${safeName}_${_v('rep-test-date', '').replace(/\s/g, '_')}.pdf`;
+        pdfPayload._filename = filename;  // tell backend what filename to serve
+
         const pdfResp = await fetch('/api/generate-pdf-report', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -600,21 +607,11 @@ export async function generateReport(ui) {
             throw new Error(`PDF generation failed (${pdfResp.status}): ${err}`);
         }
 
-        const blob = await pdfResp.blob();
-        const safeName = _v('rep-client', 'Report').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 40);
-        const filename  = `ATC105_${safeName}_${_v('rep-test-date', '').replace(/\s/g, '_')}.pdf`;
+        const { token } = await pdfResp.json();
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        // Defer revocation — revoking synchronously after click() causes a
-        // "NetworkError when attempting to fetch resource" because the browser
-        // hasn't had a chance to read the blob URL before it is invalidated.
-        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 150);
+        // Step 2: navigate to the real GET URL — IDM/browsers download this
+        // as a normal file without any blob:// sandbox restriction.
+        window.location.href = `/api/download-pdf/${token}`;
 
         setStatus(`PDF generated successfully — ${filename}`);
 

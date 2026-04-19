@@ -2,6 +2,9 @@ import os
 import sys
 import tempfile
 import math
+import uuid
+import time
+import threading
 from pathlib import Path
 from typing import List, Optional
 
@@ -530,21 +533,72 @@ async def filter_excel_local(req: LocalFilterRequest):
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Failed to filter files: {exc}")
 
+# ── Temporary PDF store (token → bytes, expires after 5 min) ─────────────────
+# This pattern avoids blob:// URLs which are inaccessible to external download
+# managers (e.g. IDM) that try to re-fetch the URL in a separate process.
+_PDF_STORE: dict[str, tuple[bytes, str, float]] = {}  # token → (bytes, filename, expiry)
+_PDF_STORE_LOCK = threading.Lock()
+
+def _cleanup_pdf_store():
+    """Background thread: purge expired tokens every 60 seconds."""
+    while True:
+        time.sleep(60)
+        now = time.time()
+        with _PDF_STORE_LOCK:
+            expired = [k for k, (_, _, exp) in _PDF_STORE.items() if now > exp]
+            for k in expired:
+                del _PDF_STORE[k]
+
+threading.Thread(target=_cleanup_pdf_store, daemon=True).start()
+
+
 @app.post("/api/generate-pdf-report")
 def api_generate_pdf_report(payload: dict):
     """
-    Renders and streams out the fully calculated ATC-105 PDF.
+    Step 1 of 2: Generate the ATC-105 PDF and store it server-side with a
+    short-lived UUID token. Returns {"token": "...", "filename": "..."} so
+    the frontend can redirect to /api/download-pdf/{token} — a plain GET URL
+    that external download managers (IDM etc.) can fetch independently.
     """
     try:
         pdf_bytes = generate_pdf_report(payload)
-        return Response(
-            content=pdf_bytes, 
-            media_type="application/pdf", 
-            headers={"Content-Disposition": "attachment; filename=CTI_Performance_Report_ATC105.pdf"}
-        )
     except Exception as e:
         import traceback
         raise HTTPException(status_code=500, detail=f"PDF Generation Failed: {str(e)}\n{traceback.format_exc()}")
+
+    token    = uuid.uuid4().hex
+    filename = payload.get("_filename", "CTI_Performance_Report_ATC105.pdf")
+    expiry   = time.time() + 300  # 5 minutes
+
+    with _PDF_STORE_LOCK:
+        _PDF_STORE[token] = (pdf_bytes, filename, expiry)
+
+    return {"token": token, "filename": filename}
+
+
+@app.get("/api/download-pdf/{token}")
+def api_download_pdf(token: str):
+    """
+    Step 2 of 2: Serve the pre-generated PDF via a normal HTTP GET.
+    This URL is a real server resource — IDM and other download managers
+    can access it in a separate process without any blob:// restriction.
+    Token is single-use: consumed on first download.
+    """
+    with _PDF_STORE_LOCK:
+        entry = _PDF_STORE.pop(token, None)
+
+    if entry is None:
+        raise HTTPException(status_code=404, detail="PDF token not found or already downloaded.")
+
+    pdf_bytes, filename, expiry = entry
+    if time.time() > expiry:
+        raise HTTPException(status_code=410, detail="PDF token has expired. Please regenerate.")
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 # Serve UI
 app.mount("/css", StaticFiles(directory=str(WEB_ROOT / "css")), name="css")
