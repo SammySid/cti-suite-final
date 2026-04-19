@@ -611,8 +611,10 @@ export async function generateReport(ui) {
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
-        a.remove();
+        // Defer revocation — revoking synchronously after click() causes a
+        // "NetworkError when attempting to fetch resource" because the browser
+        // hasn't had a chance to read the blob URL before it is invalidated.
+        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 150);
 
         setStatus(`PDF generated successfully — ${filename}`);
 
