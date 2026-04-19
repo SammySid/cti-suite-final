@@ -1,5 +1,12 @@
-{# _narrative.html — Preamble, Members, Assessment Method, Conclusions
-   Page breaks via standard CSS: <div class="page-break"> triggers break-before:page
+{# _narrative.html — Preamble, Members, Assessment, Conclusions
+   Space-optimised: merges thin sections to eliminate blank half-pages.
+
+   Page layout:
+     Page 1 — Preamble + Members Present (combined if space allows)
+     Page 2 — Assessment Method + Instrument Placement
+     Page 3 — Conclusion & Remarks + Suggestions
+
+   Page breaks: standard CSS break-before:page via .page-break div
    Variables: preamble_paragraphs, members_client, members_ssctc,
               assessment_method, instrument_placement, conclusions, suggestions, client
 #}
@@ -11,11 +18,8 @@
 <p class="body">{{ p }}</p>
 {% endfor %}
 
-<div class="page-break"></div>
-
-<!-- ── Members Present ──────────────────────────────────────────────────── -->
-{% include '_page_header.html' %}
-<div class="sec-bar">MEMBERS PRESENT FOR THE TEST</div>
+<!-- ── Members Present (on same page as preamble if preamble is short) ──── -->
+<div class="sec-bar" style="margin-top: 20px;">MEMBERS PRESENT FOR THE TEST</div>
 
 {% if members_client %}
 <div class="sec-bar-sub">CLIENT &mdash; {{ client }}</div>
@@ -25,7 +29,7 @@
 {% endif %}
 
 {% if members_ssctc %}
-<div class="sec-bar-sub" style="margin-top: 14px;">SS COOLING TOWER CONSULTANTS (SSCTC)</div>
+<div class="sec-bar-sub" style="margin-top: 10px;">SS COOLING TOWER CONSULTANTS (SSCTC)</div>
 <ul class="mbr-list">
     {% for m in members_ssctc %}<li>{{ m }}</li>{% endfor %}
 </ul>
@@ -44,7 +48,7 @@
 {% endif %}
 
 {% if instrument_placement %}
-<div class="sec-bar">INSTRUMENT PLACEMENT AND READINGS</div>
+<div class="sec-bar" style="margin-top: 18px;">INSTRUMENT PLACEMENT AND READINGS</div>
 {% for inst in instrument_placement %}
 <p class="body">{{ inst }}</p>
 {% endfor %}

@@ -1,23 +1,24 @@
 {# _test_section.html
-   One complete ATC-105 test analysis block.
-   Render once per test via: {% include '_test_section.html' %}
-   Caller must set `test` in context (done by the for-loop in report_template.html).
+   One complete ATC-105 test analysis block — 5 steps, each on its own page.
 
-   Pages within each test block:
-     Page A  — Design vs Recorded conditions + Step 1 (Table 1)
-     Page B  — Step 2 (Cross Plot 1) + Table 2
-     Page C  — Step 3 (Adj. Flow) + Step 4 (Cross Plot 2) together on one page
-     Page D  — Final ATC-105 results (Step 5 table + unified result card)
+   Page layout per test:
+     Page A  — Section bar + Design vs Recorded table + Step 1 (Table 1)
+     Page B  — Step 2: Cross Plot 1 + Table 2
+     Page C  — Step 3: Adjusted Flow Calculation + Step 4: Cross Plot 2
+     Page D  — Step 5: Final Results table + Unified Result Card + Summary bar
+
+   Caller: {% for test in tests %}{% include '_test_section.html' %}{% endfor %}
+   The for-loop in report_template.html inserts a .page-break between tests.
 #}
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     PAGE A : Design vs Recorded + Step 1 (Table 1)
- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE A — Design vs Recorded Conditions  +  Step 1 (Table 1)
+═════════════════════════════════════════════════════════════════════════ -->
 {% include '_page_header.html' %}
 <div class="sec-bar">ATC-105 PERFORMANCE EVALUATION &mdash; {{ test.label }}</div>
 
-<!-- Design vs Recorded conditions -->
-<table class="data-tbl avoid-break" style="max-width: 520px; margin-bottom: 14px;">
+<!-- Design vs Recorded conditions table -->
+<table class="data-tbl" style="max-width: 520px; margin-bottom: 18px;">
     <colgroup>
         <col style="width: 45%;"/>
         <col style="width: 11%;"/>
@@ -43,7 +44,7 @@
 </table>
 
 <!-- Step 1 -->
-<table class="step-hdr avoid-break">
+<table class="step-hdr">
     <tr>
         <td class="step-badge">STEP<br/>1</td>
         <td class="step-title">
@@ -59,7 +60,7 @@
 </p>
 
 {% if test.table1_rows %}
-<table class="data-tbl avoid-break">
+<table class="data-tbl">
     <colgroup>
         <col style="width: 11%;"/>
         <col style="width: 13%;"/>
@@ -92,9 +93,9 @@
 
 <div class="page-break"></div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════
-     PAGE B : Step 2 — Cross Plot 1  +  Table 2
- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE B — Step 2: Cross Plot 1  +  Table 2
+═════════════════════════════════════════════════════════════════════════ -->
 {% include '_page_header.html' %}
 
 <table class="step-hdr">
@@ -121,11 +122,11 @@
     &nbsp;&middot;&nbsp; Test Range (red vertical line) = {{ test.test_range }}&deg;C
 </p>
 
-<!-- Table 2 — derived from Cross Plot 1 intersections -->
+<!-- Table 2 -->
 <div class="sec-bar-sub" style="margin-top: 14px;">
     TABLE 2 &mdash; CWT at Test Range = {{ test.test_range }}&deg;C (Read from Cross Plot 1)
 </div>
-<table class="data-tbl avoid-break" style="max-width: 480px; margin-top: 5px;">
+<table class="data-tbl" style="max-width: 480px; margin-top: 5px;">
     <colgroup>
         <col style="width: 44%;"/>
         <col style="width: 28%;"/>
@@ -147,9 +148,10 @@
 
 <div class="page-break"></div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     PAGE C : Step 3 (Adjusted Flow) + Step 4 (Cross Plot 2) — same page
- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE C — Step 3: Adjusted Water Flow  +  Step 4: Cross Plot 2
+     (Both steps naturally fit on one page — Step 3 table is compact)
+═════════════════════════════════════════════════════════════════════════ -->
 {% include '_page_header.html' %}
 
 <table class="step-hdr">
@@ -166,7 +168,7 @@
     design and test conditions. The adjusted flow is then marked on Cross Plot 2.
 </p>
 
-<div class="calc-panel" style="max-width: 500px; margin-bottom: 14px;">
+<div class="calc-panel" style="max-width: 500px; margin-bottom: 18px;">
     <h4>Step 3 &mdash; Input Parameters &amp; Adjusted Flow Calculation</h4>
     <table class="data-tbl">
         <colgroup>
@@ -211,7 +213,7 @@
     </table>
 </div>
 
-<!-- Step 4 immediately below Step 3 — no page break between them -->
+<!-- Step 4 immediately follows Step 3 — no page break between them -->
 <table class="step-hdr">
     <tr>
         <td class="step-badge">STEP<br/>4</td>
@@ -238,9 +240,9 @@
 
 <div class="page-break"></div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     PAGE D : Step 5 — Final Results + Unified Result Card
- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE D — Step 5: Final Results  +  Unified Result Card
+═════════════════════════════════════════════════════════════════════════ -->
 {% include '_page_header.html' %}
 <div class="sec-bar">FINAL ATC-105 RESULTS &mdash; {{ test.label }}</div>
 
@@ -258,7 +260,7 @@
     horizontally from that point.
 </p>
 
-<table class="data-tbl avoid-break" style="max-width: 540px; margin-top: 8px;">
+<table class="data-tbl" style="max-width: 540px; margin-top: 8px;">
     <colgroup>
         <col style="width: 5%;"/>
         <col style="width: 55%;"/>
@@ -320,14 +322,11 @@
     </tbody>
 </table>
 
-<!-- ── Unified result card: Shortfall + Capability side by side ─────────── -->
+<!-- Unified result card: Shortfall + Capability side by side -->
 <div class="result-card">
-    <div class="rc-header">
-        CONCLUSION &mdash; {{ test.label }}
-    </div>
+    <div class="rc-header">CONCLUSION &mdash; {{ test.label }}</div>
     <table class="rc-metrics">
         <tr>
-            <!-- Shortfall -->
             <td>
                 <p class="rc-label">CWT Shortfall in Performance</p>
                 <p class="rc-value-red">{{ _f2(test.math_results.shortfall) }} &deg;C</p>
@@ -336,7 +335,6 @@
                     ({{ _f2(test.math_results.pred_cwt) }}&deg;C)
                 </p>
             </td>
-            <!-- Capability -->
             <td class="rc-divider">
                 <p class="rc-label">Cooling Tower Capability</p>
                 <p class="rc-value-blue">{{ test.math_results.capability }} %</p>
