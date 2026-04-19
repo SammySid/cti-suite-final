@@ -260,12 +260,12 @@ function _buildCalcHtml(d, t, r) {
   </div>
 
   <div class="space-y-0.5">
-    <p class="text-[8px] font-bold uppercase tracking-widest text-violet-400/80">③ Predicted CWT — Cross Plot 1</p>
+    <p class="text-[8px] font-bold uppercase tracking-widest text-violet-400/80">③ Predicted CWT — Cross Plot 2</p>
     <p class="text-slate-400">Tower curve: KaV/L = C × (L/G)^−m = <span class="text-violet-300">${f2(d.constant_c)}</span> × (L/G)^−<span class="text-violet-300">${f2(d.constant_m)}</span></p>
-    <p class="text-slate-400">Merkel KaV/L computed at: WBT=${f2(t.wbt)}°C · HWT=${f2(t.hwt)}°C · CWT=${f2(t.cwt)}°C · L/G=${f2(d.lg)}</p>
-    <p class="text-slate-400">At Q_adj = ${f1(r.adj_flow)} m³/hr on Cross Plot 1:</p>
+    <p class="text-slate-400">Table 2 built at Test WBT (${f2(t.wbt)}°C) and Test Range — 3 flow × 3 range points</p>
+    <p class="text-slate-400">At Q_adj = ${f1(r.adj_flow)} m³/hr on Cross Plot 2 (Water Flow vs CWT):</p>
     <p class="text-slate-400">→ Pred. CWT = <span class="text-cyan-300 font-bold">${f2(r.pred_cwt)} °C</span></p>
-    <p class="text-[9px] text-slate-600">Cross-plot built from this tower's own C &amp; M — synced from Thermal Analysis.</p>
+    <p class="text-[9px] text-slate-600">Performance curve built from this tower's own C &amp; M — synced from Thermal Analysis.</p>
   </div>
 
   <div class="space-y-0.5">
@@ -350,6 +350,12 @@ export async function previewAllTests(ui) {
         [['pv1-cap', r1.capability], ['pv2-cap', r2.capability], ['pv3-cap', r3.capability]].forEach(([id, v]) => {
             const el = document.getElementById(id); if (!el || v == null) return;
             el.className = `font-mono font-bold ${v >= 100 ? 'text-emerald-400' : v >= 95 ? 'text-amber-400' : 'text-rose-400'}`;
+        });
+
+        // Re-colour shortfall: positive = underperforming (rose), negative = exceeding spec (emerald)
+        [['pv1-shortfall', r1.shortfall], ['pv2-shortfall', r2.shortfall], ['pv3-shortfall', r3.shortfall]].forEach(([id, v]) => {
+            const el = document.getElementById(id); if (!el || v == null) return;
+            el.className = `font-mono font-bold ${v > 0 ? 'text-rose-400' : v < 0 ? 'text-emerald-400' : 'text-slate-400'}`;
         });
 
         // Improvement deltas
