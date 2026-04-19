@@ -63,8 +63,8 @@ export function bindFilterUpload(ui) {
 
                 const card = document.createElement('div');
                 card.className = 'bg-slate-900/60 rounded-xl p-2 border border-cyan-500/20 text-center';
-                card.innerHTML = `<p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">${label}</p>
-                                  <p class="text-sm font-black text-cyan-300 font-mono">${val} <span class="text-[10px] text-slate-500">${unit}</span></p>`;
+                card.innerHTML = `<p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">${label}</p>
+                                  <p class="text-sm font-black text-cyan-300 font-mono">${val} <span class="text-xs text-slate-400">${unit}</span></p>`;
                 previewEl.appendChild(card);
             }
 
@@ -400,21 +400,21 @@ function _buildPvCalcTable(d, t, r) {
     return `<table class="w-full divide-y divide-white/5">
         <thead class="bg-slate-900/60">
             <tr>
-                <th class="px-3 py-2 text-left text-[8px] font-black uppercase tracking-widest text-slate-600 w-6">#</th>
-                <th class="px-3 py-2 text-left text-[8px] font-black uppercase tracking-widest text-slate-500">Step</th>
-                <th class="px-3 py-2 text-left text-[8px] font-black uppercase tracking-widest text-slate-500 hidden md:table-cell">What It Means</th>
-                <th class="px-3 py-2 text-left text-[8px] font-black uppercase tracking-widest text-slate-500 hidden lg:table-cell">Formula / Working</th>
-                <th class="px-3 py-2 text-right text-[8px] font-black uppercase tracking-widest text-slate-500">Result</th>
+                <th class="px-3 py-2 text-left text-[10px] font-black uppercase tracking-widest text-slate-500 w-6">#</th>
+                <th class="px-3 py-2 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Step</th>
+                <th class="px-3 py-2 text-left text-[10px] font-black uppercase tracking-widest text-slate-400 hidden md:table-cell">What It Means</th>
+                <th class="px-3 py-2 text-left text-[10px] font-black uppercase tracking-widest text-slate-400 hidden lg:table-cell">Formula / Working</th>
+                <th class="px-3 py-2 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Result</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-white/[0.04]">
             ${rows.map(([n, step, meaning, formula, result]) => `
             <tr class="hover:bg-white/[0.02]">
-                <td class="px-3 py-2.5 text-[10px] font-mono text-slate-600">${n}</td>
-                <td class="px-3 py-2.5 text-[10px] font-mono text-slate-300 font-bold whitespace-nowrap">${step}</td>
-                <td class="px-3 py-2.5 text-[10px] text-slate-500 hidden md:table-cell leading-relaxed">${meaning}</td>
-                <td class="px-3 py-2.5 text-[9px] font-mono text-slate-400 hidden lg:table-cell">${formula}</td>
-                <td class="px-3 py-2.5 text-[10px] font-mono text-right">${result}</td>
+                <td class="px-3 py-2.5 text-xs font-mono text-slate-500">${n}</td>
+                <td class="px-3 py-2.5 text-xs font-mono text-slate-200 font-bold whitespace-nowrap">${step}</td>
+                <td class="px-3 py-2.5 text-xs text-slate-400 hidden md:table-cell leading-relaxed">${meaning}</td>
+                <td class="px-3 py-2.5 text-[11px] font-mono text-slate-400 hidden lg:table-cell">${formula}</td>
+                <td class="px-3 py-2.5 text-xs font-mono text-right">${result}</td>
             </tr>`).join('')}
         </tbody>
     </table>`;
@@ -454,21 +454,21 @@ function _buildComparisonTable(t1, t2, t3, r1, r2, r3) {
         const c2   = type === 'cap' ? capCls(v2) : type === 'sf' ? sfCls(v2)  : type === 'imp' ? impCls(v2) : 'text-slate-300';
         const c3   = type === 'cap' ? capCls(v3) : type === 'sf' ? sfCls(v3)  : type === 'imp' ? impCls(v3) : 'text-slate-300';
         return `<tr class="hover:bg-white/[0.02] ${bg}">
-            <td class="px-3 py-2 text-[10px] font-mono text-slate-400">${param}</td>
-            <td class="px-3 py-2 text-[10px] font-mono text-center text-slate-600">${unit}</td>
-            <td class="px-3 py-2 text-[10px] font-mono text-right ${c1}">${v1}</td>
-            <td class="px-3 py-2 text-[10px] font-mono text-right ${c2}">${v2}</td>
-            <td class="px-3 py-2 text-[10px] font-mono text-right ${c3} font-bold">${v3}</td>
+            <td class="px-3 py-2 text-xs font-mono text-slate-300">${param}</td>
+            <td class="px-3 py-2 text-xs font-mono text-center text-slate-500">${unit}</td>
+            <td class="px-3 py-2 text-xs font-mono text-right ${c1}">${v1}</td>
+            <td class="px-3 py-2 text-xs font-mono text-right ${c2}">${v2}</td>
+            <td class="px-3 py-2 text-xs font-mono text-right ${c3} font-bold">${v3}</td>
         </tr>`;
     }).join('');
 
     return `<thead>
             <tr class="border-b border-white/10 bg-slate-900/60">
-                <th class="px-3 py-2.5 text-left text-[8px] font-black uppercase tracking-widest text-slate-500">Parameter</th>
-                <th class="px-3 py-2.5 text-center text-[8px] font-black uppercase tracking-widest text-slate-500">Unit</th>
-                <th class="px-3 py-2.5 text-right text-[8px] font-black uppercase tracking-widest text-slate-400">Test 1<br><span class="text-slate-600 font-normal normal-case tracking-normal">Pre-Baseline</span></th>
-                <th class="px-3 py-2.5 text-right text-[8px] font-black uppercase tracking-widest text-slate-400">Test 2<br><span class="text-slate-600 font-normal normal-case tracking-normal">Post Fan Pitch</span></th>
-                <th class="px-3 py-2.5 text-right text-[8px] font-black uppercase tracking-widest text-cyan-400">Test 3 ★<br><span class="text-slate-600 font-normal normal-case tracking-normal">Post Fill Dist.</span></th>
+                <th class="px-3 py-2.5 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Parameter</th>
+                <th class="px-3 py-2.5 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Unit</th>
+                <th class="px-3 py-2.5 text-right text-[10px] font-black uppercase tracking-widest text-slate-300">Test 1<br><span class="text-slate-500 font-normal normal-case tracking-normal">Pre-Baseline</span></th>
+                <th class="px-3 py-2.5 text-right text-[10px] font-black uppercase tracking-widest text-slate-300">Test 2<br><span class="text-slate-500 font-normal normal-case tracking-normal">Post Fan Pitch</span></th>
+                <th class="px-3 py-2.5 text-right text-[10px] font-black uppercase tracking-widest text-cyan-400">Test 3 ★<br><span class="text-slate-500 font-normal normal-case tracking-normal">Post Fill Dist.</span></th>
             </tr>
         </thead>
         <tbody class="divide-y divide-white/[0.04]">${rowHtml}</tbody>`;
@@ -487,7 +487,7 @@ function _buildDesignGrid(design) {
     ];
     return items.map(([label, val, title]) =>
         `<div class="rounded-lg bg-slate-900/60 border border-white/5 p-2.5 text-center" title="${title}">
-            <p class="text-[8px] font-black uppercase tracking-widest text-slate-600 mb-0.5">${label}</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">${label}</p>
             <p class="text-sm font-black font-mono text-slate-200">${val}</p>
         </div>`
     ).join('');
@@ -536,7 +536,7 @@ export async function previewAllTests(ui) {
             const capEl  = document.getElementById(capId);
             if (capEl)  { capEl.textContent  = `${r.capability?.toFixed(1) ?? '—'} %`;  capEl.className  = `text-2xl font-black font-mono ${_capTextCls(r.capability)}`; }
             const verdEl = document.getElementById(verdId);
-            if (verdEl) { verdEl.textContent = _capVerdict(r.capability); verdEl.className = `text-[9px] font-black uppercase mt-0.5 ${_capTextCls(r.capability)}`; }
+            if (verdEl) { verdEl.textContent = _capVerdict(r.capability); verdEl.className = `text-[11px] font-black uppercase mt-1 ${_capTextCls(r.capability)}`; }
         });
         _pvRenderCapChart([r1.capability, r2.capability, r3.capability]);
 
