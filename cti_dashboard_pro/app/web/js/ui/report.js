@@ -496,7 +496,6 @@ function _buildDesignGrid(design) {
 // ── Results preview — full in-browser report document ─────────────────────────
 export async function previewAllTests(ui) {
     const btn      = document.getElementById('previewAllTestsBtn');
-    const panel    = document.getElementById('previewResultsPanel');
     const errorEl  = document.getElementById('previewError');
     const origHtml = btn.innerHTML;
 
@@ -615,7 +614,21 @@ export async function previewAllTests(ui) {
         if (compWrapper) compWrapper.innerHTML = _buildComparisonTable(t1, t2, t3, r1, r2, r3);
 
         // ── Show preview panel ────────────────────────────────────────────────
-        if (panel) panel.classList.remove('hidden');
+        // ── Update modal header ────────────────────────────────────────
+        const modalSubtitle = [_v('rep-client',''), _v('rep-asset',''), _v('rep-test-date','')].filter(Boolean).join(' · ');
+        _text('pv-modal-subtitle', modalSubtitle || 'ATC-105 Report Preview');
+        const mvEl = document.getElementById('pv-modal-verdict');
+        if (mvEl) {
+            mvEl.textContent = r3.capability >= 100 ? 'OVERALL: PASS' : r3.capability >= 95 ? 'OVERALL: MARGINAL' : 'OVERALL: FAIL';
+            mvEl.className   = `shrink-0 ml-1 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${_capBadgeCls(r3.capability)}`;
+        }
+
+        // ── Show "Re-open overlay" hint inside the step card ─────────
+        const hintEl = document.getElementById('previewReadyHint');
+        if (hintEl) { hintEl.classList.remove('hidden'); hintEl.classList.add('flex'); }
+
+        // ── Open the preview modal ────────────────────────────────────
+        if (typeof openPreviewModal === 'function') openPreviewModal();
 
         // ── Update live Test-3 mini-preview card in Step 3 ───────────────────
         const pvCard = document.getElementById('atcPreview');
