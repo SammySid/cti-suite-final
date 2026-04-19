@@ -113,6 +113,7 @@
         /* ── Tables ─────────────────────────────────────────────────────────── */
         table.data-table {
             width: 100%;
+            table-layout: fixed;        /* critical: forces xhtml2pdf to respect col widths */
             border-collapse: collapse;
             margin-top: 8px;
             font-size: 8.5pt;
@@ -122,15 +123,19 @@
             background-color: #1e3a5f;
             color: white;
             font-weight: bold;
-            padding: 6px 8px;
+            padding: 6px 5px;
             text-align: center;
             border: 1px solid #1e3a5f;
+            word-wrap: break-word;
+            overflow: hidden;
         }
         table.data-table td {
             border: 1px solid #cbd5e1;
-            padding: 5px 8px;
+            padding: 5px 5px;
             text-align: center;
             vertical-align: middle;
+            word-wrap: break-word;
+            overflow: hidden;
         }
         table.data-table td.left { text-align: left; font-weight: 600; color: #0f172a; }
         table.data-table tr:nth-child(even) td { background-color: #f8fafc; }
@@ -451,13 +456,20 @@
 </p>
 
 <table class="data-table avoid-break">
+    <colgroup>
+        <col style="width:32%;"/>
+        <col style="width:9%;"/>
+        <col style="width:18%;"/>
+        <col style="width:18%;"/>
+        <col style="width:23%;"/>
+    </colgroup>
     <thead>
         <tr>
-            <th style="width:34%; text-align:left; padding: 7px 8px;">Parameter</th>
-            <th style="width:8%;">Unit</th>
-            <th style="width:18%;">TEST 1 (Pre-Test)</th>
-            <th style="width:18%;">TEST 2 (Post Fan Change)</th>
-            <th style="width:18%;">TEST 3 (Post Distr. Change)</th>
+            <th style="text-align:left; padding:7px 6px;">Parameter</th>
+            <th>Unit</th>
+            <th>TEST 1 Pre-Test</th>
+            <th>TEST 2 Post Fan</th>
+            <th>TEST 3 Post Distr.</th>
         </tr>
     </thead>
     <tbody>
@@ -551,11 +563,17 @@
 
 <!-- Design vs Recorded Test conditions -->
 <table class="data-table avoid-break" style="max-width: 540px; margin-bottom: 18px;">
+    <colgroup>
+        <col style="width:46%;"/>
+        <col style="width:12%;"/>
+        <col style="width:21%;"/>
+        <col style="width:21%;"/>
+    </colgroup>
     <thead>
         <tr>
-            <th style="text-align:left; width:46%;">Parameter</th>
+            <th style="text-align:left;">Parameter</th>
             <th>Unit</th>
-            <th>Design Values</th>
+            <th>Design</th>
             <th>Recorded Test</th>
         </tr>
     </thead>
@@ -587,13 +605,20 @@
 
 {% if test.table1_rows %}
 <table class="data-table avoid-break">
+    <colgroup>
+        <col style="width:12%;"/>
+        <col style="width:13%;"/>
+        <col style="width:25%;"/>
+        <col style="width:25%;"/>
+        <col style="width:25%;"/>
+    </colgroup>
     <thead>
         <tr>
-            <th style="text-align:left; width:12%;">Range (%)</th>
-            <th style="width:14%;">Range (°C)</th>
-            <th style="color:#c4b5fd;">CWT @ 90% Flow ({{ test.flow_90 }} m3/hr)</th>
-            <th style="color:#86efac;">CWT @ 100% Flow ({{ test.flow_100 }} m3/hr)</th>
-            <th style="color:#93c5fd;">CWT @ 110% Flow ({{ test.flow_110 }} m3/hr)</th>
+            <th style="text-align:left;">Range %</th>
+            <th>Range °C</th>
+            <th style="color:#c4b5fd;">CWT 90% Flow ({{ test.flow_90 }})</th>
+            <th style="color:#86efac;">CWT 100% Flow ({{ test.flow_100 }})</th>
+            <th style="color:#93c5fd;">CWT 110% Flow ({{ test.flow_110 }})</th>
         </tr>
     </thead>
     <tbody>
@@ -649,6 +674,11 @@
     TABLE 2 — CWT at Test Range = {{ test.test_range }}°C (Read from Cross Plot 1)
 </div>
 <table class="data-table avoid-break" style="max-width: 500px; margin-top:6px;">
+    <colgroup>
+        <col style="width:44%;"/>
+        <col style="width:28%;"/>
+        <col style="width:28%;"/>
+    </colgroup>
     <thead>
         <tr>
             <th style="text-align:left;">Flow Condition</th>
@@ -691,8 +721,14 @@
 <div class="result-panel" style="max-width:520px; margin-bottom:18px;">
     <h4>Step 3 — Input Parameters &amp; Adjusted Flow Calculation</h4>
     <table class="data-table">
+        <colgroup>
+            <col style="width:6%;"/>
+            <col style="width:56%;"/>
+            <col style="width:22%;"/>
+            <col style="width:16%;"/>
+        </colgroup>
         <tr>
-            <th style="text-align:left; width:5%;">Ref</th>
+            <th style="text-align:left;">Ref</th>
             <th style="text-align:left;">Parameter</th>
             <th>Value</th>
             <th>Unit</th>
@@ -775,9 +811,15 @@
 </p>
 
 <table class="data-table avoid-break" style="max-width: 560px; margin-top: 10px;">
+    <colgroup>
+        <col style="width:6%;"/>
+        <col style="width:56%;"/>
+        <col style="width:22%;"/>
+        <col style="width:16%;"/>
+    </colgroup>
     <thead>
         <tr>
-            <th style="text-align:left; width:5%;">Ref</th>
+            <th style="text-align:left;">Ref</th>
             <th style="text-align:left;">Item</th>
             <th>Value</th>
             <th>Unit</th>

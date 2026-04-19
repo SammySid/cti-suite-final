@@ -495,9 +495,9 @@ export async function generateReport(ui) {
         setStatus('ATC-105 calculated for all tests. Rendering PDF…');
 
         // ── Derived values ────────────────────────────────────────────────
-        const airFlow = t3.air;
+        // Air flow is no longer a UI input; fan area is still collected for
+        // velocity calculation if needed, but air flow rows are omitted from table.
         const airArea = _n('rep-fan-area', 92.25);
-        const fanAvgVel = airArea > 0 ? parseFloat((airFlow / airArea).toFixed(2)) : '—';
 
         const sf1 = atc_pre.shortfall;
         const sf2 = atc_post.shortfall;
@@ -519,8 +519,6 @@ export async function generateReport(ui) {
               test1: t1.cwt,    test2: t2.cwt,    test3: t3.cwt },
             { name: 'Fan Power At Motor Inlet', unit: 'KW',
               test1: t1.fan_power, test2: t2.fan_power, test3: t3.fan_power },
-            { name: 'Fan Air Flow',             unit: 'M3/s',
-              test1: t1.air,    test2: t2.air,    test3: airFlow },
             { name: 'Range',                    unit: 'Deg.C',
               test1: parseFloat((t1.hwt - t1.cwt).toFixed(2)),
               test2: parseFloat((t2.hwt - t2.cwt).toFixed(2)),
@@ -584,11 +582,9 @@ export async function generateReport(ui) {
             final_data_table,
             data_notes: _lines('rep-data-notes'),
 
-            // Air flow summary
+            // Fan area (air flow no longer collected as UI input)
             airflow: {
-                avg_velocity: fanAvgVel,
-                area:         airArea,
-                total_flow:   airFlow,
+                area: airArea,
             },
         };
 
